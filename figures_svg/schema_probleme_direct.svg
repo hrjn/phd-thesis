@@ -1,0 +1,294 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+
+<svg
+   xmlns:dc="http://purl.org/dc/elements/1.1/"
+   xmlns:cc="http://creativecommons.org/ns#"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   width="210mm"
+   height="297mm"
+   viewBox="0 0 744.09448819 1052.3622047"
+   id="svg4596"
+   version="1.1"
+   inkscape:version="0.91 r13725"
+   sodipodi:docname="schema_probleme_direct.svg"
+   inkscape:export-filename="D:\MANUSCRIT\figures_chap_1\schema_probleme_direct.png"
+   inkscape:export-xdpi="300"
+   inkscape:export-ydpi="300">
+  <defs
+     id="defs4598" />
+  <sodipodi:namedview
+     id="base"
+     pagecolor="#ffffff"
+     bordercolor="#666666"
+     borderopacity="1.0"
+     inkscape:pageopacity="0.0"
+     inkscape:pageshadow="2"
+     inkscape:zoom="1.979899"
+     inkscape:cx="248.28982"
+     inkscape:cy="632.73046"
+     inkscape:document-units="px"
+     inkscape:current-layer="layer1"
+     showgrid="true"
+     inkscape:window-width="1366"
+     inkscape:window-height="746"
+     inkscape:window-x="-8"
+     inkscape:window-y="684"
+     inkscape:window-maximized="1">
+    <inkscape:grid
+       type="xygrid"
+       id="grid4604" />
+  </sodipodi:namedview>
+  <metadata
+     id="metadata4601">
+    <rdf:RDF>
+      <cc:Work
+         rdf:about="">
+        <dc:format>image/svg+xml</dc:format>
+        <dc:type
+           rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+        <dc:title></dc:title>
+      </cc:Work>
+    </rdf:RDF>
+  </metadata>
+  <g
+     inkscape:label="Calque 1"
+     inkscape:groupmode="layer"
+     id="layer1">
+    <circle
+       style="fill:#ff0000;fill-opacity:1;stroke:#523300;stroke-width:1;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:0.53669727"
+       id="path4606"
+       cx="90"
+       cy="442.36221"
+       r="5"
+       inkscape:export-filename="D:\MANUSCRIT\figures_chap_1\schema_probleme_direct.png"
+       inkscape:export-xdpi="300"
+       inkscape:export-ydpi="300" />
+    <rect
+       style="fill:#75a8ff;fill-opacity:1;stroke:#523300;stroke-width:0.79301244;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:0.53669727"
+       id="rect5148"
+       width="8.1866827"
+       height="7.6816063"
+       x="295.8559"
+       y="432.76382"
+       inkscape:export-filename="D:\MANUSCRIT\figures_chap_1\schema_probleme_direct.png"
+       inkscape:export-xdpi="300"
+       inkscape:export-ydpi="300" />
+    <rect
+       style="fill:#75a8ff;fill-opacity:1;stroke:#523300;stroke-width:0.79301244;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:0.53669727"
+       id="rect5148-4"
+       width="8.1866827"
+       height="7.6816063"
+       x="261.10461"
+       y="464.27905"
+       inkscape:export-filename="D:\MANUSCRIT\figures_chap_1\schema_probleme_direct.png"
+       inkscape:export-xdpi="300"
+       inkscape:export-ydpi="300" />
+    <rect
+       style="fill:#75a8ff;fill-opacity:1;stroke:#523300;stroke-width:0.79301244;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:0.53669727"
+       id="rect5148-3"
+       width="8.1866827"
+       height="7.6816063"
+       x="241.36353"
+       y="368.36533"
+       inkscape:export-filename="D:\MANUSCRIT\figures_chap_1\schema_probleme_direct.png"
+       inkscape:export-xdpi="300"
+       inkscape:export-ydpi="300" />
+    <path
+       style="fill:#75a8ff;fill-opacity:1;stroke:#1d0052;stroke-width:1;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:0.53669727"
+       id="path5185"
+       sodipodi:type="arc"
+       sodipodi:cx="235"
+       sodipodi:cy="564.86218"
+       sodipodi:rx="115"
+       sodipodi:ry="17.5"
+       sodipodi:start="0"
+       sodipodi:end="0.040370787"
+       sodipodi:open="true"
+       d="m 350,564.86218 a 115,17.5 0 0 1 -0.0937,0.7063"
+       inkscape:export-filename="D:\MANUSCRIT\figures_chap_1\schema_probleme_direct.png"
+       inkscape:export-xdpi="300"
+       inkscape:export-ydpi="300" />
+    <path
+       style="fill:#d40000;fill-rule:evenodd;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;opacity:0.22"
+       d="M 90,442.3622 259.89592,426.10078 C 312.12368,425.16998 380,412.3622 380,457.3622 c 0,60 -63.45695,34.45378 -110.00255,28.33248 z"
+       id="path5201"
+       inkscape:connector-curvature="0"
+       sodipodi:nodetypes="ccccc"
+       inkscape:export-filename="D:\MANUSCRIT\figures_chap_1\schema_probleme_direct.png"
+       inkscape:export-xdpi="300"
+       inkscape:export-ydpi="300" />
+    <path
+       style="fill:none;fill-rule:evenodd;stroke:#000000;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+       d="m 382.89348,339.27843 35,0"
+       id="path5203"
+       inkscape:connector-curvature="0"
+       inkscape:export-filename="D:\MANUSCRIT\figures_chap_1\schema_probleme_direct.png"
+       inkscape:export-xdpi="300"
+       inkscape:export-ydpi="300" />
+    <path
+       style="fill:none;fill-rule:evenodd;stroke:#000000;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+       d="m 407.89348,334.27843 10,5"
+       id="path5205"
+       inkscape:connector-curvature="0"
+       inkscape:export-filename="D:\MANUSCRIT\figures_chap_1\schema_probleme_direct.png"
+       inkscape:export-xdpi="300"
+       inkscape:export-ydpi="300" />
+    <path
+       style="fill:none;fill-rule:evenodd;stroke:#000000;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+       d="m 407.89348,344.27843 10,-5"
+       id="path5207"
+       inkscape:connector-curvature="0"
+       inkscape:export-filename="D:\MANUSCRIT\figures_chap_1\schema_probleme_direct.png"
+       inkscape:export-xdpi="300"
+       inkscape:export-ydpi="300" />
+    <text
+       xml:space="preserve"
+       style="font-style:normal;font-weight:normal;font-size:40px;line-height:125%;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+       x="78.383247"
+       y="459.28101"
+       id="text5209"
+       sodipodi:linespacing="125%"
+       inkscape:export-filename="D:\MANUSCRIT\figures_chap_1\schema_probleme_direct.png"
+       inkscape:export-xdpi="300"
+       inkscape:export-ydpi="300"><tspan
+         sodipodi:role="line"
+         id="tspan5211"
+         x="78.383247"
+         y="459.28101"
+         style="font-style:normal;font-variant:normal;font-weight:500;font-stretch:normal;font-size:17.5px;font-family:'CMU Sans Serif';-inkscape-font-specification:'CMU Sans Serif Medium'">S</tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-style:normal;font-weight:normal;font-size:40px;line-height:125%;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+       x="250.61169"
+       y="385.53986"
+       id="text5209-8"
+       sodipodi:linespacing="125%"
+       inkscape:export-filename="D:\MANUSCRIT\figures_chap_1\schema_probleme_direct.png"
+       inkscape:export-xdpi="300"
+       inkscape:export-ydpi="300"><tspan
+         sodipodi:role="line"
+         id="tspan5211-0"
+         x="250.61169"
+         y="385.53986"
+         style="font-style:normal;font-variant:normal;font-weight:500;font-stretch:normal;font-size:15px;font-family:'CMU Sans Serif';-inkscape-font-specification:'CMU Sans Serif Medium'">R</tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-style:normal;font-weight:normal;font-size:40px;line-height:125%;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+       x="304.65231"
+       y="450.44089"
+       id="text5209-8-0"
+       sodipodi:linespacing="125%"
+       inkscape:export-filename="D:\MANUSCRIT\figures_chap_1\schema_probleme_direct.png"
+       inkscape:export-xdpi="300"
+       inkscape:export-ydpi="300"><tspan
+         sodipodi:role="line"
+         id="tspan5211-0-8"
+         x="304.65231"
+         y="450.44089"
+         style="font-style:normal;font-variant:normal;font-weight:500;font-stretch:normal;font-size:15px;font-family:'CMU Sans Serif';-inkscape-font-specification:'CMU Sans Serif Medium'">R</tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-style:normal;font-weight:normal;font-size:40px;line-height:125%;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+       x="270.45941"
+       y="483.21497"
+       id="text5209-8-2"
+       sodipodi:linespacing="125%"
+       inkscape:export-filename="D:\MANUSCRIT\figures_chap_1\schema_probleme_direct.png"
+       inkscape:export-xdpi="300"
+       inkscape:export-ydpi="300"><tspan
+         sodipodi:role="line"
+         id="tspan5211-0-0"
+         x="270.45941"
+         y="483.21497"
+         style="font-style:normal;font-variant:normal;font-weight:500;font-stretch:normal;font-size:15px;font-family:'CMU Sans Serif';-inkscape-font-specification:'CMU Sans Serif Medium'">R</tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-style:normal;font-weight:normal;font-size:40px;line-height:125%;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+       x="260.25891"
+       y="390.48651"
+       id="text5257"
+       sodipodi:linespacing="125%"
+       inkscape:export-filename="D:\MANUSCRIT\figures_chap_1\schema_probleme_direct.png"
+       inkscape:export-xdpi="300"
+       inkscape:export-ydpi="300"><tspan
+         sodipodi:role="line"
+         id="tspan5259"
+         x="260.25891"
+         y="390.48651"
+         style="font-style:normal;font-variant:normal;font-weight:500;font-stretch:normal;font-size:12.5px;font-family:'CMU Sans Serif';-inkscape-font-specification:'CMU Sans Serif Medium'">1</tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-style:normal;font-weight:normal;font-size:40px;line-height:125%;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+       x="313.54318"
+       y="453.51953"
+       id="text5257-6"
+       sodipodi:linespacing="125%"
+       inkscape:export-filename="D:\MANUSCRIT\figures_chap_1\schema_probleme_direct.png"
+       inkscape:export-xdpi="300"
+       inkscape:export-ydpi="300"><tspan
+         sodipodi:role="line"
+         id="tspan5259-4"
+         x="313.54318"
+         y="453.51953"
+         style="font-style:normal;font-variant:normal;font-weight:500;font-stretch:normal;font-size:12.5px;font-family:'CMU Sans Serif';-inkscape-font-specification:'CMU Sans Serif Medium'">2</tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-style:normal;font-weight:normal;font-size:40px;line-height:125%;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+       x="279.1929"
+       y="487.40784"
+       id="text5257-8"
+       sodipodi:linespacing="125%"
+       inkscape:export-filename="D:\MANUSCRIT\figures_chap_1\schema_probleme_direct.png"
+       inkscape:export-xdpi="300"
+       inkscape:export-ydpi="300"><tspan
+         sodipodi:role="line"
+         id="tspan5259-0"
+         x="279.1929"
+         y="487.40784"
+         style="font-style:normal;font-variant:normal;font-weight:500;font-stretch:normal;font-size:12.5px;font-family:'CMU Sans Serif';-inkscape-font-specification:'CMU Sans Serif Medium'">3</tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-style:normal;font-weight:normal;font-size:40px;line-height:125%;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+       x="381.83255"
+       y="333.42059"
+       id="text5287"
+       sodipodi:linespacing="125%"
+       inkscape:export-filename="D:\MANUSCRIT\figures_chap_1\schema_probleme_direct.png"
+       inkscape:export-xdpi="300"
+       inkscape:export-ydpi="300"><tspan
+         sodipodi:role="line"
+         id="tspan5289"
+         x="381.83255"
+         y="333.42059"
+         style="font-style:normal;font-variant:normal;font-weight:500;font-stretch:normal;font-size:13.75px;font-family:'CMU Sans Serif';-inkscape-font-specification:'CMU Sans Serif Medium'">vent</tspan></text>
+    <path
+       style="fill:none;fill-rule:evenodd;stroke:#000000;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+       d="m 60,317.3622 0,250"
+       id="path5291"
+       inkscape:connector-curvature="0"
+       inkscape:export-filename="D:\MANUSCRIT\figures_chap_1\schema_probleme_direct.png"
+       inkscape:export-xdpi="300"
+       inkscape:export-ydpi="300" />
+    <path
+       style="fill:none;fill-rule:evenodd;stroke:#000000;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+       d="m 60,567.3622 380,0 0,-250"
+       id="path5293"
+       inkscape:connector-curvature="0"
+       inkscape:export-filename="D:\MANUSCRIT\figures_chap_1\schema_probleme_direct.png"
+       inkscape:export-xdpi="300"
+       inkscape:export-ydpi="300" />
+    <path
+       style="fill:none;fill-rule:evenodd;stroke:#000000;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+       d="m 60,317.3622 380,0"
+       id="path5295"
+       inkscape:connector-curvature="0"
+       inkscape:export-filename="D:\MANUSCRIT\figures_chap_1\schema_probleme_direct.png"
+       inkscape:export-xdpi="300"
+       inkscape:export-ydpi="300" />
+  </g>
+</svg>

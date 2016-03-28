@@ -1,0 +1,312 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+
+<svg
+   xmlns:dc="http://purl.org/dc/elements/1.1/"
+   xmlns:cc="http://creativecommons.org/ns#"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   width="210mm"
+   height="297mm"
+   viewBox="0 0 744.09448819 1052.3622047"
+   id="svg4596"
+   version="1.1"
+   inkscape:version="0.91 r13725"
+   sodipodi:docname="schema_probleme_inverse.svg"
+   inkscape:export-filename="D:\MANUSCRIT\figures_chap_1\schema_probleme_direct.png"
+   inkscape:export-xdpi="300"
+   inkscape:export-ydpi="300">
+  <defs
+     id="defs4598" />
+  <sodipodi:namedview
+     id="base"
+     pagecolor="#ffffff"
+     bordercolor="#666666"
+     borderopacity="1.0"
+     inkscape:pageopacity="0.0"
+     inkscape:pageshadow="2"
+     inkscape:zoom="1.979899"
+     inkscape:cx="163.12341"
+     inkscape:cy="627.2373"
+     inkscape:document-units="px"
+     inkscape:current-layer="layer1"
+     showgrid="true"
+     inkscape:window-width="1366"
+     inkscape:window-height="746"
+     inkscape:window-x="-8"
+     inkscape:window-y="684"
+     inkscape:window-maximized="1">
+    <inkscape:grid
+       type="xygrid"
+       id="grid4604" />
+  </sodipodi:namedview>
+  <metadata
+     id="metadata4601">
+    <rdf:RDF>
+      <cc:Work
+         rdf:about="">
+        <dc:format>image/svg+xml</dc:format>
+        <dc:type
+           rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+        <dc:title></dc:title>
+      </cc:Work>
+    </rdf:RDF>
+  </metadata>
+  <g
+     inkscape:label="Calque 1"
+     inkscape:groupmode="layer"
+     id="layer1">
+    <circle
+       style="fill:#ff0000;fill-opacity:1;stroke:#523300;stroke-width:1;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:0.53669727"
+       id="path4606"
+       cx="103.13198"
+       cy="432.26068"
+       r="5"
+       inkscape:export-filename="D:\MANUSCRIT\figures_chap_1\schema_probleme_inverse.png"
+       inkscape:export-xdpi="300"
+       inkscape:export-ydpi="300" />
+    <rect
+       style="fill:#75a8ff;fill-opacity:1;stroke:#523300;stroke-width:0.79301244;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:0.53669727"
+       id="rect5148"
+       width="8.1866827"
+       height="7.6816063"
+       x="308.98788"
+       y="422.66229"
+       inkscape:export-filename="D:\MANUSCRIT\figures_chap_1\schema_probleme_inverse.png"
+       inkscape:export-xdpi="300"
+       inkscape:export-ydpi="300" />
+    <rect
+       style="fill:#75a8ff;fill-opacity:1;stroke:#523300;stroke-width:0.79301244;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:0.53669727"
+       id="rect5148-4"
+       width="8.1866827"
+       height="7.6816063"
+       x="274.2366"
+       y="454.17752"
+       inkscape:export-filename="D:\MANUSCRIT\figures_chap_1\schema_probleme_inverse.png"
+       inkscape:export-xdpi="300"
+       inkscape:export-ydpi="300" />
+    <rect
+       style="fill:#75a8ff;fill-opacity:1;stroke:#523300;stroke-width:0.79301244;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:0.53669727"
+       id="rect5148-3"
+       width="8.1866827"
+       height="7.6816063"
+       x="254.49551"
+       y="358.26379"
+       inkscape:export-filename="D:\MANUSCRIT\figures_chap_1\schema_probleme_inverse.png"
+       inkscape:export-xdpi="300"
+       inkscape:export-ydpi="300" />
+    <path
+       style="fill:#75a8ff;fill-opacity:1;stroke:#1d0052;stroke-width:1;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:0.53669727"
+       id="path5185"
+       sodipodi:type="arc"
+       sodipodi:cx="248.13199"
+       sodipodi:cy="554.76068"
+       sodipodi:rx="115"
+       sodipodi:ry="17.5"
+       sodipodi:start="0"
+       sodipodi:end="0.040370787"
+       sodipodi:open="true"
+       d="m 363.13199,554.76068 a 115,17.5 0 0 1 -0.0937,0.7063"
+       inkscape:export-filename="D:\MANUSCRIT\figures_chap_1\schema_probleme_inverse.png"
+       inkscape:export-xdpi="300"
+       inkscape:export-ydpi="300" />
+    <path
+       style="opacity:0.22000002;fill:#0002d4;fill-rule:evenodd;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;fill-opacity:1"
+       d="M 314.87292,428.14442 175.97243,455.87575 C 132.93731,461.00716 77.964947,477.35077 74.251827,439.81329 69.301007,389.76332 123.79008,405.78182 162.7167,407.00684 Z"
+       id="path5201"
+       inkscape:connector-curvature="0"
+       sodipodi:nodetypes="ccccc"
+       inkscape:export-filename="D:\MANUSCRIT\figures_chap_1\schema_probleme_inverse.png"
+       inkscape:export-xdpi="300"
+       inkscape:export-ydpi="300" />
+    <path
+       style="fill:none;fill-rule:evenodd;stroke:#000000;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+       d="m 396.02546,329.1769 35,0"
+       id="path5203"
+       inkscape:connector-curvature="0"
+       inkscape:export-filename="D:\MANUSCRIT\figures_chap_1\schema_probleme_inverse.png"
+       inkscape:export-xdpi="300"
+       inkscape:export-ydpi="300" />
+    <path
+       style="fill:none;fill-rule:evenodd;stroke:#000000;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+       d="m 421.02546,324.1769 10,5"
+       id="path5205"
+       inkscape:connector-curvature="0"
+       inkscape:export-filename="D:\MANUSCRIT\figures_chap_1\schema_probleme_inverse.png"
+       inkscape:export-xdpi="300"
+       inkscape:export-ydpi="300" />
+    <path
+       style="fill:none;fill-rule:evenodd;stroke:#000000;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+       d="m 421.02546,334.1769 10,-5"
+       id="path5207"
+       inkscape:connector-curvature="0"
+       inkscape:export-filename="D:\MANUSCRIT\figures_chap_1\schema_probleme_inverse.png"
+       inkscape:export-xdpi="300"
+       inkscape:export-ydpi="300" />
+    <text
+       xml:space="preserve"
+       style="font-style:normal;font-weight:normal;font-size:40px;line-height:125%;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+       x="91.515228"
+       y="449.17947"
+       id="text5209"
+       sodipodi:linespacing="125%"
+       inkscape:export-filename="D:\MANUSCRIT\figures_chap_1\schema_probleme_inverse.png"
+       inkscape:export-xdpi="300"
+       inkscape:export-ydpi="300"><tspan
+         sodipodi:role="line"
+         id="tspan5211"
+         x="91.515228"
+         y="449.17947"
+         style="font-style:normal;font-variant:normal;font-weight:500;font-stretch:normal;font-size:17.5px;font-family:'CMU Sans Serif';-inkscape-font-specification:'CMU Sans Serif Medium'">S</tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-style:normal;font-weight:normal;font-size:40px;line-height:125%;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+       x="263.74368"
+       y="375.43832"
+       id="text5209-8"
+       sodipodi:linespacing="125%"
+       inkscape:export-filename="D:\MANUSCRIT\figures_chap_1\schema_probleme_inverse.png"
+       inkscape:export-xdpi="300"
+       inkscape:export-ydpi="300"><tspan
+         sodipodi:role="line"
+         id="tspan5211-0"
+         x="263.74368"
+         y="375.43832"
+         style="font-style:normal;font-variant:normal;font-weight:500;font-stretch:normal;font-size:15px;font-family:'CMU Sans Serif';-inkscape-font-specification:'CMU Sans Serif Medium'">R</tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-style:normal;font-weight:normal;font-size:40px;line-height:125%;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+       x="317.7843"
+       y="440.33936"
+       id="text5209-8-0"
+       sodipodi:linespacing="125%"
+       inkscape:export-filename="D:\MANUSCRIT\figures_chap_1\schema_probleme_inverse.png"
+       inkscape:export-xdpi="300"
+       inkscape:export-ydpi="300"><tspan
+         sodipodi:role="line"
+         id="tspan5211-0-8"
+         x="317.7843"
+         y="440.33936"
+         style="font-style:normal;font-variant:normal;font-weight:500;font-stretch:normal;font-size:15px;font-family:'CMU Sans Serif';-inkscape-font-specification:'CMU Sans Serif Medium'">R</tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-style:normal;font-weight:normal;font-size:40px;line-height:125%;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+       x="283.5914"
+       y="473.11343"
+       id="text5209-8-2"
+       sodipodi:linespacing="125%"
+       inkscape:export-filename="D:\MANUSCRIT\figures_chap_1\schema_probleme_inverse.png"
+       inkscape:export-xdpi="300"
+       inkscape:export-ydpi="300"><tspan
+         sodipodi:role="line"
+         id="tspan5211-0-0"
+         x="283.5914"
+         y="473.11343"
+         style="font-style:normal;font-variant:normal;font-weight:500;font-stretch:normal;font-size:15px;font-family:'CMU Sans Serif';-inkscape-font-specification:'CMU Sans Serif Medium'">R</tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-style:normal;font-weight:normal;font-size:40px;line-height:125%;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+       x="273.3909"
+       y="380.38498"
+       id="text5257"
+       sodipodi:linespacing="125%"
+       inkscape:export-filename="D:\MANUSCRIT\figures_chap_1\schema_probleme_inverse.png"
+       inkscape:export-xdpi="300"
+       inkscape:export-ydpi="300"><tspan
+         sodipodi:role="line"
+         id="tspan5259"
+         x="273.3909"
+         y="380.38498"
+         style="font-style:normal;font-variant:normal;font-weight:500;font-stretch:normal;font-size:12.5px;font-family:'CMU Sans Serif';-inkscape-font-specification:'CMU Sans Serif Medium'">1</tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-style:normal;font-weight:normal;font-size:40px;line-height:125%;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+       x="326.67517"
+       y="443.418"
+       id="text5257-6"
+       sodipodi:linespacing="125%"
+       inkscape:export-filename="D:\MANUSCRIT\figures_chap_1\schema_probleme_inverse.png"
+       inkscape:export-xdpi="300"
+       inkscape:export-ydpi="300"><tspan
+         sodipodi:role="line"
+         id="tspan5259-4"
+         x="326.67517"
+         y="443.418"
+         style="font-style:normal;font-variant:normal;font-weight:500;font-stretch:normal;font-size:12.5px;font-family:'CMU Sans Serif';-inkscape-font-specification:'CMU Sans Serif Medium'">2</tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-style:normal;font-weight:normal;font-size:40px;line-height:125%;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+       x="292.32489"
+       y="477.3063"
+       id="text5257-8"
+       sodipodi:linespacing="125%"
+       inkscape:export-filename="D:\MANUSCRIT\figures_chap_1\schema_probleme_inverse.png"
+       inkscape:export-xdpi="300"
+       inkscape:export-ydpi="300"><tspan
+         sodipodi:role="line"
+         id="tspan5259-0"
+         x="292.32489"
+         y="477.3063"
+         style="font-style:normal;font-variant:normal;font-weight:500;font-stretch:normal;font-size:12.5px;font-family:'CMU Sans Serif';-inkscape-font-specification:'CMU Sans Serif Medium'">3</tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-style:normal;font-weight:normal;font-size:40px;line-height:125%;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+       x="394.96454"
+       y="323.31906"
+       id="text5287"
+       sodipodi:linespacing="125%"
+       inkscape:export-filename="D:\MANUSCRIT\figures_chap_1\schema_probleme_inverse.png"
+       inkscape:export-xdpi="300"
+       inkscape:export-ydpi="300"><tspan
+         sodipodi:role="line"
+         id="tspan5289"
+         x="394.96454"
+         y="323.31906"
+         style="font-style:normal;font-variant:normal;font-weight:500;font-stretch:normal;font-size:13.75px;font-family:'CMU Sans Serif';-inkscape-font-specification:'CMU Sans Serif Medium'">vent</tspan></text>
+    <path
+       style="fill:none;fill-rule:evenodd;stroke:#000000;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+       d="m 73.131983,307.26067 0,250"
+       id="path5291"
+       inkscape:connector-curvature="0"
+       inkscape:export-filename="D:\MANUSCRIT\figures_chap_1\schema_probleme_inverse.png"
+       inkscape:export-xdpi="300"
+       inkscape:export-ydpi="300" />
+    <path
+       style="fill:none;fill-rule:evenodd;stroke:#000000;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+       d="m 73.131983,557.26067 379.999997,0 0,-250"
+       id="path5293"
+       inkscape:connector-curvature="0"
+       inkscape:export-filename="D:\MANUSCRIT\figures_chap_1\schema_probleme_inverse.png"
+       inkscape:export-xdpi="300"
+       inkscape:export-ydpi="300" />
+    <path
+       style="fill:none;fill-rule:evenodd;stroke:#000000;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+       d="m 73.131983,307.26067 379.999997,0"
+       id="path5295"
+       inkscape:connector-curvature="0"
+       inkscape:export-filename="D:\MANUSCRIT\figures_chap_1\schema_probleme_inverse.png"
+       inkscape:export-xdpi="300"
+       inkscape:export-ydpi="300" />
+    <path
+       style="opacity:0.22000002;fill:#0002d4;fill-opacity:1;fill-rule:evenodd;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+       d="M 260.82721,361.92867 121.92672,389.66 c -43.035122,5.13141 -98.007482,21.47502 -101.720602,-16.06246 -4.95082,-50.04997 49.53825,-34.03147 88.464872,-32.80645 z"
+       id="path5201-3"
+       inkscape:connector-curvature="0"
+       sodipodi:nodetypes="ccccc"
+       inkscape:export-filename="D:\MANUSCRIT\figures_chap_1\schema_probleme_inverse.png"
+       inkscape:export-xdpi="300"
+       inkscape:export-ydpi="300" />
+    <path
+       style="opacity:0.22000002;fill:#0002d4;fill-opacity:1;fill-rule:evenodd;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+       d="M 278.81456,459.61399 139.91407,487.34532 C 96.878946,492.47673 41.906583,508.82034 38.193463,471.28286 33.242643,421.23289 87.731716,437.25139 126.65834,438.47641 Z"
+       id="path5201-5"
+       inkscape:connector-curvature="0"
+       sodipodi:nodetypes="ccccc"
+       inkscape:export-filename="D:\MANUSCRIT\figures_chap_1\schema_probleme_inverse.png"
+       inkscape:export-xdpi="300"
+       inkscape:export-ydpi="300" />
+  </g>
+</svg>

@@ -1,0 +1,148 @@
+\chapter{Validation de la méthodologie AMIS sur un cas expérimental}
+
+Dans ce chapitre, nous appliquons l'algorithme AMIS à un problème STE avec des données d'observations réelles issues d'une campagne expérimentale de mesures. Les résultats présentés ici reprennent les travaux illustrés dans \cite{Rajaona2015}.
+
+\section{Formulation bayésienne du problème STE}
+
+\subsection{Modèle de données et vraisemblance}
+
+Nous considérons ici une source localisée en un point $\PosSource = (x_s, y_s, z_s)$ de l'espace et caractérisée par un profil de rejet $\VecQSource$. Pour les besoins de la modélisation, ce dernier est discrétisé en $T_s$ échéances d'émission $t'_1, \cdots, t'_{T_s}$, l'intervalle entre deux échéances consécutives demeurant strictement identique. On peut ainsi définir $\VecQSource$ comme une succession de paliers d'émissions constantes suivant les intervalles temporels définis par:
+
+\begin{equation}
+\forall n \in \{2, \cdots, T_s\}, ~\Delta t'_n = t'_{n} - t'_{n-1}
+\label{eq_def_delta_t}
+\end{equation}
+
+
+On suppose que les observations sont définies par des mesures de concentration en un nombre fini de points du domaine, qui constituent les positions d'un réseau de $N_c$ capteurs. Ces mesures sont données suivant une discrétisation temporelle donnée, chaque capteur délivrant ainsi une valeur de concentration à chacun des instants d'observation $t_1, \cdots, t_{T_c}$.
+
+
+
+
+ La concentration $\obs_{i,j}$ fournie par le $i$-ème capteur à la position $\PosCapteur^{(i)}$ et à l'échéance d'observation $t_j$ est alors modélisée par l'équation suivante:
+ 
+\begin{equation}
+\obs_{i,j} = \sum\limits_{n=2}^{T_s}q(\Delta t'_n)\MatC_{i,j}(\PosSource, \Delta t'_n) + \varepsilon_{i,j}
+\label{eq_AE_2}
+\end{equation}
+
+Le premier terme de l'équation \eqref{eq_AE_2} représente à la concentration moyenne obtenue par la superposition des $T_s$ rejets sur les différents intervalles d'émission $\left\{\Delta t'_n\right\}_{2\leq n \leq T_s}$et pondérés par les quantités émises $\left\{q(\Delta t'_n)\right\}_{2 \leq n \leq T_s}$ associées. Ainsi, $\MatC_{i,j}(\PosSource, \Delta t'_n)$ désigne la concentration moyenne observée par le $i$-ème capteur à la position $\PosCapteur^{(i)}$ et à l'échéance d'observation $t_j$ si un rejet unitaire aurait été produit sur l'intervalle $\Delta t'_n$ par une source située à la position $\PosSource$. Enfin, $\varepsilon_{i,j}$ représente le terme regroupant toutes les sources d'erreur présentées au paragraphe §\ref{ss_erreurs}.\\
+
+Il est possible de réécrire l'équation \eqref{eq_AE_2} sous la forme matricielle suivante:
+
+\begin{equation}
+\VecObs = \MatC(\PosSource)\VecQSource + \VecErreur
+\label{eq_AE_3}
+\end{equation}
+qui n'est autre que l'équivalent de l'équation \eqref{eq_relation_SR_non_parametrique}. $\VecObs \in \mathbb{R}^{N_cT_c}$ est un vecteur où toutes les observations de concentration sont concaténées sous la forme suivante : 
+
+\begin{equation}
+\VecObs = \left(\obs_{1,1}, \obs_{1,2}, \cdots, \obs_{1,T_c}, \obs_{2,1}, \cdots, \cdots, \obs_{N_c,T_c}\right)^T
+\label{eq_AE_3_plus}
+\end{equation}
+
+$\VecErreur \in \mathbb{R}^{N_cT_c}$ est un vecteur d'erreur qui suit, comme présenté à l'équation \eqref{eq_bruit_obs}, une loi normale centrée de matrice de covariance $\MatR \in \mathbb{R}^{N_cT_c \times N_cT_c}$. De plus, on considère que ce vecteur de bruit affecte les observations de façon indépendante et identiquement distribuée (i.i.d.): par conséquent, la matrice $\MatR$ est diagonale:
+
+
+\begin{equation}
+\MatR = 
+\begin{pmatrix}
+\diagentry{\varObs}\\
+&\diagentry{\varObs}\\
+&&\diagentry{\xddots}\\
+&&&&\diagentry{\varObs}\\
+&&&&&\diagentry{\varObs}\\
+\end{pmatrix}
+\label{eq_AE_covariance_obs}
+\end{equation}
+
+Le terme $\MatC(\PosSource) \in \mathbb{R}^{N_cT_c \times T_s}$ est la matrice source-récepteur suivante:
+
+\begin{equation}
+\MatC(\PosSource) = 
+\begin{pmatrix}
+\MatC_{1,1}(\PosSource, \Delta t'_1) & \MatC_{1,1}(\PosSource, \Delta t'_2)  & \cdots & \MatC_{1,}(\PosSource, \Delta t'_{T_s}) \\ 
+\MatC_{1,2}(\PosSource, \Delta t'_1) & \MatC_{1,2}(\PosSource, \Delta t'_2)  & \cdots & \MatC_{1,2}(\PosSource, \Delta t'_{T_s}) \\
+\vdots & \vdots &  & \vdots \\
+\MatC_{1,T_c}(\PosSource, \Delta t'_1) & \MatC_{1,T_c}(\PosSource, \Delta t'_2)  & \cdots & \MatC_{1,T_c}(\PosSource, \Delta t'_{T_s}) \\
+\MatC_{2,1}(\PosSource, \Delta t'_1) & \MatC_{2,1}(\PosSource, \Delta t'_2)  & \cdots & \MatC_{2,1}(\PosSource, \Delta t'_{T_s}) \\
+\vdots & \vdots &  & \vdots \\
+\vdots & \vdots &  & \vdots \\
+\MatC_{N_c,T_c}(\PosSource, \Delta t'_1) & \MatC_{N_c,T_c}(\PosSource, \Delta t'_2)  & \cdots & \MatC_{N_c,T_c}(\PosSource, \Delta t'_{T_s}) \\
+\end{pmatrix}
+\label{eq_AE_4}
+\end{equation}
+
+Si on note $\VecTheta = (\PosSource, \VecQSource)$ le vecteur des paramètres caractérisant le terme source, la règle de Bayes permet d'écrire la définition de la loi a posteriori de $\VecTheta$ : 
+
+\begin{equation}
+p(\VecTheta | \VecObs) = \dfrac{p(\VecObs | \VecTheta)p(\VecTheta)}{p(\VecObs)}
+\label{eq_AE_1}
+\end{equation}
+
+Comme expliqué au paragraphe \ref{paragraphe_paradigme_bayesien}, on cherche à estimer cette loi a posteriori à un facteur multiplicatif près, l'équation \eqref{eq_AE_1} devient alors:
+
+\begin{equation}
+p(\VecTheta | \VecObs) \propto p(\VecObs | \VecTheta)p(\VecTheta)p(\VecObs)
+\label{eq_AE_1_prop}
+\end{equation}
+
+Comme on connaît la nature gaussienne du vecteur d'erreur, on peut alors définir la vraisemblance des observations $\VecObs$ sachant un terme source donné $\VecTheta$:
+
+\begin{equation}
+p(\VecObs | \VecTheta) = \prod\limits_{i=1}^{N_c} \prod\limits_{j=1}^{T_c}\mathcal{N}\left(\obs_{i,j} \middle\vert \MatC_{i,j}(\PosSource)\VecQSource, \varObs\right)
+\label{eq_AE_5}
+\end{equation}
+
+\subsection{Choix des lois a priori}
+
+\subsubsection{Position de la source}
+
+On considère que la source est forcément contenue dans les limites du domaine spatial $\mathcal{D}$ considéré, mais qu'elle peut se situer en n'importe quel point de ce domaine. En termes probabilistes, cela se traduit par une loi a priori uniforme sur la position $\PosSource$ de la source:
+
+\begin{equation}
+p(\PosSource) = \mathcal{U}_\mathcal{D}(\PosSource)
+\label{eq_AE_7}
+\end{equation}
+
+
+\subsubsection{Profil d'émission}
+
+Comme expliqué dans \cite{Winiarek2011}, la pratique la plus courante consiste à choisir un a priori gaussien pour le vecteur $\VecQSource$, qui s'écrit alors:
+
+\begin{equation}
+p(\VecQSource) = \mathcal{N}\left(\VecQSource \middle \vert \VecMeanQ, \MatCovQ\right)
+\label{eq_AE_8}
+\end{equation}
+
+Dans \cite{Bocquet2008}, il est expliqué que l'hypothèse gaussienne sur $\VecQSource$ entraîne potentiellement des incohérences physiques telles que des valeurs d'émissions négatives. Cependant, une telle hypothèse demeure fréquemment utilisée dans la littérature, et conduit à des résultats satisfaisants (voir par exemple \cite{Issartel2003}) ainsi qu'une meilleure flexibilité quant à la quantification des connaissances a priori sur le type de rejet étudié. Par exemple, si on sait d'avance que le rejet se fait à un débit relativement faible, alors il est possible d'ajuster les valeurs de la diagonale de la matrice de covariance en y mettant des quantités faibles. \\
+
+Il est toutefois possible d'atténuer les effets indésirables de l'hypothèse gaussienne sans avoir à changer la nature de la loi de probabilité a priori de $\VecQSource$, nous verrons comment cela est possible dans le prochain paragraphe.
+
+
+\section{Marginalisation du profil d'émission}
+
+\subsection{Principe}
+La vraisemblance $p(\VecObs|\VecTheta)$ présentée à l'équation \eqref{eq_AE_5} est fortement non-linéaire, et la complexité de sa formulation rend impossible le calcul analytique de la loi a posteriori $p(\VecTheta | \VecObs)$. Afin de contourner ce problème, une solution consiste à exprimer cette loi a posteriori en fonction des différentes \textit{lois a posteriori marginales} dont elle dépend. \\
+
+Par définition, la loi a posteriori $p(\VecTheta|\VecObs)$ peut s'exprimer en fonction de la loi jointe de $\VecTheta$ et $\VecObs$:
+
+\begin{equation}
+p(\VecTheta|\VecObs) = p(\PosSource, \VecQSource | \VecObs) = \dfrac{p(\PosSource, \VecQSource, \VecObs)}{p(\VecObs)}
+\label{eq_conditionalite}
+\end{equation}
+
+En appliquant la règle du conditionnement en chaîne, ou \textit{chain rule}\footnote{La \textit{chain rule} permet d'exprimer une loi jointe sous la forme d'un produit de lois conditionnelles. Si on considère les $n$ variables aléatoires $X_1, \dots, X_n$, alors on a $p(X_1, \dots, X_n) = p(X_n|X_1, \dots, X_{n-1})p(X_{n-1}|X_1, \dots, X_{n-2})\dots p(X_2|X_1)p(X_1)$.}, sur le numérateur, on arrive à l'expression suivante:
+\begin{equation}
+p(\PosSource, \VecQSource | \VecObs) = p(\VecQSource | \PosSource, \VecObs)p(\PosSource | \VecObs)
+\label{eq_AE_9}
+\end{equation}
+où $p(\VecQSource | \PosSource, \VecObs)$ et $p(\PosSource | \VecObs)$ sont les lois a posteriori marginales respectives du profil d'émission et de la position de la source. \\
+
+
+
+\section{Localisation de la source avec l'algorithme AMIS}
+
+\section{Description du modèle de dispersion à bouffées gaussiennes}
+
+\section{Résultats}

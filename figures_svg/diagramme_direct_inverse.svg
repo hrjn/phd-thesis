@@ -1,0 +1,287 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+
+<svg
+   xmlns:dc="http://purl.org/dc/elements/1.1/"
+   xmlns:cc="http://creativecommons.org/ns#"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   width="210mm"
+   height="297mm"
+   viewBox="0 0 744.09448819 1052.3622047"
+   id="svg3342"
+   version="1.1"
+   inkscape:version="0.91 r13725"
+   sodipodi:docname="diagramme_direct_inverse.svg">
+  <defs
+     id="defs3344" />
+  <sodipodi:namedview
+     id="base"
+     pagecolor="#ffffff"
+     bordercolor="#666666"
+     borderopacity="1.0"
+     inkscape:pageopacity="0.0"
+     inkscape:pageshadow="2"
+     inkscape:zoom="0.7"
+     inkscape:cx="186.34415"
+     inkscape:cy="752.86876"
+     inkscape:document-units="px"
+     inkscape:current-layer="layer1"
+     showgrid="true"
+     inkscape:window-width="1366"
+     inkscape:window-height="746"
+     inkscape:window-x="-8"
+     inkscape:window-y="1272"
+     inkscape:window-maximized="1">
+    <inkscape:grid
+       type="xygrid"
+       id="grid4192" />
+  </sodipodi:namedview>
+  <metadata
+     id="metadata3347">
+    <rdf:RDF>
+      <cc:Work
+         rdf:about="">
+        <dc:format>image/svg+xml</dc:format>
+        <dc:type
+           rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+        <dc:title></dc:title>
+      </cc:Work>
+    </rdf:RDF>
+  </metadata>
+  <g
+     inkscape:label="Calque 1"
+     inkscape:groupmode="layer"
+     id="layer1">
+    <text
+       xml:space="preserve"
+       style="font-style:normal;font-weight:normal;font-size:40px;line-height:125%;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+       x="21.010153"
+       y="144.28099"
+       id="text3352"
+       sodipodi:linespacing="125%"
+       inkscape:export-filename="D:\MANUSCRIT\figures\diagramme_direct_inverse.png"
+       inkscape:export-xdpi="150"
+       inkscape:export-ydpi="150"><tspan
+         sodipodi:role="line"
+         id="tspan3354"
+         x="21.010153"
+         y="144.28099"
+         style="font-style:normal;font-variant:normal;font-weight:500;font-stretch:normal;font-size:30px;font-family:'CMU Serif';-inkscape-font-specification:'CMU Serif Medium'">Paramètres</tspan></text>
+    <rect
+       style="fill:#e4c6ff;fill-opacity:1;stroke:#000000;stroke-opacity:1"
+       id="rect3356"
+       width="197.14285"
+       height="87.14286"
+       x="252.18619"
+       y="99.757614"
+       inkscape:export-filename="D:\MANUSCRIT\figures\diagramme_direct_inverse.png"
+       inkscape:export-xdpi="150"
+       inkscape:export-ydpi="150" />
+    <text
+       xml:space="preserve"
+       style="font-style:normal;font-weight:normal;font-size:40px;line-height:125%;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+       x="542.95618"
+       y="132.4422"
+       id="text3352-2"
+       sodipodi:linespacing="125%"
+       inkscape:export-filename="D:\MANUSCRIT\figures\diagramme_direct_inverse.png"
+       inkscape:export-xdpi="150"
+       inkscape:export-ydpi="150"><tspan
+         sodipodi:role="line"
+         id="tspan3354-5"
+         x="542.95618"
+         y="132.4422"
+         style="font-style:normal;font-variant:normal;font-weight:500;font-stretch:normal;font-size:30px;font-family:'CMU Serif';-inkscape-font-specification:'CMU Serif Medium'">Données </tspan><tspan
+         sodipodi:role="line"
+         x="542.95618"
+         y="169.9422"
+         style="font-style:normal;font-variant:normal;font-weight:500;font-stretch:normal;font-size:30px;font-family:'CMU Serif';-inkscape-font-specification:'CMU Serif Medium'"
+         id="tspan4194">simulées</tspan></text>
+    <rect
+       style="fill:#e4c61e;fill-opacity:1;stroke:#000000;stroke-opacity:1"
+       id="rect3356-0"
+       width="197.14285"
+       height="87.14286"
+       x="251.42854"
+       y="323.28827"
+       inkscape:export-filename="D:\MANUSCRIT\figures\diagramme_direct_inverse.png"
+       inkscape:export-xdpi="150"
+       inkscape:export-ydpi="150" />
+    <text
+       xml:space="preserve"
+       style="font-style:normal;font-weight:normal;font-size:40px;line-height:125%;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+       x="273.69403"
+       y="375.01419"
+       id="text4212"
+       sodipodi:linespacing="125%"
+       inkscape:export-filename="D:\MANUSCRIT\figures\diagramme_direct_inverse.png"
+       inkscape:export-xdpi="150"
+       inkscape:export-ydpi="150"><tspan
+         sodipodi:role="line"
+         id="tspan4214"
+         x="273.69403"
+         y="375.01419"
+         style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-family:'CMU Concrete';-inkscape-font-specification:'CMU Concrete Bold'">Modèle</tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-style:normal;font-weight:normal;font-size:40px;line-height:125%;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+       x="274.60263"
+       y="153.8923"
+       id="text4212-3"
+       sodipodi:linespacing="125%"
+       inkscape:export-filename="D:\MANUSCRIT\figures\diagramme_direct_inverse.png"
+       inkscape:export-xdpi="150"
+       inkscape:export-ydpi="150"><tspan
+         sodipodi:role="line"
+         id="tspan4214-7"
+         x="274.60263"
+         y="153.8923"
+         style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-family:'CMU Concrete';-inkscape-font-specification:'CMU Concrete Bold'">Modèle</tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-style:normal;font-weight:normal;font-size:40px;line-height:125%;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+       x="538.71252"
+       y="357.70621"
+       id="text3352-2-3"
+       sodipodi:linespacing="125%"
+       inkscape:export-filename="D:\MANUSCRIT\figures\diagramme_direct_inverse.png"
+       inkscape:export-xdpi="150"
+       inkscape:export-ydpi="150"><tspan
+         sodipodi:role="line"
+         x="538.71252"
+         y="357.70621"
+         style="font-style:normal;font-variant:normal;font-weight:500;font-stretch:normal;font-size:30px;font-family:'CMU Serif';-inkscape-font-specification:'CMU Serif Medium'"
+         id="tspan4194-5">Données</tspan><tspan
+         sodipodi:role="line"
+         x="538.71252"
+         y="395.20621"
+         style="font-style:normal;font-variant:normal;font-weight:500;font-stretch:normal;font-size:30px;font-family:'CMU Serif';-inkscape-font-specification:'CMU Serif Medium'"
+         id="tspan4272">observées</tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-style:normal;font-weight:normal;font-size:40px;line-height:125%;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+       x="24.142134"
+       y="355.40289"
+       id="text3352-7"
+       sodipodi:linespacing="125%"
+       inkscape:export-filename="D:\MANUSCRIT\figures\diagramme_direct_inverse.png"
+       inkscape:export-xdpi="150"
+       inkscape:export-ydpi="150"><tspan
+         sodipodi:role="line"
+         id="tspan3354-7"
+         x="24.142134"
+         y="355.40289"
+         style="font-style:normal;font-variant:normal;font-weight:500;font-stretch:normal;font-size:30px;font-family:'CMU Serif';-inkscape-font-specification:'CMU Serif Medium'">Paramètres </tspan><tspan
+         sodipodi:role="line"
+         x="24.142134"
+         y="392.90289"
+         style="font-style:normal;font-variant:normal;font-weight:500;font-stretch:normal;font-size:30px;font-family:'CMU Serif';-inkscape-font-specification:'CMU Serif Medium'"
+         id="tspan4292">estimés</tspan></text>
+    <path
+       style="fill:none;fill-rule:evenodd;stroke:#000000;stroke-width:1.14837682px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+       d="m 251.45801,361.67661 -73.44636,0 13.35388,-4.93778"
+       id="path4300"
+       inkscape:connector-curvature="0"
+       inkscape:export-filename="D:\MANUSCRIT\figures\diagramme_direct_inverse.png"
+       inkscape:export-xdpi="150"
+       inkscape:export-ydpi="150" />
+    <path
+       style="fill:none;fill-rule:evenodd;stroke:#000000;stroke-width:1.25214124px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+       d="m 178.02696,361.80992 13.50413,5.8051"
+       id="path4302"
+       inkscape:connector-curvature="0"
+       inkscape:export-filename="D:\MANUSCRIT\figures\diagramme_direct_inverse.png"
+       inkscape:export-xdpi="150"
+       inkscape:export-ydpi="150" />
+    <path
+       style="fill:none;fill-rule:evenodd;stroke:#000000;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+       d="m 537.97969,361.70739 -90,0 15,-5"
+       id="path4304"
+       inkscape:connector-curvature="0"
+       inkscape:export-filename="D:\MANUSCRIT\figures\diagramme_direct_inverse.png"
+       inkscape:export-xdpi="150"
+       inkscape:export-ydpi="150" />
+    <path
+       style="fill:none;fill-rule:evenodd;stroke:#000000;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+       d="m 448.97969,361.70739 14,5"
+       id="path4306"
+       inkscape:connector-curvature="0"
+       inkscape:export-filename="D:\MANUSCRIT\figures\diagramme_direct_inverse.png"
+       inkscape:export-xdpi="150"
+       inkscape:export-ydpi="150" />
+    <path
+       style="fill:none;fill-rule:evenodd;stroke:#000000;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+       d="m 450,137.3622 90,0"
+       id="path4308"
+       inkscape:connector-curvature="0"
+       inkscape:export-filename="D:\MANUSCRIT\figures\diagramme_direct_inverse.png"
+       inkscape:export-xdpi="150"
+       inkscape:export-ydpi="150" />
+    <path
+       style="fill:none;fill-rule:evenodd;stroke:#000000;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+       d="m 540,137.3622 -10,-5"
+       id="path4310"
+       inkscape:connector-curvature="0"
+       inkscape:export-filename="D:\MANUSCRIT\figures\diagramme_direct_inverse.png"
+       inkscape:export-xdpi="150"
+       inkscape:export-ydpi="150" />
+    <path
+       style="fill:none;fill-rule:evenodd;stroke:#000000;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+       d="m 530,142.3622 10,-5"
+       id="path4312"
+       inkscape:connector-curvature="0"
+       inkscape:export-filename="D:\MANUSCRIT\figures\diagramme_direct_inverse.png"
+       inkscape:export-xdpi="150"
+       inkscape:export-ydpi="150" />
+    <path
+       style="fill:none;fill-rule:evenodd;stroke:#000000;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+       d="m 170,137.3622 80,0 -10,-5"
+       id="path4314"
+       inkscape:connector-curvature="0"
+       inkscape:export-filename="D:\MANUSCRIT\figures\diagramme_direct_inverse.png"
+       inkscape:export-xdpi="150"
+       inkscape:export-ydpi="150" />
+    <path
+       style="fill:none;fill-rule:evenodd;stroke:#000000;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+       d="m 240,142.3622 10,-5"
+       id="path4316"
+       inkscape:connector-curvature="0"
+       inkscape:export-filename="D:\MANUSCRIT\figures\diagramme_direct_inverse.png"
+       inkscape:export-xdpi="150"
+       inkscape:export-ydpi="150" />
+    <text
+       xml:space="preserve"
+       style="font-style:normal;font-weight:normal;font-size:40px;line-height:125%;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+       x="440"
+       y="72.362206"
+       id="text4318"
+       sodipodi:linespacing="125%"
+       inkscape:export-filename="D:\MANUSCRIT\figures\diagramme_direct_inverse.png"
+       inkscape:export-xdpi="150"
+       inkscape:export-ydpi="150"><tspan
+         sodipodi:role="line"
+         id="tspan4320"
+         x="440"
+         y="72.362206"
+         style="-inkscape-font-specification:'CMU Serif Bold Italic';font-family:'CMU Serif';font-weight:bold;font-style:italic;font-stretch:normal;font-variant:normal;font-size:30px">Problème direct</tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-style:normal;font-weight:normal;font-size:40px;line-height:125%;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+       x="434.28571"
+       y="298.07651"
+       id="text4318-5"
+       sodipodi:linespacing="125%"
+       inkscape:export-filename="D:\MANUSCRIT\figures\diagramme_direct_inverse.png"
+       inkscape:export-xdpi="150"
+       inkscape:export-ydpi="150"><tspan
+         sodipodi:role="line"
+         id="tspan4320-1"
+         x="434.28571"
+         y="298.07651"
+         style="font-style:italic;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:30px;font-family:'CMU Serif';-inkscape-font-specification:'CMU Serif Bold Italic'">Problème inverse</tspan></text>
+  </g>
+</svg>
