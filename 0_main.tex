@@ -39,10 +39,13 @@
 
 % Pour insérer des images:
 \usepackage{graphicx}
-	\graphicspath{{figures_chap_1/}{figures_chap_2/}}
-
+	\graphicspath{{figures_chap_1/}{figures_chap_2/}{figures_chap_3/}}
 % Pour insérer des images au format eps:
 \usepackage{epstopdf}
+
+
+
+
 
 
 % Pour l'en-tête et le pied de page:
@@ -79,6 +82,7 @@
 	
 % Pour créer des sous-figures dans un environnement figure commun:
 \usepackage{subcaption}
+
 
 % Pour ajouter les numéros de ligne dans la version draft:
 %\usepackage{lineno}
@@ -136,6 +140,10 @@
 \newcommand{\stdObs}{{\sigma_{obs}}}
 \newcommand{\VecMeanQ}{{\bm{\mu}_q}}
 \newcommand{\MatCovQ}{{\bm{\Sigma}_q}}
+\newcommand{\MatG}{{\bm{[G]}}}
+\newcommand{\MatK}{{\bm{K}}}
+\newcommand{\PostMeanQ}{{\widetilde{\VecMeanQ}}}
+\newcommand{\PostCovQ}{{\widetilde{\MatCovQ}}}
 
 \begin{document}
 	\tableofcontents

@@ -139,7 +139,124 @@ p(\PosSource, \VecQSource | \VecObs) = p(\VecQSource | \PosSource, \VecObs)p(\Po
 \end{equation}
 où $p(\VecQSource | \PosSource, \VecObs)$ et $p(\PosSource | \VecObs)$ sont les lois a posteriori marginales respectives du profil d'émission et de la position de la source. \\
 
+\subsection{A priori gaussien et solution analytique pour}
 
+Afin de passer de $p(\VecQSource)$ à $p(\VecQSource |\PosSource, \VecObs)$, on utilise une version statique des équations du \textit{filtre de Kalman}.\\
+
+Le filtre de Kalman \cite{Kalman1961} est une méthode classique pour l'estimation d'état séquentielle dans le cas d'un phénomène qui n'est pas complètement observable et qui est défini par un système linéaire. Concrètement, il peut s'appliquer aux systèmes de la forme suivante:
+
+\begin{equation}
+\begin{split}
+\VecQSource_t & = \bm{A}_n\VecQSource_{t-1} + \bm{b}_t\\
+\VecObs_t & = \MatC_t(\PosSource) \VecQSource_t + \VecErreur_t
+\end{split}
+\label{eq_filtre_kalman_dynamique}
+\end{equation}
+où $\VecQSource_t$ représente l'état non-observable et $\VecObs_t$ le processus observable, en l'occurence les mesures de concentration, au temps $t$. L'opérateur $\bm{A}$ est une matrice de transition entre les états $\VecQSource_{t-1}$ et $\VecQSource_t$, et $\bm{b}_t$ est un bruit gaussien centré de variance connue.
+
+ On suppose connu l'état initial $\VecQSource_0$ de $\VecQSource$,  autrement dit les paramètres $\bm{\mu}_{q_{0}}$ et $\bm{\Sigma}_{q_0}$ de sa loi a priori $p(\VecQSource_0)$ sont donnés. Le principe du filtre de Kalman consiste alors à calculer de façon récursive des estimateurs $\PostMeanQ_t$ et $\PostCovQ_t$ caractérisant l'état $\VecQSource_t$.\\
+ 
+ Ici, notre problème est stationnaire, donc dans l'équation \eqref{eq_filtre_kalman_dynamique} on a $\bm{A}_n$ = $\bm{I}$ où $\bm{I}$ désigne la matrice identité, $\bm{b}_t = 0$ et la dépendance temporelle en $t$ disparaît: il n'y a qu'une unique étape de mise à jour, celle du passage de $p(\VecQSource)$ à $p(\VecQSource|\PosSource, \VecObs)$. Dans ce cas, les équations du filtre de Kalman permettent alors d'écrire les mises à jour suivantes:
+ 
+ \begin{equation}
+ \begin{split}
+ \PostMeanQ & = \VecMeanQ + \MatK(\VecObs - \MatC(\PosSource)\VecMeanQ) \\
+ \PostCovQ & = \MatCovQ - \MatK\MatC(\PosSource)\MatCovQ
+ \end{split}
+ \label{eq_filtre_kalman_statique}
+ \end{equation}
+ où $\MatK$ est la \textit{matrice de gain de Kalman} définie par:
+ 
+ \begin{equation}
+ \MatK = \MatCovQ\MatC(\PosSource)^T(\MatC(\PosSource)\MatCovQ\MatC(\PosSource)^T + \MatR)^{-1}
+ \end{equation}
+ 
+ 
+ 
+ 
+ 
+  De plus, si les observations sont soumises à un bruit gaussien et que la loi a priori $p(\VecQSource)$ est également gaussienne, alors le système \eqref{eq_filtre_kalman_dynamique} est gaussien, et par conséquent la loi a posteriori $p(\VecQSource|\PosSource, \VecObs)$ est également gaussienne, de moyenne $\PostMeanQ$ et de covariance $ \PostCovQ$ : 
+  
+  \begin{equation}
+  p(\VecQSource|\PosSource, \VecObs) = \mathcal{N}(\VecQSource | \PostMeanQ, \PostCovQ)
+  \label{eq_AE_13}
+  \end{equation}
+
+\subsection{Contrainte de positivité}
+
+Dans le but d'assurer la positivité des valeurs d'émission de la source, une contrainte peut être appliquée sur les résultats de l'équation \eqref{eq_filtre_kalman_statique}, inspirée par les travaux de \cite{Simon2010}. Il s'agit d'utiliser une méthode permettant de restreindre les valeurs d'un vecteur d'état à un intervalle borné ou semi-borné prédéfini: pour cela, la densité de probabilité de ce vecteur d'état est tronquée suivant la contrainte que l'on cherche à appliquer. \\
+
+Le processus de troncature est ainsi appliqué de façon séquentielle sur chaque composante de $\VecQSource$: on travaille ainsi à tronquer $T_s$ densités de loi univariées. Le détail de cette démarche est décrit par l'algorithme \ref{algo_PCO}, qui permet d'approximer la loi a posteriori marginale de $\VecQSource$ par : 
+
+\begin{equation}
+p^c(\VecQSource | \PosSource, \VecObs) = \mathcal{N}(\VecQSource | \PostMeanQ^c, \PostCovQ^c)
+\label{eq_AE_16}
+\end{equation}
+
+\begin{algorithm}
+	\DontPrintSemicolon
+	\SetAlgoLined
+	\SetKwInOut{Input}{Entrées}
+	\SetKwInOut{Output}{Sorties}
+	\Input{$\PostMeanQ$ et $\PostCovQ$}
+	Initialisation: $\PostMeanQ^c=\PostMeanQ$ et $\PostCovQ^c=\PostCovQ$\;
+	\For{$i=1:T_s$}{
+		${\bm \gamma}_i=\begin{bmatrix}{\bf 0}_{1\times (i-1)} & 1  & {\bf 0}_{1\times (T_s-i)}\end{bmatrix}^T$\;
+		Calculer ${\bm W}_i$ et ${\bm T}_i$ par la réduction de Jordan de $\PostCovQ^c$, i.e. ${\bm T}_i {\bm W}_i {\bm T}_i^T=\PostCovQ^c$\;
+		Calculer ${\bm S}_i$ par l'orthogonalisation de Gram-Schmidt pour obtenir la matrice orthogonale ${\bm S}_i$ telle que $${\bm S}_i {\bm W}_i^{1/2} {\bm T}_i^T {\bm \gamma}_i=\begin{bmatrix}
+		({\bm \gamma}_i^T \PostCovQ^c {\bm \gamma}_i)^{1/2} & 0 & \cdots & 0 
+		\end{bmatrix} $$
+		 $c_i=-\dfrac{{\bm \gamma}_i^T \PostMeanQ^c}{({\bm \gamma}_i^T \PostCovQ^c {\bm \gamma}_i)^{1/2}}$\;
+		 $\mu_i=\dfrac{\phi(c_i)}{1-\Phi(c_i)}$ avec $\phi(\cdot)$ la densité de la loi normale centrée réduite, et $\Phi(\cdot)$ la fonction de répartition de la loi normale centreé réduite.\;
+		 $\sigma^2_i=1-\mu_i(\mu_i-c_i)$\;
+		 ${\bm z}_i=\begin{bmatrix}\mu_i & 0 & \cdots & 0 \end{bmatrix}^T$\;
+		 ${\bm D}_i=\text{diag}(\sigma^2_i,1,\ldots,1)$\;
+		Calculer les paramètres de la densité tronquée:
+		\begin{align*}
+		\begin{split}
+		\PostMeanQ^c&={\bm T}_i {\bm W}_i^{1/2} {\bm S}_i ^T{\bm z}_i + \PostMeanQ^c\\
+		\PostCovQ^c&={\bm T}_i {\bm W}_i^{1/2} {\bm S}_i^T {\bm D}_i  {\bm S}_i {\bm W}_i^{1/2} {\bm T}_i ^T \\
+		\end{split}
+		\end{align*}
+	}
+	\Output{$\PostMeanQ^c$ et $\PostCovQ^c$}
+	\caption{Contrainte de positivité sur $\VecQSource$ par troncature de la densité de $p(\VecQSource | \PosSource, \VecObs)$}
+	\label{algo_PCO}
+\end{algorithm}
+
+Notons qu'une telle procédure permet également d'optimiser le calcul de la vraisemblance marginale de la localisation de la source $p(\VecObs | \PosSource)$: celle-ci peut alors se calculer par le même procédé que celui employé dans l'équation \eqref{eq_AE_9}, et devient alors:
+
+\begin{equation}
+p^c(\VecObs | \PosSource) = \dfrac{p(\VecObs | \VecQSource, \PosSource)p(\VecQSource)}{p^c(\VecQSource | \PosSource, \VecObs)}
+\label{eq_AE_17}
+\end{equation}
+
+
+ \begin{figure}[h]
+ 	\centering
+ 	\begin{subfigure}[t]{0.5\textwidth}
+ 		\centering
+		\includegraphics[width=1\textwidth]{ConstrainedFigure1.eps}
+		\caption{}
+ 		\label{fig_AE_2_a}
+ 	\end{subfigure}%
+ 	\begin{subfigure}[t]{0.5\textwidth}
+ 		\centering
+		\includegraphics[width=1\textwidth]{ConstrainedFigure2.eps}
+		\caption{}
+ 		\label{fig_AE_2_b}
+ 	\end{subfigure}
+ 	\begin{subfigure}[t]{0.5\textwidth}
+ 		\centering
+ 		\includegraphics[width=1\textwidth]{ConstrainedFigure3.eps}
+ 		\caption{}
+ 		\label{fig_AE_2_c}
+ 	\end{subfigure} 
+ 	\label{fig_AE_2}	
+ 	\caption{Illustration de l'application de la contrainte de positivité (en noir) sur les paramètres d'une distribution gaussienne bivariée (en rouge) dans trois cas distincts: sans corrélation (\ref{fig_AE_2_a}), avec corrélation négative (\ref{fig_AE_2_b}) et avec corrélation positive (\ref{fig_AE_2_c}).}
+ \end{figure}
+
+La figure \ref{fig_AE_2} résume bien le fonctionnement de l'algorithme \ref{algo_PCO}: la zone en noir représente une densité centrée sur la partie positive de la distribution initiale (en rouge). 
 
 \section{Localisation de la source avec l'algorithme AMIS}
 
