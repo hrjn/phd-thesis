@@ -1,6 +1,49 @@
 \chapter{Validation de la méthodologie AMIS sur un cas expérimental}
 
-Dans ce chapitre, nous appliquons l'algorithme AMIS à un problème STE avec des données d'observations réelles issues d'une campagne expérimentale de mesures. Les résultats présentés ici reprennent les travaux illustrés dans \cite{Rajaona2015}.
+Dans ce chapitre, nous appliquons l'algorithme AMIS à un problème STE avec des données d'observations réelles issues d'une campagne expérimentale de mesures. Nous présentons dans un premier temps le contexte de la campagne, puis nous détaillons l'approche méthodologique ainsi que les résultats obtenus. Le contenu de ce chapitre reprend les travaux illustrés dans \cite{Rajaona2015}.
+
+\section{Contexte: l'expérience FFT07}
+
+La campagne expérimentale \textit{FUSION Fields Trials 2007} (FFT07) fût conçue et menée en 2007 par la \textit{Defense Threat Reduction Agency} (DTRA), une agence du Département de la Défense (DoD) des Etats-Unis dont la mission principale est axée autour de la prévention et de la protection vis-à-vis des risques NRBC.\\
+
+Le but de FFT07 était de constituer une base de données météorologiques et de mesure de concentration issues d'une série de tests, ou \textit{trials}, chacun d'entre eux consistant en un rejet de gaz traceur sur une zone fortement instrumentée du site militaire de \textit{Dugway Proving Ground}, dans le désert de l'Utah.\\
+Certains éléments de cette base de données ont été transmises à plusieurs équipes de recherche, chacune ayant pour tâche d'estimer au mieux les paramètres du terme source de chacun des \textit{trials} fournis (voir \cite{Platt2010}, \cite{Annunzio2012b}, et \cite{Singh2014} pour des exemples d'utilisation).\\
+
+L'expérience FFT07 a été formatée pour étudier l'impact à courte portée des rejets de gaz traceur: le domaine considéré est un carré de 500 mètres de côté. Plusieurs configurations de rejet ont été utilisées, chacune caractérisant un \textit{trial} distinct par:
+\begin{itemize}
+	\item la période du jour où le rejet a eu lieu,
+	\item la vitesse du vent et sa direction,
+	\item la classe de stabilité atmosphérique,
+	\item le nombre de sources ayant simultanément émis un rejet (1, 2 ou 3); \\
+	\item dans le cas d'une source unique, le type du rejet: continu ou instantané.
+\end{itemize}
+
+L'acquisition des données s'est faite via un réseau de 100 capteurs à photo-ionisation (\textit{digital photoionization detectors}, ou digiPID), répartis en un maillage uniforme régulier sur l'ensemble du domaine. Ces capteurs sont situés à 50m les uns des autres, et à une hauteur de 2m du sol. La fréquence d'acquisition des concentrations est relativement élevée (50Hz): dans notre étude, nous avons réduit la dimension du vecteur d'observation en effectuant un moyennage sur des fenêtres de 10s afin que les calculs puissent se faire dans des temps raisonnables sans pour autant déplorer une perte significative d'information (voir figure \ref{fig_AE_3}).
+
+\begin{figure}[h!]
+	\centering
+	\includegraphics[scale=0.65]{moyennage_concentrations}
+	\caption{Concentrations brutes (en bleu) et concentrations moyennées (en rouge) sur une fenêtre glissante de 10s. }
+	\label{fig_AE_3}
+\end{figure}
+
+
+L'expérience FFT07 étant un outil de validation, le domaine d'étude comprend beaucoup plus de capteurs que dans un cas standard, où le domaine est moins instrumenté. Afin d'envisager un cas réaliste tout en conservant une quantité suffisante de données d'observation à traiter, nous avons choisi de limiter le nombre de capteurs exploitables à 25 (voir figure \ref{fig_AE_4}).
+
+\begin{figure}[h!]
+	\centering
+	\includegraphics[scale=0.65]{FFT07_capteurs}
+	\caption{Choix du sous-réseau de 25 capteurs utilisé dans notre étude.}
+	\label{fig_AE_4}
+\end{figure}
+
+Dans notre cas, nous travaillons avec les configurations issues des \textit{trials} 7 et 30: 
+\begin{itemize}
+	\item Dans un premier temps, nous simulons à l'aide d'un modèle de dispersion les concentrations mesurées aux capteurs pour chaque \textit{trial},
+	\item Nous effectuons ensuite la validation expérimentale à l'aides des concentrations réelles obtenues pour le \textit{trial} 7.
+\end{itemize}
+
+
 
 \section{Formulation bayésienne du problème STE}
 
@@ -14,12 +57,12 @@ Nous considérons ici une source localisée en un point $\PosSource = (x_s, y_s,
 \end{equation}
 
 
-On suppose que les observations sont définies par des mesures de concentration en un nombre fini de points du domaine, qui constituent les positions d'un réseau de $N_c$ capteurs. Ces mesures sont données suivant une discrétisation temporelle donnée, chaque capteur délivrant ainsi une valeur de concentration à chacun des instants d'observation $t_1, \cdots, t_{T_c}$.
+On suppose que les observations sont définies par des mesures de concentration en un nombre fini de points $ \PosCapteur^{(1)}, \cdots, \PosCapteur^{(N_c)}$ du domaine, qui constituent les positions d'un réseau de $N_c$ capteurs. On considère que les capteurs et la source se situent à la même hauteur, ce qui permet de n'étudier la position de la source que sur deux dimensions, autrement dit écrire $\PosSource = (x_s, y_s)$. Les mesures fournies par ces capteurs sont données suivant une discrétisation temporelle donnée, chaque capteur délivrant ainsi une valeur de concentration à chacun des instants d'observation $t_1, \cdots, t_{T_c}$.
 
 
 
 
- La concentration $\obs_{i,j}$ fournie par le $i$-ème capteur à la position $\PosCapteur^{(i)}$ et à l'échéance d'observation $t_j$ est alors modélisée par l'équation suivante:
+ La concentration $\obs_{i,j}$ fournie par le $i$-ème capteur à la position $\PosCapteur^{(i)}$ et à l'échéance d'observation $t_j$ est alors modélisée par l'équation suivante: 
  
 \begin{equation}
 \obs_{i,j} = \sum\limits_{n=2}^{T_s}q(\Delta t'_n)\MatC_{i,j}(\PosSource, \Delta t'_n) + \varepsilon_{i,j}
@@ -139,7 +182,7 @@ p(\PosSource, \VecQSource | \VecObs) = p(\VecQSource | \PosSource, \VecObs)p(\Po
 \end{equation}
 où $p(\VecQSource | \PosSource, \VecObs)$ et $p(\PosSource | \VecObs)$ sont les lois a posteriori marginales respectives du profil d'émission et de la position de la source. \\
 
-\subsection{A priori gaussien et solution analytique pour}
+\subsection{A priori gaussien et solution analytique}
 
 Afin de passer de $p(\VecQSource)$ à $p(\VecQSource |\PosSource, \VecObs)$, on utilise une version statique des équations du \textit{filtre de Kalman}.\\
 
@@ -181,6 +224,8 @@ où $\VecQSource_t$ représente l'état non-observable et $\VecObs_t$ le process
   p(\VecQSource|\PosSource, \VecObs) = \mathcal{N}(\VecQSource | \PostMeanQ, \PostCovQ)
   \label{eq_AE_13}
   \end{equation}
+  
+  Les paramètres $\PostMeanQ$ et $\PostCovQ$ sont ainsi obtenus de façon analytique (i.e. sans approximation) par les équations \eqref{eq_filtre_kalman_statique}. 
 
 \subsection{Contrainte de positivité}
 
@@ -233,6 +278,7 @@ p^c(\VecObs | \PosSource) = \dfrac{p(\VecObs | \VecQSource, \PosSource)p(\VecQSo
 
 
  \begin{figure}[h]
+ 	 	\label{fig_AE_2}	
  	\centering
  	\begin{subfigure}[t]{0.5\textwidth}
  		\centering
@@ -252,13 +298,67 @@ p^c(\VecObs | \PosSource) = \dfrac{p(\VecObs | \VecQSource, \PosSource)p(\VecQSo
  		\caption{}
  		\label{fig_AE_2_c}
  	\end{subfigure} 
- 	\label{fig_AE_2}	
+
  	\caption{Illustration de l'application de la contrainte de positivité (en noir) sur les paramètres d'une distribution gaussienne bivariée (en rouge) dans trois cas distincts: sans corrélation (\ref{fig_AE_2_a}), avec corrélation négative (\ref{fig_AE_2_b}) et avec corrélation positive (\ref{fig_AE_2_c}).}
  \end{figure}
 
-La figure \ref{fig_AE_2} résume bien le fonctionnement de l'algorithme \ref{algo_PCO}: la zone en noir représente une densité centrée sur la partie positive de la distribution initiale (en rouge). 
+La figure \ref{fig_AE_2} résume bien le fonctionnement de l'algorithme \ref{algo_PCO}: la zone en noir représente la version tronquée aux valeurs positives de la distribution initiale (en rouge). 
 
 \section{Localisation de la source avec l'algorithme AMIS}
+
+Il s'agit ici d'étudier la loi a posteriori marginale $p(\PosSource | \VecObs)$ de la position de la source. Contrairement au profil d'émission, il est plus difficile d'obtenir une solution analytique pour caractériser cette distribution. Par conséquent, l'approche par simulation stochastique sera privilégiée, le but étant de chercher à approximer la distribution $p(\PosSource | \VecObs)$. \\
+
+Nous appliquons l'algorithme AMIS décrit dans le chapitre 2 afin de localiser la source. Dans un cadre bayésien, la loi a posteriori marginale recherchée peut s'écrire à une constante multiplicative près, suivant la relation de proportionnalité suivante:
+
+\begin{equation}
+p(\PosSource | \VecObs) \propto p(\VecObs | \PosSource)p(\PosSource)
+\label{eq_AE_20}
+\end{equation}
+
+La fonction de vraisemblance $p(\VecObs | \PosSource)$ est définie par l'équation \eqref{eq_AE_5} (ou \eqref{eq_AE_17} si on choisit d'appliquer la contrainte de positivité), et la loi a priori $p(\PosSource)$ par l'équation \eqref{eq_AE_7}. 
+
+\subsection{Choix de la loi de proposition}
+
+L'algorithme AMIS requiert une loi de proposition paramétrique qui soit suffisamment flexible pour pouvoir envisager plusieurs configurations d'initialisation, qu'il s'agisse de partir d'une répartition uniforme des particules ou d'une distribution favorisant une zone cible pré-définie. Suivant la logique développée dans \cite{Cappe2008}, on choisit ainsi une mixture de $D$ distribution gaussiennes bivariées:
+
+\begin{equation}
+\varphi_{(\alpha,\nu)}(\PosSource) = \sum\limits_{d=1}^D \alpha_d \varphi_d(\PosSource | \nu_d)
+\label{eq_AE_21}
+\end{equation}
+où les $\alpha_d$ sont les facteurs d'influence de chacune des composantes de la mixture, et $\nu_d$ représente le vecteur des paramètres de la $d$-ième composante, telle que : 
+\begin{equation}
+\varphi_d(\PosSource | \nu_d) = \mathcal{N}(\PosSource | \VecMu_d, \MatSigma_d)
+\label{eq_AE_21_bis}
+\end{equation}
+avec $\VecMu_d \in \mathbb{R}^2$ et $\MatSigma_d \in \mathbb{R}^{2\times2}$. Pour la suite, on choisit $D=4$, ce qui est suffisant pour bien couvrir le domaine sans pour autant avoir de recouvrement entre les particules échantillonnées depuis différentes composantes. Le choix des paramètres initiaux, en particulier celui de $\MatSigma_d$, permet de régler la surface couverte par chacune des composantes afin d'obtenir une répartition relativement homogène des particules, illustrant une absence de connaissance a priori sur une localisation potentielle de la source (voir figure X).
+
+ \begin{figure}[h!]
+ 	\label{fig_init_amis}	
+ 	\centering
+ 	\begin{subfigure}[t]{0.5\textwidth}
+ 		\centering
+ 		\includegraphics[width=1\textwidth]{init_amis_bad.eps}
+ 		\caption{$\MatSigma_d = 
+ 			\begin{pmatrix}
+ 			50 & 0 \\
+ 			0 & 50
+ 			\end{pmatrix}$}
+ 		\label{init_amis_bad}
+ 	\end{subfigure}%
+ 	\begin{subfigure}[t]{0.5\textwidth}
+ 		\centering
+ 		\includegraphics[width=1\textwidth]{init_amis_good.eps}
+ 		\caption{$\MatSigma_d = 
+ 			\begin{pmatrix}
+ 			5000 & 0 \\
+ 			0 & 5000
+ 			\end{pmatrix}$}
+ 		\label{init_amis_good}
+ 	\end{subfigure}
+ 	
+ 	\caption{Exemples d'initialisation de l'AMIS avec $D=4$ composantes pour la loi de proposition: un bon choix des $\MatSigma_d$ permet un tirage homogène sur le domaine (\ref{init_amis_good}) tandis qu'une covariance trop faible ne permettra pas d'explorer tout le domaine (\ref{init_amis_bad}).}
+ \end{figure}
+
 
 \section{Description du modèle de dispersion à bouffées gaussiennes}
 
