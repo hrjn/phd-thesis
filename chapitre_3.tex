@@ -1,3 +1,4 @@
+\setcounter{chapter}{2}
 \chapter{Validation de la méthodologie AMIS sur un cas expérimental}
 
 Dans ce chapitre, nous appliquons l'algorithme AMIS à un problème STE avec des données d'observations réelles issues d'une campagne expérimentale de mesures. Nous présentons dans un premier temps le contexte de la campagne, puis nous détaillons l'approche méthodologique ainsi que les résultats obtenus. Le contenu de ce chapitre reprend les travaux illustrés dans \cite{Rajaona2015}.
@@ -436,10 +437,14 @@ Les modèles gaussiens permettent de représenter la dispersion à petite échel
 \section{Résultats}
 
 \subsection{Avec données simulées}
+\label{par_simule}
 
 Dans un premier temps, afin de valider la méthode, le choix a été fait de se placer dans un cadre synthétique, à savoir reproduire les conditions de l'expérience FFT07 et simuler les concentrations mesurées aux capteurs grâce à l'exécution d'un modèle de dispersion, en l'occurence le modèle gaussien défini au paragraphe précédent. Ainsi, les positions des capteurs et des sources sont exactement les mêmes que celles des \textit{trials} 7 et 30 de FFT07. Les données météorologiques sont ajustées afin que les concentrations simulées soient les plus proches possibles des relevés expérimentaux, et le vent est considéré constant en direction et en vitesse. \\
 
-L'algorithme AMIS a été exécuté sur $K = 10$ itérations, avec $N_p = 100$ particules échantillonnées par itération. Les observations synthétiques ont été générées avec un ajout de bruit gaussien centré de variance $10^{-5}$ afin de simuler les différents éléments d'erreurs présent dans le cas expérimental. La loi a priori de $\VecQSource$ a été choisie telle que $\VecMeanQ = 0$ et $\MatCovQ = \varQ \bm{I}$ avec $\varQ = 10^{-3}$. En pratique, diminuer $\varQ$ revient à supposer a priori que la source est proche des capteurs ayant mesuré une concentration non-nulle, et à l'inverse une variance $\varQ$ élevée implique une source potentiellement plus éloignée. La valeur choisie ici a fourni le meilleur compromis et les résultats les plus plausibles. \\
+L'algorithme AMIS a été exécuté sur $K = 10$ itérations, avec $N_p = 100$ particules échantillonnées par itération. Les observations synthétiques ont été générées avec un ajout de bruit gaussien centré de variance $10^{-5}$ afin de simuler les différents éléments d'erreurs présent dans le cas expérimental. La variance d'observation est fixée à $\varObs = 10^{-5}$. La loi a priori de $\VecQSource$ a été choisie telle que $\VecMeanQ = 0$ et $\MatCovQ = \varQ \bm{I}$ avec $\varQ = 10^{-3}$. En pratique, diminuer $\varQ$ revient à supposer a priori que la source est proche des capteurs ayant mesuré une concentration non-nulle, et à l'inverse une variance $\varQ$ élevée implique une source potentiellement plus éloignée. 
+La valeur choisie pour les différents paramètres énumérés ci-dessus sont celles ayant permis d'obtenir les résultats les plus plausibles, présentés ci-après. \\
+
+\subsubsection{Estimation de la position}
 
 L'algorithme a été testé avec deux positions de source différentes, correspondant respectivement aux \textit{trials} 7 et 30, leurs coordonnées (en km) sont données par : 
 \begin{equation}
@@ -480,8 +485,10 @@ L'algorithme a été testé avec deux positions de source différentes, correspo
   \end{equation}
   
   On arrive ainsi à un point estimé distant de moins d'un mètre par rapport à la position réelle de la source. \\
+
+  \subsubsection{Estimation du profil de rejet}
   
-  La figure X illustre l'impact de l'utilisation de la contrainte de positivité pour l'estimation de $\VecQSource$.
+  La figure X illustre l'impact de l'utilisation de la contrainte de positivité pour l'estimation du profil du rejet $\VecQSource$.
   
  \begin{figure}[h!]
  	\centering
@@ -515,9 +522,216 @@ L'algorithme a été testé avec deux positions de source différentes, correspo
   		\label{fig_AE_7_C}
   	\end{subfigure} 
   	
-  	\caption{Simulation et résultats d'estimation pour différents profils d'émission: rejet simple (\ref{fig_AE_7_A}), rejet variable (\ref{fig_AE_7_B}), rejet continu (\ref{fig_AE 7_C}). Le profil à retrouver (en rouge) est comparé au profil estimé (bleu) et à l'intervalle de confiance à $\pm 2 \widetilde{\sigma}_q$ (gris).}
+  	\caption{Simulation et résultats d'estimation pour différents profils d'émission: rejet simple (\ref{fig_AE_7_A}), rejet variable (\ref{fig_AE_7_B}), rejet continu (\ref{fig_AE 7_C}). Le profil à retrouver (en rouge) est comparé au profil estimé (en bleu) et à l'intervalle de confiance à $\pm 2 \widetilde{\sigma}_q$ (en gris).}
   	\label{fig_AE_7}	
   \end{figure}
   
-  Comme présenté en figure \ref{fig_AE_7}, la méthode parvient à fournir une bonne estimation du profil de rejet dans les trois cas présentés. Sachant que l'estimation de la loi a posteriori de $\VecQSource$ consiste à estimer à la fois $\PostMeanQ$ et $\PostCovQ$, il est possible de représenter la marge d'incertitude associée à chaque valeur estimée: pour chacun des cas de la figure \ref{fig_AE_7} la valeur réelle du débit est bien incluse dans l'intervalle à $\pm 2\widetilde{\sigma_q}$, où $\widetilde{\sigma_q^2 = \text{diag}(\PostCovQ)$. 
+  Comme présenté en figure \ref{fig_AE_7}, la méthode parvient à fournir une bonne estimation du profil de rejet dans les trois cas présentés. Sachant que l'estimation de la loi a posteriori de $\VecQSource$ consiste à estimer à la fois $\PostMeanQ$ et $\PostCovQ$, il est possible de représenter la marge d'incertitude associée à chaque valeur estimée: pour chacun des cas de la figure \ref{fig_AE_7} la valeur réelle du débit est bien incluse dans l'intervalle à $\pm 2\widetilde{\sigma_q}$, où $\widetilde{\sigma_q}^2 = \text{diag}(\PostCovQ)$. Dans le cas de la figure \ref{fig_AE_7_C}, le pic à la limite de l'intervalle d'émission est dû au fait que le rejet est plus long que la période d'observation: en l'absence d'information, l'algorithme ne peut fournir une estimation correcte, mais demeure cohérent  en augmentant fortement la taille de la marge d'incertitude, signifiant ainsi que l'information manque. \\
+  
+  \subsubsection{Robustesse statistique de l'estimation}
+    
+    L'algorithme AMIS est une procédure basée sur l'échantillonnage d'importance, qui est par nature une démarche aléatoire. Pour tenir compte de cette caractéristique dans la validation de notre méthodologie, nous avons exécuté l'AMIS sur plusieurs \textit{runs}, avec et sans application de la contrainte de positivité, et en perturbant les observations de concentrations fournies. Nous avons ensuite comparé les performances dans chacun des cas, en analysant les résultats présentés au tableau \ref{table_1_AE}. 
+    
+    \begin{table}[h!]
+    	\centering
+    	
+    	\begin{tabular}{cccc}
+    		
+    		Contrainte positivité & $\bar{d}(\widehat{\PosSource},\PosSource)$ (m)& $\sigma_{\widehat{x_s}}$ (m)& $\sigma_{\widehat{y_s}}$ (m)\\
+    		\hline
+    		OUI                   & 0  	& 0.9        & 3.2        \\
+    		NON                   & 10.44   & 0.4        & 1.0 \\      
+    		\hline
+    	\end{tabular}
+    	\caption{Evaluation statistique des estimations sur 40 runs de l'AMIS avec et sans application de la contrainte de positivité. $\bar{d}(\widehat{\PosSource},\PosSource)$ représente la distance moyenne entre la position de source estimée par MMSE et l'emplacement réel de la source. $\sigma_{\widehat{x_s}}$ et $\sigma_{\widehat{y_s}}$ sont respectivement les moyennes des écarts-types des distributions a posteriori marginales $p(x_s | \VecObs)$ et $p(y_s | \VecObs)$. }
+    	\label{table_1_AE}
+    \end{table}
+    
+    Ces résultats confirment que l'application de la contrainte de positivité apporte en moyenne une certaine amélioration au niveau de la localisation de la source. Si on cherche à quantifier la précision de l'estimation du profil de rejet, on peut calculer l'erreur quadratique moyenne, ou \textit{mean square error} (MSE), entre la valeur estimée $\PostMeanQ$ et la valeur théorique $\VecQSource$ selon la formule suivante: 
+    
+    \begin{equation}
+    \text{MSE}(\PostMeanQ, \VecQSource) = \dfrac{1}{T_s}\sum\limits_{n=1}^{T_s}\left(\PostMeanQ(t'_n) - \VecQSource(t'_n)\right)^2
+    \label{eq_AE_31}
+    \end{equation}
+    
+Dans le cas où on applique la contrainte de positivité, on a une erreur MSE de $1.37\times10^{-12}$, qui est une meilleure valeur que pour le cas sans contrainte, où on a une erreur MSE de $1.26\times10^{-9}$.  \\
+
+\subsubsection{Comparaison avec le MCMC}
+
+Nous avons ensuite cherché à comparer les performances de l'AMIS avec un autre algorithme d'inférence bayésienne couramment utilisé pour les problèmes STE, en l'occurence la méthode MCMC, présentée dans le Chapitre 2. \\
+
+Pour cela, nous avons implémenté une algorithme de type \textit{random walk Metropolis}  avec un noyau de transition gaussien fixe, et l'intégration de la contrainte de positivité de l'algorithme \ref{algo_PCO} dans le calcul de la vraisemblance, sur 1000 itérations. Afin de tenir compte du phénomène de \textit{burn-in}, les 100 premiers états sont ignorés. \\
+
+Un test de robustesse statistique a ensuite été effectué, en changeant de façon aléatoire le point de départ de la chaîne de Markov à chaque \textit{run} (uniformément sur le domaine). Pour la localisation de la source, l'estimateur MMSE moyen obtenu par MCMC a été comparé aux résultats de l'AMIS dans le tableau \ref{table_2_AE}. \\
+
+    \begin{table}[h!]
+    	\centering
+    	
+    	\begin{tabular}{cccc}
+    		
+    		Algorithme & $\widehat{\PosSource}$ (m)& $\sigma_{\widehat{x_s}}$ (m)& $\sigma_{\widehat{y_s}}$ (m)\\
+    		\hline
+    		AMIS                   & (331.759;4439.966)  	& 0.9        & 3.2        \\
+    		MCMC                   & (331.742;4439.981)   & 130        & 95 \\      
+    		\hline
+    	\end{tabular}
+    	\caption{Evaluation statistique des estimations sur 40 \textit{runs} de l'AMIS et du MCMC avec application de la contrainte de positivité. Ici, $\widehat{\PosSource}$ représente la moyenne des estimateurs ponctuels MMSE obtenus pour chaque \textit{run} . $\sigma_{\widehat{x_s}}$ et $\sigma_{\widehat{y_s}}$ sont respectivement les moyennes des écarts-types des distributions a posteriori marginales $p(x_s | \VecObs)$ et $p(y_s | \VecObs)$. }
+    	\label{table_2_AE}
+    \end{table}
+    
+ On remarque ainsi que les performances de l'AMIS sont meilleures en termes de précision pour localiser la source. De fait, l'approche MCMC est en partie pénalisée par l'étape d'initialisation. En effet, la convergence vers une position suffisamment proche de la vraie source est d'autant plus longue et incertaine que l'état initial de cette chaîne est éloigné de la vraie source. En ce sens, le fait de travailler sur une population de particules plutôt que sur la succession d'états séquentiels, ainsi que l'aspect adaptatif de l'AMIS lui permettent une meilleure flexibilité pour la mise à jour des paramètres de la loi de proposition, réduisant ainsi la dépendance de ses performances par rapport à l'état initial. Une alternative serait d'instancier plusieurs chaînes de Markov dont les états initiaux sont suffisamment éloignés les uns des autres pour bien couvrir le domaine, mais cela augmente la charge de calcul et les ressources requises pour l'exécution de l'algorithme. \\
  
+ En plus de la précision de chacun des algorithmes, nous nous sommes également penchés sur leur vitesse de convergence. \\
+ 
+ \begin{figure}[h!]
+ 	\centering
+ 	\includegraphics[width=0.7\textwidth]{fig_8}
+ 	\caption{Comparaison de la vitesse de convergence entre MCMC (en bleu) et AMIS (en magenta)}
+ 	\label{fig_8_AE} 	
+ \end{figure}
+
+ Sur la figure \ref{fig_8_AE}, on utilise un critère qualitatif qui est la distance de l'estimation MMSE du lieu du rejet à une itération donnée. Les calculs ont été calibrés afin que chacun des algorithmes traite une charge équivalente de calcul. Ainsi, avec:
+ \begin{itemize}
+ 	\item $N_p=100$ particules par itérations et $K=10$ itérations pour l'AMIS,
+ 	\item $1000$ itérations pour le MCMC,
+ \end{itemize} 
+ le nombre de calculs de la loi de vraisemblance, et par extension le nombre d'appels au modèle de dispersion, est strictement le même pour les deux algorithmes. 
+ 
+ Les résultats obtenus démontrent l'efficacité de l'aspect adaptatif de l'AMIS, qui lui permet d'atteindre rapidement une estimation de bonne qualité pour la localisation de la source.\\
+ 
+ Encore une fois, dans la démarche MCMC, l'initialisation de la chaîne de Markov influe sur la vitesse de convergence, cette dernière étant d'autant plus élevée que l'état initial se situe proche de la vraie source. Un autre paramètre du MCMC intervient également ici: la variance du noyau de transition. En effet, comme expliqué au Chapitre 2, si la valeur choisie pour cette variance est trop faible, même si l'initialisation place la chaîne dans une position relativement favorable, la convergence sera trop lente car le nombre d'états nécessaires pour atteindre une estimation correcte sera plus élevé. A l'inverse, il est risqué de trop augmenter la valeur de cette variance, car cela entraînerait des transitions d'amplitude trop élevée, pouvant potentiellement empêcher la convergence vers le point source recherché. L'AMIS est quant à lui plus souple dans sa démarche de transition d'une itération à l'autre, cependant il peut être également sujet à des problèmes de convergence si, par exemple, les particules échantillonnées par la loi de proposition initiale ne couvrent pas du tout la zone où se situe la vraie source, d'où l'intérêt d'une initialisation homogène telle que présentée à la figure \ref{init_amis_good}.\\
+ 
+ \subsubsection{Effective Sample Size}
+ 
+ Un critère spécifique aux méthodes basées sur l'échantillonnage d'importance est la représentativité de la distribution cible en fonction des particules ayant été échantillonnées afin d'approximer cette loi. Un outil permettant de quantifier cette grandeur est l'ESS, tel que présenté à l'équation \eqref{eq_def_ESS}, il permet ici en particulier de surveiller si l'AMIS est bloqué par un effet de dégénérescence des poids, ce qui se manifeste par une valeur d'ESS constamment faible. \\
+ 
+ \begin{figure}[h!]
+ 	\centering
+ 	\includegraphics[width=0.7\textwidth]{fig_9}
+ 	\caption{Evolution de l'ESS par itération (avec $N_p=100$ particules tirées par itération)}
+ 	\label{fig_9_AE}
+ \end{figure}
+ 
+ On observe sur la figure \ref{fig_9_AE} que l'ESS prend un certain temps avant d'atteindre des valeurs suffisamment élevées, néanmoins l'estimation de la position de la source devient rapidement pertinente si on se réfère à la figure \ref{fig_8_AE}. En pratique, cela illustre le fait que l'AMIS a tendance à affecter un poids relativement élevé à un nombre restreint de particules (voire à une particule unique) proches de la vraie source. Une façon de remédier à cela consiste à augmenter la valeur de la variance d'observation $\varObs$ choisie pour l'exécution de l'algorithme.
+ 
+ 
+ \subsection{Avec données expérimentales}
+ 
+ Après un premier ensemble de tests sur données simulées, nous avons appliqué la même méthodologie en utilisant les mesures de concentrations expérimentales directement issues de l'expérience FFT07. \\
+ 
+ \subsubsection{Traitement des données manquantes}
+ 
+ Une première analyse des données d'observation a permis de mettre en évidence l'absence de mesures de concentrations sur certaines plages temporelles, voire sur la totalité de la fenêtre d'observation, pour plusieurs capteurs du réseau, dans les \textit{trials} 7 et 30. Ces données manquantes sont le résultat de défaillances ponctuelles des dispositifs instrumentaux au moment des essais. Nous avons ainsi eu à gérer deux types de situations:
+ 
+ \begin{itemize}
+ 	\item Dans les cas où les données sont partiellement manquantes, typiquement s'il existe une quantité finie de points de mesure où les concentrations ne sont pas disponibles, alors une interpolation linéaire est faite pour remplir les valeurs manquantes à partir des concentrations disponibles.
+ 	\item Dans les cas où aucune concentration n'est disponible sur un capteur donné, ce dernier est écarté du réseau et n'est pas intégré au vecteur d'observations $\VecObs$. La même opération est faite si la proportion de points de mesures manquants est significativement supérieur à la quantité de mesures valables, l'opération d'interpolation étant dans ces cas-à susceptible d'introduire une information faussée.\\
+ \end{itemize}
+ 
+\subsubsection{Variabilité météorologique}
+
+Le fait d'utiliser des données expérimentales permet également de prendre en compte la présence de variations de vitesse et de direction du vent, et voir si l'algorithme d'estimation de la source arrive à gérer une telle situation. En particulier dans le \textit{trial} 7, la direction du vent change sensiblement durant la période du rejet, comme le montre la figure \ref{fig_11_AE}.
+
+\begin{figure}[h!]
+	\centering
+	\includegraphics[width=0.7\textwidth]{fig_11}
+	\caption{Direction du vent mesurée par la station météo la plus proche de la source (\textit{trial} 7)}
+	\label{fig_11_AE}
+\end{figure}
+
+Le choix d'un modèle de dispersion à bouffées gaussiennes permet ainsi d'intégrer ces variations de vent: pour le \textit{trial} 7 nous avons donc recueilli et moyenné les mesures de vent issues des deux capteurs de vent soniques (anémomètres à ultrasons) présents sur le domaine, puis intégré les valeurs résultantes dans le modèle de dispersion. Pour le \textit{trial} 30 les variations sont beaucoup moins importantes, nous avons donc gardé l'hypothèse d'un vent stationnaire uniforme. \\
+
+\subsubsection{Estimation de la position (\textit{trials} 7 et 30)}
+
+De même que pour le cas synthétique, nous avons calculé par KDE les distributions a posteriori de la position de la source sur chacun des axes, et représenté les résultats pour les \textit{trials} 7 et 30 sur les figures \ref{fig_12_AE} et \ref{fig_13_AE}. Les paramètres suivants ont été utilisés:
+
+\begin{itemize}
+	\item \textit{trial} 7: $\varObs = 10^{-10}$ et $\varQ = 5\times 10^{-2}$,
+	\item \textit{trial} 30: $\varObs = 5 \times 10^{-8}$ et $\varQ = 5\times 10^{-3}$.\\
+\end{itemize}
+
+\begin{figure}[h!]
+	\centering
+	\begin{subfigure}[t]{0.5\textwidth}
+		\centering
+		\includegraphics[width=1\textwidth]{fig_12_A}
+		\caption{}
+		\label{fig_12_A}
+	\end{subfigure}%
+	\begin{subfigure}[t]{0.5\textwidth}
+		\centering
+		\includegraphics[width=1\textwidth]{fig_12_B}
+		\caption{}
+		\label{fig_12_B}
+	\end{subfigure}
+	\caption{Distribution a posteriori de la position de la source (en bleu) à partir des données d'observations expérimentales FFT07 pour le \textit{trial} 7. La position réelle de la source est en pointillés rouges.} 
+	\label{fig_12_AE}		
+\end{figure}
+
+\begin{figure}[h!]
+	\centering
+	\includegraphics[width=1\textwidth]{fig_13}
+	\caption{Distribution a posteriori de la position de la source (en bleu) à partir des données d'observations expérimentales FFT07 pour le \textit{trial} 30. La position réelle de la source est en pointillés rouges.}
+	\label{fig_13_AE}
+\end{figure}
+
+On observe que les résultats sont presque aussi bons que dans le cas synthétique. En termes de distance de l'estimée ponctuelle MMSE par rapport à la vraie source, on reste sur des valeurs satisfaisantes de 9.8m pour le \textit{trial} 7 et 1.5m pour le \textit{trial} 30. 
+
+\subsubsection{Comparaison avec le MCMC (\textit{trial} 7)}
+
+Une comparaison avec le même type d'algorithme MCMC que le paragraphe §\ref{par_simule} a également été menée, en utilisant les données expérimentales du \textit{trial} 7. On remarque sur la figure \ref{fig_14_AE} que pour l'estimation de la position, les deux méthodes fournissent des résultats globalement satisfaisants. \\
+
+\begin{figure}[h!]
+	\centering
+	\begin{subfigure}[t]{0.5\textwidth}
+		\centering
+		\includegraphics[width=1\textwidth]{fig_14_A}
+		\caption{}
+		\label{fig_14_A}
+	\end{subfigure}%
+	\centering
+	\begin{subfigure}[t]{0.5\textwidth}
+		\centering
+		\includegraphics[width=1\textwidth]{fig_14_B}
+		\caption{}
+		\label{fig_14_B}
+	\end{subfigure}
+	\caption{Comparaison de l'estimation de la position de la source du \textit{trial} 7 avec des observations réelles en utilisant AMIS (en magenta) et MCMC (en bleu). La position réelle de la source est en pointillés noirs.}
+	\label{fig_14_AE} 
+\end{figure}
+
+La comparaison a aussi été faite avec les résultats d'estimation du profil de rejet, comme illustré en figure X. Les résultats ont été moyennés sur des fenêtres d'1 minute afin de lisser l'allure du débit.
+
+ On note que les premières valeurs non-nulles du débit estimé apparaissent plus tôt qu'attendu, et avec des amplitudes plus importantes. Cela est en partie causé par le fait que l'estimée ponctuelle de la source a été située plus en amont que la position réelle, ce qui a forcé l'algorithme à produire un débit plus important pour ajuster en conséquence les concentrations résultantes au niveau des capteurs, et à avancer l'instant de "démarrage" du rejet. Ce phénomène est un peu plus marqué dans le cas du MCMC (figure X). Néanmoins, on arrive dans les deux cas à obtenir une estimation correcte, pour laquelle le profil d'émission recherché s'intègre relativement bien dans l'intervalle de confiance, et le temps de fin d'émission est bien retrouvé. \\
+
+\begin{figure}[h!]
+	\centering
+	\begin{subfigure}[t]{0.5\textwidth}
+		\centering
+		\includegraphics[width=1\textwidth]{fig_15_A}
+		\caption{AMIS}
+		\label{fig_15_A}
+	\end{subfigure}%
+	\centering
+	\begin{subfigure}[t]{0.5\textwidth}
+		\centering
+		\includegraphics[width=1\textwidth]{fig_15_B}
+		\caption{MCMC}
+		\label{fig_15_B}
+	\end{subfigure}
+	\caption{Estimation du profil d'émission du \textit{trial} 7 (en noir), intervalle de confiance à $\pm 2\sigma_q$ (en gris) et comparaison avec les valeurs réelles (en rouge), avec AMIS (\ref{fig_15_A}) et MCMC (\ref{fig_15_B}).}
+	\label{fig_15_AE} 
+\end{figure}
+
+\section{Conclusions}
+
+L'étude de cas sur l'expérience FFT07 présentée dans ce chapitre a permis une première validation de la méthodologie axée sur l'algorithme AMIS. Celle-ci a en effet permis une bonne estimation de la position de la source dans les cas synthétiques et expérimentaux,  en fournissant une distribution a posteriori du paramètre de position. Cet outil statistique permet ainsi d'effectuer une analyse autour des incertitudes associées à l'estimation et se prête bien à un cadre d'aide à la décision dans un contexte opérationnel. L'information ponctuelle demeure également accessible, par le biais du calcul de l'estimateur MMSE. \\
+
+ La démarche et a également permis de reconstruire un profil d'émission complet, fournissant une information temporelle sur les quantités émises par la source ainsi que ses temps de démarrage et d'arrêt. Cet aspect temporel présente un aspect innovant par rapport aux approches conventionnelles présentées dans la littérature, où l'hypothèse d'un débit d'émission constant est formulée, se traduisant dans la pratique par la recherche d'une unique valeur scalaire $q$. \\
+ 
+Cette étude a démontré que la quasi-totalité de la charge de calcul est concentrée sur la construction des matrices source-récepteur, plus précisément sur les appels au modèle de dispersion. Dans le cas d'un modèle gaussien les temps de calcul demeurent raisonnables, mais ils dépendent directement du nombre de particules échantillonnées par itération de l'AMIS. Nous avons pu vérifier que le fait de tirer plus de 100 particules par itération dans cette étude de cas n'améliorait pas significativement les résultats d'estimation, mais dans le cadre général un nombre trop faible de particules peut potentiellement dégrader la qualité de l'estimation, car l'exploration de l'espace des paramètres s'en trouve restreinte. De plus, à nombre égal de particules, si le contexte exige l'utilisation d'un modèle de dispersion plus élaboré (par exemple dans un milieu urbain), la charge et le temps de calcul seront bien plus importants. \\
+
+Une optimisation du mode de construction de ces matrices source-récepteur permettant une montée en charge sans augmentation excessive du temps de calcul est abordée dans le Chapitre 5.
+
+
+
