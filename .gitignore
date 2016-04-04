@@ -1,3 +1,10 @@
+## Custom folders
+figures_psd/*
+figures_keynote/*
+figures_svd/*
+
+## Temporary files
+*.swp
 ## Core latex/pdflatex auxiliary files:
 *.aux
 *.lof
