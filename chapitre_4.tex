@@ -1,0 +1,21 @@
+\chapter{Calcul des matrices source-récepteur par un modèle lagrangien adjoint}
+
+L'étude de cas sur l'expérience FFT07 présentée dans le Chapitre 3 a montré que la charge de calcul de la procédure d'estimation du terme source est en grande majorité focalisée sur le calcul de la matrice source-récepteur. Cette étape nécessite une quantité d'appels au modèle de dispersion égale au nombre de particules échantillonnées par itération multiplié par le nombre d'itérations, soit en pratique 1000 instances dans le cas de FFT07. \\
+Si pour les cas les plus simples il est possible de se limiter à des modèles de dispersion suffisamment rapides, la situation change dès qu'il s'agit de considérer un contexte plus élaboré, avec des outils de calculs permettant certes une meilleure représentation des phénomènes de dispersion, mais dont l'exécution devient bien plus coûteuse en termes d'implémentation et de temps de calcul. \\
+L'objet de ce chapitre est ainsi de présenter une façon d'optimiser le calcul des matrices source-récepteur lorsque celui-ci doit faire appel à un code de dispersion plus complexe que le modèle à bouffées gaussiennes précédemment évoqué. Nous nous appuyons pour cela sur l'utilisation d'un modèle de dispersion adjoint, dont la justification est détaillée dans le premier paragraphe. Nous introduisons dans un deuxième temps le code de calcul PMSS ( et le modèle adjoint associé) utilisé par ARIA Technologies et le CEA en situation opérationnelle, pour ensuite expliquer comment celui-ci s'intègre dans la structure algorithmique de notre méthodologie. Enfin, le dernier paragraphe décrit les résultats de plusieurs analyses effectuées sur un cas-test en simulation.
+
+\section{Dualité forward/backward}
+
+\section{Le code de calcul PMSS}
+
+\subsection{L'approche lagrangienne de la dispersion atmosphérique}
+
+Pour les modèles dits eulériens, la résolution du problème de la dispersion d'un polluant dans l'atmosphère passe par la construction d'un maillage sur le domaine étudié, afin de pouvoir observer l'évolution des concentrations du polluant porté par les mouvements de l'air. 
+
+Le point de vue lagrangien est différent: il s'agit ici de résoudre un système d'équations dans un repère lié au déplacement de la masse d'air contenant le polluant. Pour cela, on représente le panache sous la forme d'un ensemble de \textit{particules lagrangiennes}\footnote{Afin d'éviter toute confusion avec les particules statistiques dont il est fait référence dans le cadre de l'algorithme AMIS, nous utiliserons les dénominations complètes  de \textit{particules lagrangiennes} et de \textit{particules AMIS} dans la suite du manuscrit.}), chacune étant porteuse d'une masse élémentaire du polluant considéré. Pour obtenir la concentration de polluant en un point $\Vecx$ de l'espace à un instant $t$ donné, il faut ainsi compter le nombre de particules lagrangiennes présentes à cet instant $t$ dans un volume élémentaire $d\Vecv$ autour du point considéré. 
+\missingfigure{Comptage des particules dans un vol. élémentaire}
+
+
+
+\section{Résultats}
+

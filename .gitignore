@@ -2,7 +2,7 @@
 figures_psd/*
 figures_keynote/*
 figures_svd/*
-
+output/*
 ## Temporary files
 *.swp
 ## Core latex/pdflatex auxiliary files:

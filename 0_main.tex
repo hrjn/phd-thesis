@@ -80,6 +80,8 @@
 		
 % Pour mettre des commentaires/corrections à la relecture:
 \usepackage{todonotes}
+\newcommand\todoin[2][]{\todo[inline, backgroundcolor=red!20!white, caption={2do}, #1]{
+		\begin{minipage}{\textwidth-4pt}#2\end{minipage}}}
 
 % Pour créer une liste des symboles:
 \usepackage{nomencl}
@@ -152,6 +154,8 @@
 \newcommand{\PostCovQ}{{\widetilde{\MatCovQ}}}
 \newcommand{\varQ}{\sigma_q^2}
 \newcommand{\VecThetaMaj}{{\bm{\Theta}}}
+\newcommand{\Vecx}{{\bm{x}}}
+\newcommand{\Vecv}{{\bm{v}}}
 
 \begin{document}
 	\tableofcontents
@@ -160,11 +164,13 @@
 	
 	%\printnomenclature
 	
-	%\input{chapitre_1_v2}
+	\input{chapitre_1_v2}
 
-	%\input{chapitre_2}
+	\input{chapitre_2}
 	
 	\input{chapitre_3}
+	
+	\input{chapitre_4}
 	
 	\bibliographystyle{apalike}
 	\bibliography{_biblio}

@@ -273,8 +273,7 @@ p^c(\VecObs | \PosSource) = \dfrac{p(\VecObs | \VecQSource, \PosSource)p(\VecQSo
 \end{equation}
 
 
- \begin{figure}[h]
- 	 	\label{fig_AE_2}	
+ \begin{figure}[h!]
  	\centering
  	\begin{subfigure}[t]{0.5\textwidth}
  		\centering
@@ -296,6 +295,7 @@ p^c(\VecObs | \PosSource) = \dfrac{p(\VecObs | \VecQSource, \PosSource)p(\VecQSo
  	\end{subfigure} 
 
  	\caption{Illustration de l'application de la contrainte de positivité (en noir) sur les paramètres d'une distribution gaussienne bivariée (en rouge) dans trois cas distincts: sans corrélation (\ref{fig_AE_2_a}), avec corrélation négative (\ref{fig_AE_2_b}) et avec corrélation positive (\ref{fig_AE_2_c}).}
+ 	 \label{fig_AE_2}	
  \end{figure}
 
 La figure \ref{fig_AE_2} résume bien le fonctionnement de l'algorithme \ref{algo_PCO}: la zone en noir représente la version tronquée aux valeurs positives de la distribution initiale (en rouge). 
@@ -361,8 +361,8 @@ avec $\VecMu_d \in \mathbb{R}^2$ et $\MatSigma_d \in \mathbb{R}^{2\times2}$.
  			\end{pmatrix}$}
  		\label{init_amis_good}
  	\end{subfigure}
- 	\label{fig_init_amis}	
  	\caption{Exemples d'initialisation de l'AMIS avec $D=4$ composantes pour la loi de proposition: un bon choix des $\MatSigma_d$ permet un tirage homogène sur le domaine (\ref{init_amis_good}) tandis qu'une covariance trop faible ne permettra pas d'explorer tout le domaine (\ref{init_amis_bad}).}
+ 	 \label{fig_init_amis}	
  \end{figure}
  
   Pour la suite, on choisit $D=4$, ce qui est suffisant pour bien couvrir le domaine sans pour autant avoir de recouvrement entre les particules échantillonnées depuis différentes composantes. Le choix des paramètres initiaux, en particulier celui de $\MatSigma_d$, permet de régler la surface couverte par chacune des composantes afin d'obtenir une répartition relativement homogène des particules, illustrant une absence de connaissance a priori sur une localisation potentielle de la source (voir figure \ref{fig_init_amis}).
@@ -400,7 +400,7 @@ Les modèles gaussiens permettent de représenter la dispersion à petite échel
  
  Dans le cadre de FFT07, le choix d'un modèle à bouffées par rapport à un modèle à panache est justifié par la dépendance temporelle du profil d'émission que nous cherchons à estimer. La grandeur $\VecQSource$ est en effet un vecteur, et non une valeur constante comme c'est le cas si on appliquait un modèle de type \textit{Gaussian plume}. Cela permet également de prendre en compte les variations météorologiques telles que des changements de direction de vent. \\
  
- La concentration mesurée au $i$-ème capteur $\PosCapteur^{(i)} = (x_c^{(i)}, y_c^{(i)}$ au temps d'observation $t_j$ résultant d'une source localisée en $\PosSource$ émettant un rejet instantané à l'instant $t'_n$ est donnée par: 
+ La concentration mesurée au $i$-ème capteur $\PosCapteur^{(i)} = (x_c^{(i)}, y_c^{(i)})$ au temps d'observation $t_j$ résultant d'une source localisée en $\PosSource$ émettant un rejet instantané à l'instant $t'_n$ est donnée par: 
  
  \begin{equation}
  \MatC_{i,j}(\PosSource, t'_n) = \dfrac{2Q_u\Delta t_p}{(2\pi)^{3/2}s_x s_y s_z}\exp\left[-\dfrac{1}{2}(\Lambda_x^2 + \Lambda_y^2)\right]
@@ -488,7 +488,7 @@ L'algorithme a été testé avec deux positions de source différentes, correspo
 
   \subsubsection{Estimation du profil de rejet}
   
-  La figure X illustre l'impact de l'utilisation de la contrainte de positivité pour l'estimation du profil du rejet $\VecQSource$.
+  La figure \ref{fig_6_AE} illustre l'impact de l'utilisation de la contrainte de positivité pour l'estimation du profil du rejet $\VecQSource$.
   
  \begin{figure}[h!]
  	\centering
@@ -522,7 +522,7 @@ L'algorithme a été testé avec deux positions de source différentes, correspo
   		\label{fig_AE_7_C}
   	\end{subfigure} 
   	
-  	\caption{Simulation et résultats d'estimation pour différents profils d'émission: rejet simple (\ref{fig_AE_7_A}), rejet variable (\ref{fig_AE_7_B}), rejet continu (\ref{fig_AE 7_C}). Le profil à retrouver (en rouge) est comparé au profil estimé (en bleu) et à l'intervalle de confiance à $\pm 2 \widetilde{\sigma}_q$ (en gris).}
+  	\caption{Simulation et résultats d'estimation pour différents profils d'émission: rejet simple (\ref{fig_AE_7_A}), rejet variable (\ref{fig_AE_7_B}), rejet continu (\ref{fig_AE_7_C}). Le profil à retrouver (en rouge) est comparé au profil estimé (en bleu) et à l'intervalle de confiance à $\pm 2 \widetilde{\sigma}_q$ (en gris).}
   	\label{fig_AE_7}	
   \end{figure}
   
@@ -700,9 +700,9 @@ Une comparaison avec le même type d'algorithme MCMC que le paragraphe §\ref{pa
 	\label{fig_14_AE} 
 \end{figure}
 
-La comparaison a aussi été faite avec les résultats d'estimation du profil de rejet, comme illustré en figure X. Les résultats ont été moyennés sur des fenêtres d'1 minute afin de lisser l'allure du débit.
+La comparaison a aussi été faite avec les résultats d'estimation du profil de rejet, comme illustré en figure \ref{fig_15_AE}. Les résultats ont été moyennés sur des fenêtres d'1 minute afin de lisser l'allure du débit.
 
- On note que les premières valeurs non-nulles du débit estimé apparaissent plus tôt qu'attendu, et avec des amplitudes plus importantes. Cela est en partie causé par le fait que l'estimée ponctuelle de la source a été située plus en amont que la position réelle, ce qui a forcé l'algorithme à produire un débit plus important pour ajuster en conséquence les concentrations résultantes au niveau des capteurs, et à avancer l'instant de "démarrage" du rejet. Ce phénomène est un peu plus marqué dans le cas du MCMC (figure X). Néanmoins, on arrive dans les deux cas à obtenir une estimation correcte, pour laquelle le profil d'émission recherché s'intègre relativement bien dans l'intervalle de confiance, et le temps de fin d'émission est bien retrouvé. \\
+ On note que les premières valeurs non-nulles du débit estimé apparaissent plus tôt qu'attendu, et avec des amplitudes plus importantes. Cela est en partie causé par le fait que l'estimée ponctuelle de la source a été située plus en amont que la position réelle, ce qui a forcé l'algorithme à produire un débit plus important pour ajuster en conséquence les concentrations résultantes au niveau des capteurs, et à avancer l'instant de "démarrage" du rejet. Ce phénomène est un peu plus marqué dans le cas du MCMC (\ref{fig_15_B}). Néanmoins, on arrive dans les deux cas à obtenir une estimation correcte, pour laquelle le profil d'émission recherché s'intègre relativement bien dans l'intervalle de confiance, et le temps de fin d'émission est bien retrouvé. \\
 
 \begin{figure}[h!]
 	\centering
@@ -719,7 +719,7 @@ La comparaison a aussi été faite avec les résultats d'estimation du profil de
 		\caption{MCMC}
 		\label{fig_15_B}
 	\end{subfigure}
-	\caption{Estimation du profil d'émission du \textit{trial} 7 (en noir), intervalle de confiance à $\pm 2\sigma_q$ (en gris) et comparaison avec les valeurs réelles (en rouge), avec AMIS (\ref{fig_15_A}) et MCMC (\ref{fig_15_B}).}
+	\caption{Estimation du profil d'émission du \textit{trial} 7 (en noir), intervalle de confiance à $\pm 2\widetilde{\sigma}_q$ (en gris) et comparaison avec les valeurs réelles (en rouge), avec AMIS (\ref{fig_15_A}) et MCMC (\ref{fig_15_B}).}
 	\label{fig_15_AE} 
 \end{figure}
 

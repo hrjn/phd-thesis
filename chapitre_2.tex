@@ -1,5 +1,16 @@
 \chapter{Inférence bayésienne et méthodes de Monte-Carlo}
 
+\todoin{
+	\textbf{TODO CHAPITRE 2}
+	\begin{itemize}
+		\item  détailler davantage le fonctionnement de l'AMIS, en particulier le rôle des $\vartheta$ dans l'algorithme (DMW et recyclage)
+		\item détailler et démontrer les formules de mise à jour de la proposal dans le cas M-PMC + mixture de gaussienne multivariée, et lier avec le cas pratique bivarié pour la localisation de la source dans le chapitre 3
+		\item mettre un exemple de simulation commun pour M-PMC et AMIS (la partie AMIS manque d'illustration pratique)
+		\item utiliser plutôt la CDF dans la figure 2.6
+		\item vérifier qu'il n'y a pas de redite/doublons après la modification de l'état de l'art dans le chapitre 1
+		\item ajouter un paragraphe de transition "choix de l'AMIS et application au problème STE" à la fin, en s'inspirant de l'introduction du papier AE.
+	\end{itemize}}
+
 Ce chapitre présente la philosophie et les objectifs de l'inférence bayésienne, puis présente les principes de base régissant les méthodes de Monte Carlo. Un exposé plus détaillé est développé autour des deux grandes familles des techniques Monte Carlo, à savoir les \textit{Markov Chain Monte Carlo} et les algorithmes d'échantillonnage d'importance. Concernant ces derniers, l'aspect adaptatif sur la loi de proposition est introduit au travers des méthodes Population Monte Carlo, puis complété par la notion d'adaptativité multiple qui caractérise l'algorithme AMIS. 
 
 	
@@ -599,4 +610,6 @@ L'AMIS permet donc de ré-exploiter toutes l'information disponible (sur les poi
 	\caption{Adaptive Multiple Importance Sampling (AMIS)}
 	\label{algo_AMIS}
 \end{algorithm}
+
+
 
