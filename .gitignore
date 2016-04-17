@@ -5,6 +5,8 @@ figures_svd/*
 outputs/*
 ## Temporary files
 *.swp
+## Main output
+0_main.pdf
 ## Core latex/pdflatex auxiliary files:
 *.aux
 *.lof
