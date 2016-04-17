@@ -6,7 +6,6 @@
 		\item  détailler davantage le fonctionnement de l'AMIS, en particulier le rôle des $\vartheta$ dans l'algorithme (DMW et recyclage)
 		\item détailler et démontrer les formules de mise à jour de la proposal dans le cas M-PMC + mixture de gaussienne multivariée, et lier avec le cas pratique bivarié pour la localisation de la source dans le chapitre 3
 		\item mettre un exemple de simulation commun pour M-PMC et AMIS (la partie AMIS manque d'illustration pratique)
-		\item utiliser plutôt la CDF dans la figure 2.6
 		\item vérifier qu'il n'y a pas de redite/doublons après la modification de l'état de l'art dans le chapitre 1
 		\item ajouter un paragraphe de transition "choix de l'AMIS et application au problème STE" à la fin, en s'inspirant de l'introduction du papier AE.
 	\end{itemize}}
@@ -494,6 +493,8 @@ Une façon de contourner le problème de la dégénérescence consiste à ré-é
 
 Le facteur-clé de la performance d'un algorithme de type IS réside dans l'utilisation d'une bonne loi de proposition: il paraît donc naturel d'envisager des méthodes permettant l'ajustement de cette loi pour qu'elle permette une bonne approximation de la loi cible. \\
 
+\subsubsection{Population Monte Carlo}
+
 Les travaux présentés dans \cite{Cappe2004} illustrent une première approche, qui peut être vue comme une version itérative de l'IS visant à adapter la loi de proposition afin de la rapprocher au mieux de la loi cible. Plus précisément, à chaque itération $k$: 
 \begin{enumerate}
 	\item on tire un échantillon $\VecTheta_k = (\theta_{1,k}, \dots, \theta_{N_p,k})$ de particules obtenues par une perturbation stochastique qui revient à appliquer un noyau de transition de type "marche aléatoire" sur chacun des $\theta_{1,k-1}, \dots, \theta_{N_p,k-1}$, à la façon d'une chaîne de Markov,
@@ -505,6 +506,8 @@ Les travaux présentés dans \cite{Cappe2004} illustrent une première approche,
 Le point 3. donne le résultat de l'algorithme à l'itération $k$, à savoir un vecteur de particules ajustées pour être proche de la loi cible. A partir de là, on peut ré-itérer en appliquant de nouveau une perturbation sur ce vecteur, et ainsi de suite. 
 
 A la différence des algorithmes MCMC, on ne génère pas qu'un seul élément par itération comme c'est le cas pour chaque nouvel état de la chaîne de Markov, mais plutôt une nouvelle population issue d'une loi de proposition différente de l'itération précédente, d'où le nom de \textit{Population Monte Carlo} (PMC) attribué à cette famille de méthodes.\\
+
+\subsubsection{D-kernel PMC}
 
 \cite{Douc2007} formalise le concept d'adaptation de la loi de proposition en la définissant comme étant un mélange de $D$ noyaux fixes $\propFonc_1, \dots, \propFonc_D$ défini par : 
 
@@ -520,6 +523,8 @@ D(\pi || q_\alpha ) = \int \log\left(\dfrac{\pi(\VecTheta)}{q_\alpha(\VecTheta)}
 \label{eq_definition_KL}
 \end{equation}
 
+\subsubsection{M-PMC}
+
 \cite{Cappe2008} propose une extension de ces travaux en introduisant une méthode appelée \textit{M-PMC} reposant sur le même type de critère de performance, mais visant cette fois à étendre la phase d'adaptation à tous les paramètres de la mixture $q_\alpha$, sans se limiter aux seuls $\alpha_d$. La loi de proposition peut alors s'écrire sous la forme suivante:
 
 \begin{equation}
@@ -528,7 +533,7 @@ D(\pi || q_\alpha ) = \int \log\left(\dfrac{\pi(\VecTheta)}{q_\alpha(\VecTheta)}
 \end{equation}
 où $\nu_d$ représente les paramètres de la $d$-ième composante de la loi de proposition.
 
-La procédure d'adaptation qui en découle s'inspire de l'algorithme dit d'\textit{Expectation-Maximization} (EM) pour construire les équations de mise à jour des $\nu_d$ : en effet, le fait de minimiser l'équation \eqref{eq_definition_KL} équivaut ici  à maximiser la grandeur : 
+La procédure d'adaptation qui en découle s'inspire de l'algorithme dit d'\textit{Expectation-Maximization} (EM) pour construire les équations de mise à jour des éléments constituant $\nu_d$ : en effet, le fait de minimiser l'équation \eqref{eq_definition_KL} équivaut ici  à maximiser la grandeur : 
 
 \begin{equation}
 \int \log\left(\sum\limits_{d=1}^D \alpha_d \propFonc_d(\VecTheta| \nu_d)\right)\pi(\VecTheta)d\VecTheta
@@ -546,19 +551,35 @@ Ce type de méthode est particulièrement approprié si on choisit la loi de pro
 où $\nu_d = (\mu_d, \Sigma_d)$ représente les paramètres classiques (moyenne et matrice de covariance) de la $d$-ième composante. En effet, dans ce cas-là, les équations de mise à jour de $\nu_d$ peuvent être obtenues de façon analytique, comme détaillé dans \cite{Bilmes1998}. \\
 
 
-A chaque itération $t \in {1, \dots, T}$, l'approche M-PMC permet ainsi, à partir des particules échantillonnées depuis la loi de proposition $\propFonc_{alpha(t), \nu(t)}$ et de leurs poids d'importance respectifs, d'obtenir la nouvelle proposition $propFonc_{\alpha(t+1), \nu(t+1)}$ qui sera réutilisée à l'itération suivante. Contrairement à la version originale du PMC, ici le tirage des nouvelles particules ne dépend plus directement des anciennes, qui ne sont pas explicitement considérées comme des paramètres de la loi de tirage. \\
+A chaque itération $k \in {1, \dots, K}$, l'approche M-PMC permet ainsi, à partir des particules échantillonnées depuis la loi de proposition $\propFonc_{\alpha^k, \nu^k}$ et de leurs poids d'importance respectifs, d'obtenir la nouvelle proposition $\propFonc_{\alpha^{k+1}, \nu^{k+1}}$ qui sera réutilisée à l'itération suivante. Contrairement à la version originale du PMC, ici le tirage des nouvelles particules ne dépend plus directement des anciennes, qui ne sont pas explicitement considérées comme des paramètres de la loi de tirage. \\
 
-Un autre problème lié à celui de l'adaptation de la loi de proposition apparait lorsque pour une itération donnée, $\propFonc_t$ engendre la création de poids d'importance illustrant un phénomène de dégénérescence. Dans un schéma de type M-PMC, les poids de forte valeur qui sont alors générés vont subsister tout au long de la simulation, malgré le fait que la loi de proposition se mette à jour aux itérations suivantes et que les poids soient normalisés. Cela se traduit concrètement par une variance systématiquement élevée de la distribution des poids d'importance, et conduit alors à de mauvais résultats d'estimation à cause de ce problème persistant.
+\subsubsection{Adaptive Multiple Importance Sampling (AMIS)}
 
-Une façon d'y remédier est proposée dans \cite{Veach1995} et \cite{Owen2000} avec l'utilisation d'une méthode de \textit{deterministic mixture weights} (DMW) qui consiste, à l'itération $k$, à recalculer tous les poids générés aux itérations $1, \dots, k-1$ en fonction des $\propFonc_1, \dots, \propFonc_{t-1}$. Une telle démarche de \textit{recyclage} permet ainsi d'atténuer les valeurs des éventuels mauvais poids d'importance en les pénalisant par rapport aux poids des itérations suivantes qui se comportent mieux, et ce de façon itérative. 
+Dans le cas du M-PMC, un problème qui peut se poser est celui de la persistance d'un ou plusieurs poids à forte valeur. En effet, si lors d'une itération on observe un phénomène de dégénérescence, celui-ci va subsister tout au long du schéma itératif, et risque de fausser les calculs du fait de la nature adaptative de la démarche, qui réutilise tous les poids existants, et ni la mise à jour des paramètres de la loi de proposition, ni la normalisation du vecteur des poids d'importance ne règle le problème. Cela se traduit alors concrètement par une variance systématiquement élevée de la distribution des poids d'importance, et peut alors conduire  à de mauvais résultats d'estimation. \\
 
-La combinaison d'une démarche DMW sur les poids d'importance et d'un schéma M-PMC sur les paramètres de loi de proposition constitue ainsi le coeur des travaux présentés dans \cite{Cornuet2012}, qui ont mené à la création de l'algorithme d'\textit{Adaptive Multiple Importance Sampling} (AMIS). En pratique, ce dernier agit en deux étapes, s'inspirant des techniques mentionnées précédemment : 
-\begin{enumerate}
-	\item dans un premier temps, on calcule les poids d'importance suivant la méthode DMW en tenant compte de tous les poids précédemment générés ET des lois de propositions associés,
-	\item on utilise les poids recyclés pour adapter la loi de proposition en suivant la démarche du M-PMC.
-\end{enumerate}
+Une façon d'y remédier est proposée dans \cite{Veach1995} et \cite{Owen2000} avec l'utilisation d'une méthode appelée \textit{deterministic multiple mixture}. En pratique,cela consiste à modifier la formule de calcul du poids d'importance $w_k^{(i)}$ associé à la particule $\theta_k^{(i)}$ à l'itération $k$. Le but est de prendre en compte la suite $(\propFonc_0, \dots, \propFonc_k)$ des distributions de proposition, et non plus uniquement la loi  courante $\propFonc_k$. Pour cela, on définit la grandeur suivante:
+\begin{equation}
+\vartheta_k^{(i)} = N_p \propFonc_{\alpha^0,\nu^0}(\theta_k^{(i)}) + \sum\limits_{l=1}^k N_p \propFonc_{\alpha^l,\nu^l}(\theta_k^{(i)})
+\label{eq_DMW_1}
+\end{equation}
 
-L'AMIS permet donc de ré-exploiter toutes l'information disponible (sur les poids et les lois de proposition) de façon optimale, son fonctionnement est détaillée dans l'algorithme \ref{algo_AMIS}. C'est sur la base de cette méthodologie que nous allons développer une procédure d'estimation du terme source dans le prochain chapitre. \\
+On peut alors écrire la nouvelle formule permettant de calculer le poids d'importance $w_k^{(i)}$:
+
+\begin{equation}
+w_k^{(i)} = \dfrac{\pi(\theta_k^{(i)})}{\left(\dfrac{1}{(k+1)N_p}\vartheta_k^{(i)}\right)} = (k+1)N_p\dfrac{\pi(\theta_k^{(i)})}{\vartheta_k^{(i)}}
+\end{equation}
+
+Ce cheminement peut être appliqué à la fois pour le calcul du poids courant, mais également pour ajuster les poids calculés lors des itérations précédentes: on parle alors de \textit{recyclage des poids}. Un tel processus de stabilisation  permet ainsi d'atténuer automatiquement les valeurs des poids d'importance sujets à dégénérescence en les pénalisant par rapport aux poids obtenus aux itérations suivantes.\\
+
+Le fait de coupler au sein d'un même algorithme : \\
+
+\begin{itemize}
+	\item le  recyclage optimal des poids d'importance générés entre le début de la simulation et l'itération courante,
+	\item la mise à jour des paramètres de la loi de proposition en fonction des poids d'importance,\\
+\end{itemize}
+constitue ainsi le coeur des travaux présentés dans \cite{Cornuet2012}, qui ont mené à la création de l'algorithme d'\textit{Adaptive Multiple Importance Sampling} (AMIS). \\
+
+L'AMIS permet donc de ré-exploiter toutes l'information disponible (sur les poids et les lois de proposition) de façon optimale, son fonctionnement est détaillée dans l'algorithme \ref{algo_AMIS}. 
 
 \IncMargin{1em}
 \begin{algorithm}
@@ -566,30 +587,30 @@ L'AMIS permet donc de ré-exploiter toutes l'information disponible (sur les poi
 	\SetKwInOut{Input}{Entrées}
 	\SetKwInOut{Output}{Sorties}
 	
-	\Input{Les paramètres $\alpha(0)$, $\nu(0)$ de la loi de proposition initiale $\propFonc_{\alpha(0), \nu(0)}$}
+	\Input{Les paramètres $\alpha^0$, $\nu^0$ de la loi de proposition initiale $\propFonc_{\alpha^0, \nu^0}$}
 	
-	Générer $N_p$ particules $\valTheta_0^{(1)}, \dots, \valTheta_0^{(N_p)}$ depuis  $\propFonc_{\alpha(0), \nu(0)}$\\
+	Générer $N_p$ particules $\valTheta_0^{(1)}, \dots, \valTheta_0^{(N_p)}$ depuis  $\propFonc_{\alpha^0, \nu^0}$\\
 	\For{$i=1, \dots, N_p$}{
 		Calculer les poids d'importance initiaux:\\
-		$\vartheta_0^{(i)} = N_p \propFonc_{\alpha(0), \nu(0)}(\valTheta_0^{(i)})$\\
-		$w_0^{(i)} = \dfrac{\pi(\theta_0^{(i)})}{\propFonc_{\alpha(0), \nu(0)}(\theta_0^{(i)})}$\\
+		$\vartheta_0^{(i)} = N_p \propFonc_{\alpha^0, \nu^0}(\valTheta_0^{(i)})$\\
+		$w_0^{(i)} = \dfrac{\pi(\theta_0^{(i)})}{\propFonc_{\alpha^0, \nu^0}(\theta_0^{(i)})}$\\
 		}
 	Normaliser les poids initiaux:\\
 	\For{$i=1, \dots, N_p$}{
 		$\tilde{w}_0^{(i)} = \dfrac{w_0^{(i)}}{\sum\limits_{j=1}^{N_p}w_0^{(j)}}$
 		}
-	Mettre à jour la loi de proposition en calculant $\alpha(1)$ et $\nu(1)$ à partir de $\alpha(0)$, $\nu(0)$ et $\tilde{w}_0$ \\
+	Mettre à jour la loi de proposition en calculant $\alpha^1$ et $\nu^1$ à partir de $\alpha^0$, $\nu^0$ et $\tilde{w}_0$ \\
 	\For{$k=1, \dots, K$}{
-		Générer $N_p$ particules $\theta_k^{(1)}, \dots, \theta_k^{(N_p)}$ depuis la loi de proposition courante $\propFonc_{\alpha(k), \nu(k)}$:\\
+		Générer $N_p$ particules $\theta_k^{(1)}, \dots, \theta_k^{(N_p)}$ depuis la loi de proposition courante $\propFonc_{\alpha^k, \nu^k}$:\\
 		\For{$i=1, \dots, N_p$}{
 			Calculer les poids d'importance de l'échantillon courant:\\
-			$\vartheta_k^{(i)} = N_p \propFonc_{\alpha(0), \nu(0)}(\theta_k^{(i)}) + \sum\limits_{l=1}^k N_p \propFonc_{\alpha(l), \nu(l)}(\theta_k^{(i)})$\\
-			$w_k^{(i)} = (k+1)N_p \dfrac{\pi(\theta_k^{(i)})}{\propFonc_{\alpha(k), \nu(k)}(\theta_k^{(i)})} = (k+1)N_p \dfrac{p(\VecObs | \theta_k^{(i)})p(\theta_k^{(i)})}{\propFonc_{\alpha(k), \nu(k)}(\theta_k^{(i)})}$
+			$\vartheta_k^{(i)} = N_p \propFonc_{\alpha^0, \nu^0}(\theta_k^{(i)}) + \sum\limits_{l=1}^k N_p \propFonc_{\alpha^l, \nu^l}(\theta_k^{(i)})$\\
+			$w_k^{(i)} = (k+1)N_p \dfrac{\pi(\theta_k^{(i)})}{\vartheta_k^{(i)}} = (k+1)N_p \dfrac{p(\VecObs | \theta_k^{(i)})p(\theta_k^{(i)})}{\vartheta_k^{(i)}}$
 			}
-		Recycler les poids des particules obtenues par les précédentes lois de proposition en utilisant la méthode DMW:\\
+		Recycler les poids des particules obtenues par les précédentes lois de proposition :\\
 		\For{$l=0, \dots, k-1$}{
 			\For{$i=1, \dots, N_p$}{
-				$\vartheta_l^{(i)} = \vartheta_l^{(i)} + N_p \propFonc_{\alpha(k), \nu(k)}(\theta_l^{(i)})$\\
+				$\vartheta_l^{(i)} = \vartheta_l^{(i)} + N_p \propFonc_{\alpha^k, \nu^k}(\theta_l^{(i)})$\\
 				$w_l^{(i)} = (k+1) N_p \dfrac{\pi(\theta_l^{(i)})}{\vartheta_l^{(i)}}$
 				}
 			}
@@ -599,7 +620,7 @@ L'AMIS permet donc de ré-exploiter toutes l'information disponible (sur les poi
 				$\tilde{w}_l^{(i)} = \dfrac{w_l^{(i)}}{\sum\limits_{l'=1}^k\sum\limits_{j=1}^{N_p} w_{l'}^{(j)}}$
 				}
 			}
-		Mettre à jour la loi de proposition en calculant $\alpha(k+1)$ et $\nu(k+1)$ à partir de $\alpha(k)$, $\nu(k)$ et de la concaténation des poids recyclés normalisés $\tilde{w}_0, \dots, \tilde{w}_k$\\
+		Mettre à jour la loi de proposition en calculant $\alpha^{k+1}$ et $\nu^{k+1}$ à partir de $\alpha^k$, $\nu^k$ et de la concaténation des poids recyclés normalisés $\tilde{w}_0, \dots, \tilde{w}_k$\\
 		}
 		\Output{ La collection de toutes les particules: $\theta_0^{(1)}, \dots, \theta_0^{(N_p)}, \theta_1^{(1)}, \dots, \theta_K^{(1)}, \dots, \theta_K^{(N_p)}$
 			
