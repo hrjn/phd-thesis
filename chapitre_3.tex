@@ -5,18 +5,18 @@ Dans ce chapitre, nous appliquons l'algorithme AMIS à un problème STE avec des
 
 \section{Contexte: l'expérience FFT07}
 
-La campagne expérimentale \textit{FUSION Fields Trials 2007} (FFT07) fût conçue et menée en 2007 par la \textit{Defense Threat Reduction Agency} (DTRA), une agence du Département de la Défense (DoD) des Etats-Unis dont la mission principale est axée autour de la prévention et de la protection vis-à-vis des risques NRBC.\\
+La campagne expérimentale \textit{FUSION Fields Trials 2007} (FFT07) fut conçue et menée en 2007 par la \textit{Defense Threat Reduction Agency} (DTRA), une agence du Département de la Défense (DoD) des Etats-Unis dont la mission principale est axée autour de la prévention et de la protection vis-à-vis des risques NRBC.\\
 
 Le but de FFT07 était de constituer une base de données météorologiques et de mesure de concentration issues d'une série de tests, ou \textit{trials}, chacun d'entre eux consistant en un rejet de gaz traceur sur une zone fortement instrumentée du site militaire de \textit{Dugway Proving Ground}, dans le désert de l'Utah.\\
-Certains éléments de cette base de données ont été transmises à plusieurs équipes de recherche, chacune ayant pour tâche d'estimer au mieux les paramètres du terme source de chacun des \textit{trials} fournis (voir \cite{Platt2010}, \cite{Annunzio2012b}, et \cite{Singh2014} pour des exemples d'utilisation).\\
+Certains éléments de cette base de données ont été transmis à plusieurs équipes de recherche, chacune ayant pour tâche d'estimer au mieux les paramètres du terme source de chacun des \textit{trials} fournis (\cite{Platt2010} fournit un récapitulatif des différentes équipes et méthodes employées).\\
 
 L'expérience FFT07 a été formatée pour étudier l'impact à courte portée des rejets de gaz traceur: le domaine considéré est un carré de 500 mètres de côté. Plusieurs configurations de rejet ont été utilisées, chacune caractérisant un \textit{trial} distinct par:
 \begin{itemize}
 	\item la période du jour où le rejet a eu lieu,
 	\item la vitesse du vent et sa direction,
 	\item la classe de stabilité atmosphérique,
-	\item le nombre de sources ayant simultanément émis un rejet (1, 2 ou 3); \\
-	\item dans le cas d'une source unique, le type du rejet: continu ou instantané.
+	\item le nombre de sources ayant simultanément émis un rejet (1, 2 ou 3),
+	\item dans le cas d'une source unique, le type du rejet: continu ou instantané.\\
 \end{itemize}
 
 L'acquisition des données s'est faite via un réseau de 100 capteurs à photo-ionisation (\textit{digital photoionization detectors}, ou digiPID), répartis en un maillage uniforme régulier sur l'ensemble du domaine. Ces capteurs sont situés à 50m les uns des autres, et à une hauteur de 2m du sol. La fréquence d'acquisition des concentrations est relativement élevée (50Hz): dans notre étude, nous avons réduit la dimension du vecteur d'observation en effectuant un moyennage sur des fenêtres de 10s afin que les calculs puissent se faire dans des temps raisonnables sans pour autant déplorer une perte significative d'information (voir figure \ref{fig_AE_3}).
@@ -40,8 +40,8 @@ L'expérience FFT07 étant un outil de validation, le domaine d'étude comprend 
 
 Dans notre cas, nous travaillons avec les configurations issues des \textit{trials} 7 et 30: 
 \begin{itemize}
-	\item Dans un premier temps, nous simulons à l'aide d'un modèle de dispersion les concentrations mesurées aux capteurs pour chaque \textit{trial},
-	\item Nous effectuons ensuite la validation expérimentale à l'aides des concentrations réelles obtenues pour le \textit{trial} 7.
+	\item Dans un premier temps, nous simulons à l'aide d'un modèle de dispersion les concentrations mesurées aux capteurs pour chaque \textit{trial}, afin d'exclure toute source d'erreur pouvant être causée par les différents facteurs instrumentaux.
+	\item Nous confrontons ensuite l'algorithme de reconstruction du terme source aux mesures réelles des capteurs, afin de vérifier si l'estimation reste suffisamment précise par rapport au cas purement synthétique.
 \end{itemize}
 
 
@@ -65,7 +65,7 @@ On suppose que les observations sont définies par des mesures de concentration 
 \label{eq_AE_2}
 \end{equation}
 
-Le premier terme de l'équation \eqref{eq_AE_2} représente à la concentration moyenne obtenue par la superposition des $T_s$ rejets aux  différents temps d'émission $\left\{t'_n\right\}_{1\leq n \leq T_s}$et pondérés par les quantités émises $\left\{q(t'_n)\right\}_{1 \leq n \leq T_s}$ associées. Ainsi, $\MatC_{i,j}(\PosSource, t'_n)$ désigne la concentration moyenne observée par le $i$-ème capteur à la position $\PosCapteur^{(i)}$ et à l'échéance d'observation $t_j$ si un rejet unitaire aurait été émis à l'instant $t'_n$ par une source située à la position $\PosSource$. Enfin, $\varepsilon_{i,j}$ représente le terme regroupant toutes les sources d'erreur présentées au paragraphe §\ref{ss_erreurs}.\\
+Le premier terme de l'équation \eqref{eq_AE_2} représente à la concentration moyenne obtenue par la superposition des $T_s$ rejets aux  différents temps d'émission $\left\{t'_n\right\}_{1\leq n \leq T_s}$et pondérés par les quantités émises $\left\{q(t'_n)\right\}_{1 \leq n \leq T_s}$ associées. Ainsi, $\MatC_{i,j}(\PosSource, t'_n)$ désigne la concentration moyenne observée par le $i$-ème capteur à la position $\PosCapteur^{(i)}$ et à l'échéance d'observation $t_j$ pour un rejet unitaire  émis à l'instant $t'_n$ par une source située à la position $\PosSource$. Enfin, $\varepsilon_{i,j}$ représente le terme regroupant toutes les sources d'erreur présentées au paragraphe §\ref{ss_erreurs}.\\
 
 Il est possible de réécrire l'équation \eqref{eq_AE_2} sous la forme matricielle suivante:
 
@@ -126,7 +126,7 @@ p(\VecThetaMaj | \VecObs) \propto p(\VecObs | \VecThetaMaj)p(\VecThetaMaj)p(\Vec
 \label{eq_AE_1_prop}
 \end{equation}
 
-Comme on connaît la nature gaussienne du vecteur d'erreur, on peut alors définir la vraisemblance des observations $\VecObs$ sachant un terme source donné $\VecThetaMaj$:
+Comme on connait la nature gaussienne du vecteur d'erreur, on peut alors définir la vraisemblance des observations $\VecObs$ sachant un terme source donné $\VecThetaMaj$:
 
 \begin{equation}
 p(\VecObs | \VecThetaMaj) = \prod\limits_{i=1}^{N_c} \prod\limits_{j=1}^{T_c}\mathcal{N}\left(\obs_{i,j} \middle\vert \MatC_{i,j}(\PosSource)\VecQSource, \varObs\right)
@@ -365,7 +365,15 @@ avec $\VecMu_d \in \mathbb{R}^2$ et $\MatSigma_d \in \mathbb{R}^{2\times2}$.
  	 \label{fig_init_amis}	
  \end{figure}
  
-  Pour la suite, on choisit $D=4$, ce qui est suffisant pour bien couvrir le domaine sans pour autant avoir de recouvrement entre les particules échantillonnées depuis différentes composantes. Le choix des paramètres initiaux, en particulier celui de $\MatSigma_d$, permet de régler la surface couverte par chacune des composantes afin d'obtenir une répartition relativement homogène des particules, illustrant une absence de connaissance a priori sur une localisation potentielle de la source (voir figure \ref{fig_init_amis}).
+  Pour la suite, on choisit $D=4$, ce qui est suffisant pour bien couvrir le domaine sans pour autant avoir de recouvrement entre les particules échantillonnées depuis différentes composantes. Le choix des paramètres initiaux permet de régler la surface couverte par chacune des composantes afin d'obtenir une répartition relativement homogène des particules, illustrant une absence de connaissance a priori sur une localisation potentielle de la source (voir figure \ref{fig_init_amis}). En pratique, nous avons:
+  
+  \begin{enumerate}
+  	\item divisé le domaine en quatre quadrants de surface égale, 
+  	\item  placé les moyennes $\VecMu_d$ sur le centre de chacun des quadrants,
+  	\item réglé les matrices de covariance $\MatSigma_d$ de façon à ce que chacune des composantes de la mixture fournisse des échantillons couvrant toute la surface de son quadrant.\\
+  \end{enumerate}
+  
+  Les paramètres $\alpha_d, \VecMu_d et \MatSigma_d$ sont mis à jour après chaque itération grâce aux formules des équations \eqref{eq_maj_gaussien}.\\
 
 
 \section{Description du modèle de dispersion à bouffées gaussiennes}
@@ -376,7 +384,7 @@ Les modèles gaussiens permettent de représenter la dispersion à petite échel
 
 \begin{itemize}
 	\item les modèles dits \textit{de panache} (ou \textit{Gaussian plume}), où la dispersion est modélisée dans des conditions météorologiques supposées uniformes et stationnaires. Le panache émis par la source est alors modélisé par une distribution de type gaussienne dans deux directions: celle orthogonale au vent, et la direction verticale (voir figure \ref{gaussian_plume}).
-	\item les modèles dits \textit{à bouffées} (ou \textit{Gaussian puff}), modélisant une série d'émissions instantanées représentées par des bouffées à distribution gaussienne dans les trois directions de l'espace, et dont les centres sont transportés par un champ de vent qui peut potentiellement être non-uniforme et non-stationnaire. La globalité du rejet à un instant donné est ainsi illustrée par la somme des différentes bouffées émises par la source (voir figure \ref{gaussian_puff}). C'est ce type de modèle que nous utilisons dans l'étude de cas sur FFT07.
+	\item les modèles dits \textit{à bouffées} (ou \textit{Gaussian puff}), modélisant une série d'émissions instantanées représentées par des bouffées à distribution gaussienne dans les trois directions de l'espace, et dont les centres sont transportés par un champ de vent qui peut  être non-uniforme et non-stationnaire. La globalité du rejet à un instant donné est ainsi illustrée par la somme des différentes bouffées émises par la source (voir figure \ref{gaussian_puff}). C'est ce type de modèle que nous utilisons dans l'étude de cas sur FFT07.
 \end{itemize}
 
  \begin{figure}[h!]
@@ -434,14 +442,14 @@ Les modèles gaussiens permettent de représenter la dispersion à petite échel
  Comme les valeurs de la composante verticale du vent qui ont été relevées sont relativement faibles, et étant donné que les capteurs et la source se trouvent assez près du sol (2m), on ne tient pas non plus compte du terme en $z$ qui apparaît dans l'exponentielle dans la formulation générale du modèle gaussien. 
 
 
-\section{Résultats}
+\section{Présentation des résultats}
 
-\subsection{Avec données simulées}
+\subsection{Résultats obtenus avec des données simulées}
 \label{par_simule}
 
 Dans un premier temps, afin de valider la méthode, le choix a été fait de se placer dans un cadre synthétique, à savoir reproduire les conditions de l'expérience FFT07 et simuler les concentrations mesurées aux capteurs grâce à l'exécution d'un modèle de dispersion, en l'occurence le modèle gaussien défini au paragraphe précédent. Ainsi, les positions des capteurs et des sources sont exactement les mêmes que celles des \textit{trials} 7 et 30 de FFT07. Les données météorologiques sont ajustées afin que les concentrations simulées soient les plus proches possibles des relevés expérimentaux, et le vent est considéré constant en direction et en vitesse. \\
 
-L'algorithme AMIS a été exécuté sur $K = 10$ itérations, avec $N_p = 100$ particules échantillonnées par itération. Les observations synthétiques ont été générées avec un ajout de bruit gaussien centré de variance $10^{-5}$ afin de simuler les différents éléments d'erreurs présent dans le cas expérimental. La variance d'observation est fixée à $\varObs = 10^{-5}$. La loi a priori de $\VecQSource$ a été choisie telle que $\VecMeanQ = 0$ et $\MatCovQ = \varQ \bm{I}$ avec $\varQ = 10^{-3}$. En pratique, diminuer $\varQ$ revient à supposer a priori que la source est proche des capteurs ayant mesuré une concentration non-nulle, et à l'inverse une variance $\varQ$ élevée implique une source potentiellement plus éloignée. 
+L'algorithme AMIS a été exécuté sur $K = 10$ itérations, avec $N_p = 100$ particules échantillonnées par itération. Les observations synthétiques ont été générées avec un ajout de bruit gaussien centré de variance $10^{-5}$ afin de simuler les différents éléments d'erreurs présents dans le cas expérimental. La variance d'observation est fixée à $\varObs = 10^{-5}$. La loi a priori de $\VecQSource$ a été choisie telle que $\VecMeanQ = 0$ et $\MatCovQ = \varQ \bm{I}$ avec $\varQ = 10^{-3}$. En pratique, diminuer $\varQ$ revient à supposer que la source est proche des capteurs ayant mesuré une concentration non-nulle, et à l'inverse une variance $\varQ$ élevée implique une source potentiellement plus éloignée. 
 La valeur choisie pour les différents paramètres énumérés ci-dessus sont celles ayant permis d'obtenir les résultats les plus plausibles, présentés ci-après. \\
 
 \subsubsection{Estimation de la position}
@@ -473,9 +481,9 @@ L'algorithme a été testé avec deux positions de source différentes, correspo
  \end{figure}
  On peut voir sur la figure \ref{fig_5_AE} que l'AMIS fournit une bonne estimation de la position de la source dans chacun des \textit{trials}.\\
  
-  Le fait de visualiser une distribution de probabilité permet ainsi une vision plus explicite des aspects liés aux incertitudes autour de l'estimation, comparé à des méthodes de type optimisation où seule une estimation ponctuelle est donnée.
+  Le fait de visualiser une distribution de probabilité permet ainsi une vision plus explicite des aspects liés aux incertitudes autour de l'estimation,  en comparaison avec des méthodes de type optimisation où seule une estimation ponctuelle est donnée.
   
-  Pour obtenir les distributions présentées à la figure \ref{fig_5_AE}, une estimation par noyau, ou \textit{kernel density estimation}\footnote{Si $x_1, x_2, \dots, x_n$ est un échantillon issu d'une variable aléatoire $X$, alors l'estimateur de $X$ par la méthode du noyau de la densité est donné par : $$ \widehat{f}_h(x) = \dfrac{1}{nh}\sum\limits_{i=1}^n K\left(\dfrac{x - x_i}{h}\right)$$ où $K$ est un noyau arbitrairement choisi et $h$ est la fenêtre du noyau, qui règle le degré de lissage de l'estimation. $K$ est le plus souvent choisi comme étant la densité d'une gaussienne centrée réduite.} (KDE), a été effectuée: cela consiste, à construire une densité de probabilité à partir d'une population statistique, en l'occurence les particules $\left\{\VecTheta_k^{(i)}\right\}_{0\leq k \leq K}^{1\leq i \leq N_p}$ associées à leurs poids d'importance respectifs $\left\{\widetilde{w}_k^{(i)}\right\}_{0\leq k \leq K}^{1\leq i \leq N_p}$. \\
+  Pour obtenir les distributions présentées à la figure \ref{fig_5_AE}, une estimation de type KDE a été effectuée afin de construire une densité de probabilité à partir d'une population statistique, en l'occurence les particules $\left\{\VecTheta_k^{(i)}\right\}_{0\leq k \leq K}^{1\leq i \leq N_p}$ associées à leurs poids d'importance respectifs $\left\{\widetilde{w}_k^{(i)}\right\}_{0\leq k \leq K}^{1\leq i \leq N_p}$. \\
   
   
   Néanmoins, il est toujours possible d'obtenir un estimateur ponctuel à partir des lois a posteriori, il suffit pour cela de calculer le MMSE selon la formule suivante: 
@@ -499,7 +507,7 @@ L'algorithme a été testé avec deux positions de source différentes, correspo
  
  L'application de la contrainte de positivité améliore le résultat de l'estimation et permet de retrouver un profil d'émission suffisamment proche de celui recherché pour avoir une bonne estimation, tant en termes d'amplitude du débit que de détection des temps d'activation et d'arrêt d'émission de la source.\\
  
- En général, du fait de sa nature potentiellement variable, le profil d'émission de la source peut prendre différents types d'allures. Nous avons ainsi modifié ce profil afin de représenter des cas non-triviaux, re-généré les observations correspondantes, et cherché à retrouver les caractéristiques de la source. \\
+ En général, du fait de sa nature potentiellement variable, le profil d'émission de la source peut prendre différents types d'allures. Nous avons ainsi modifié ce profil afin de représenter des cas non-triviaux, généré les observations correspondantes, et cherché à retrouver les caractéristiques de la source. \\
  
   \begin{figure}[h!]
   	\centering
@@ -537,7 +545,7 @@ L'algorithme a été testé avec deux positions de source différentes, correspo
     	
     	\begin{tabular}{cccc}
     		
-    		Contrainte positivité & $\bar{d}(\widehat{\PosSource},\PosSource)$ (m)& $\sigma_{\widehat{x_s}}$ (m)& $\sigma_{\widehat{y_s}}$ (m)\\
+    		Contrainte de positivité & $\bar{d}(\widehat{\PosSource},\PosSource)$ (m)& $\sigma_{\widehat{x_s}}$ (m)& $\sigma_{\widehat{y_s}}$ (m)\\
     		\hline
     		OUI                   & 0  	& 0.9        & 3.2        \\
     		NON                   & 10.44   & 0.4        & 1.0 \\      
@@ -579,7 +587,7 @@ Un test de robustesse statistique a ensuite été effectué, en changeant de fa�
     	\label{table_2_AE}
     \end{table}
     
- On remarque ainsi que les performances de l'AMIS sont meilleures en termes de précision pour localiser la source. De fait, l'approche MCMC est en partie pénalisée par l'étape d'initialisation. En effet, la convergence vers une position suffisamment proche de la vraie source est d'autant plus longue et incertaine que l'état initial de cette chaîne est éloigné de la vraie source. En ce sens, le fait de travailler sur une population de particules plutôt que sur la succession d'états séquentiels, ainsi que l'aspect adaptatif de l'AMIS lui permettent une meilleure flexibilité pour la mise à jour des paramètres de la loi de proposition, réduisant ainsi la dépendance de ses performances par rapport à l'état initial. Une alternative serait d'instancier plusieurs chaînes de Markov dont les états initiaux sont suffisamment éloignés les uns des autres pour bien couvrir le domaine, mais cela augmente la charge de calcul et les ressources requises pour l'exécution de l'algorithme. \\
+ Dans cette étude de cas, on remarque ainsi que les performances de l'AMIS sont meilleures en termes de précision pour localiser la source. De fait, l'approche MCMC est en partie pénalisée par l'étape d'initialisation. En effet, la convergence vers une position suffisamment proche de la vraie source est d'autant plus longue et incertaine que l'état initial de cette chaîne est éloigné de la vraie source. En ce sens, le fait de travailler sur une population de particules plutôt que sur la succession d'états séquentiels, ainsi que l'aspect adaptatif de l'AMIS lui permettent une meilleure flexibilité pour la mise à jour des paramètres de la loi de proposition, réduisant ainsi la dépendance de ses performances par rapport à l'état initial. Une alternative serait d'instancier plusieurs chaînes de Markov dont les états initiaux sont suffisamment éloignés les uns des autres pour bien couvrir le domaine, mais cela augmente la charge de calcul et les ressources requises pour l'exécution de l'algorithme. \\
  
  En plus de la précision de chacun des algorithmes, nous nous sommes également penchés sur leur vitesse de convergence. \\
  
@@ -599,7 +607,7 @@ Un test de robustesse statistique a ensuite été effectué, en changeant de fa�
  
  Les résultats obtenus démontrent l'efficacité de l'aspect adaptatif de l'AMIS, qui lui permet d'atteindre rapidement une estimation de bonne qualité pour la localisation de la source.\\
  
- Encore une fois, dans la démarche MCMC, l'initialisation de la chaîne de Markov influe sur la vitesse de convergence, cette dernière étant d'autant plus élevée que l'état initial se situe proche de la vraie source. Un autre paramètre du MCMC intervient également ici: la variance du noyau de transition. En effet, comme expliqué au Chapitre 2, si la valeur choisie pour cette variance est trop faible, même si l'initialisation place la chaîne dans une position relativement favorable, la convergence sera trop lente car le nombre d'états nécessaires pour atteindre une estimation correcte sera plus élevé. A l'inverse, il est risqué de trop augmenter la valeur de cette variance, car cela entraînerait des transitions d'amplitude trop élevée, pouvant potentiellement empêcher la convergence vers le point source recherché. L'AMIS est quant à lui plus souple dans sa démarche de transition d'une itération à l'autre, cependant il peut être également sujet à des problèmes de convergence si, par exemple, les particules échantillonnées par la loi de proposition initiale ne couvrent pas du tout la zone où se situe la vraie source, d'où l'intérêt d'une initialisation homogène telle que présentée à la figure \ref{init_amis_good}.\\
+ Encore une fois, dans la démarche MCMC, l'initialisation de la chaîne de Markov influe sur la vitesse de convergence, cette dernière étant d'autant plus élevée que l'état initial se situe près de la vraie source. Un autre paramètre du MCMC intervient également ici: la variance du noyau de transition. En effet, comme expliqué au Chapitre 2, si la valeur choisie pour cette variance est trop faible, même si l'initialisation place la chaîne dans une position relativement favorable, la convergence sera trop lente car le nombre d'états nécessaires pour atteindre une estimation correcte sera plus élevé. A l'inverse, il est risqué de trop augmenter la valeur de cette variance, car cela entraînerait des transitions d'amplitude trop élevée, pouvant potentiellement empêcher la convergence vers le point source recherché. L'AMIS est quant à lui plus souple dans sa démarche de transition d'une itération à l'autre, cependant il peut être également sujet à des problèmes de convergence si, par exemple, les particules échantillonnées par la loi de proposition initiale ne couvrent pas du tout la zone où se situe la vraie source, d'où l'intérêt d'une initialisation homogène telle que présentée à la figure \ref{init_amis_good}.\\
  
  \subsubsection{Effective Sample Size}
  
@@ -615,7 +623,7 @@ Un test de robustesse statistique a ensuite été effectué, en changeant de fa�
  On observe sur la figure \ref{fig_9_AE} que l'ESS prend un certain temps avant d'atteindre des valeurs suffisamment élevées, néanmoins l'estimation de la position de la source devient rapidement pertinente si on se réfère à la figure \ref{fig_8_AE}. En pratique, cela illustre le fait que l'AMIS a tendance à affecter un poids relativement élevé à un nombre restreint de particules (voire à une particule unique) proches de la vraie source. Une façon de remédier à cela consiste à augmenter la valeur de la variance d'observation $\varObs$ choisie pour l'exécution de l'algorithme.
  
  
- \subsection{Avec données expérimentales}
+ \subsection{Résultats obtenus avec des données expérimentales}
  
  Après un premier ensemble de tests sur données simulées, nous avons appliqué la même méthodologie en utilisant les mesures de concentrations expérimentales directement issues de l'expérience FFT07. \\
  
@@ -625,7 +633,7 @@ Un test de robustesse statistique a ensuite été effectué, en changeant de fa�
  
  \begin{itemize}
  	\item Dans les cas où les données sont partiellement manquantes, typiquement s'il existe une quantité finie de points de mesure où les concentrations ne sont pas disponibles, alors une interpolation linéaire est faite pour remplir les valeurs manquantes à partir des concentrations disponibles.
- 	\item Dans les cas où aucune concentration n'est disponible sur un capteur donné, ce dernier est écarté du réseau et n'est pas intégré au vecteur d'observations $\VecObs$. La même opération est faite si la proportion de points de mesures manquants est significativement supérieur à la quantité de mesures valables, l'opération d'interpolation étant dans ces cas-à susceptible d'introduire une information faussée.\\
+ 	\item Dans les cas où aucune concentration n'est disponible sur un capteur donné, ce dernier est écarté du réseau et n'est pas intégré au vecteur d'observations $\VecObs$. La même opération est faite si la proportion des points de mesures manquants est significativement supérieure à la quantité de mesures valables, l'opération d'interpolation étant dans ces cas-à susceptible d'introduire une information faussée.\\
  \end{itemize}
  
 \subsubsection{Variabilité météorologique}
@@ -635,7 +643,7 @@ Le fait d'utiliser des données expérimentales permet également de prendre en 
 \begin{figure}[h!]
 	\centering
 	\includegraphics[width=0.7\textwidth]{fig_11}
-	\caption{Direction du vent mesurée par la station météo la plus proche de la source (\textit{trial} 7)}
+	\caption{Direction du vent mesurée par la station météorologique la plus proche de la source (\textit{trial} 7)}
 	\label{fig_11_AE}
 \end{figure}
 
@@ -702,7 +710,7 @@ Une comparaison avec le même type d'algorithme MCMC que le paragraphe §\ref{pa
 
 La comparaison a aussi été faite avec les résultats d'estimation du profil de rejet, comme illustré en figure \ref{fig_15_AE}. Les résultats ont été moyennés sur des fenêtres d'1 minute afin de lisser l'allure du débit.
 
- On note que les premières valeurs non-nulles du débit estimé apparaissent plus tôt qu'attendu, et avec des amplitudes plus importantes. Cela est en partie causé par le fait que l'estimée ponctuelle de la source a été située plus en amont que la position réelle, ce qui a forcé l'algorithme à produire un débit plus important pour ajuster en conséquence les concentrations résultantes au niveau des capteurs, et à avancer l'instant de "démarrage" du rejet. Ce phénomène est un peu plus marqué dans le cas du MCMC (\ref{fig_15_B}). Néanmoins, on arrive dans les deux cas à obtenir une estimation correcte, pour laquelle le profil d'émission recherché s'intègre relativement bien dans l'intervalle de confiance, et le temps de fin d'émission est bien retrouvé. \\
+ On note que les premières valeurs non-nulles du débit estimé apparaissent plus tôt qu'attendu, et avec des amplitudes plus importantes. Cela est en partie causé par le fait que l'estimée ponctuelle de la source a été située  en amont de la position réelle, ce qui a forcé l'algorithme à produire un débit plus important pour ajuster en conséquence les concentrations résultantes au niveau des capteurs, et à avancer l'instant de "démarrage" du rejet. Ce phénomène est un peu plus marqué dans le cas du MCMC (\ref{fig_15_B}).
 
 \begin{figure}[h!]
 	\centering
@@ -725,13 +733,13 @@ La comparaison a aussi été faite avec les résultats d'estimation du profil de
 
 \section{Conclusions}
 
-L'étude de cas sur l'expérience FFT07 présentée dans ce chapitre a permis une première validation de la méthodologie axée sur l'algorithme AMIS. Celle-ci a en effet permis une bonne estimation de la position de la source dans les cas synthétiques et expérimentaux,  en fournissant une distribution a posteriori du paramètre de position. Cet outil statistique permet ainsi d'effectuer une analyse autour des incertitudes associées à l'estimation et se prête bien à un cadre d'aide à la décision dans un contexte opérationnel. L'information ponctuelle demeure également accessible, par le biais du calcul de l'estimateur MMSE. \\
+L'étude de cas sur l'expérience FFT07 présentée dans ce chapitre a permis une première validation de la méthodologie axée sur l'algorithme AMIS. Celle-ci a en effet permis une bonne estimation de la position de la source dans les cas synthétiques et expérimentaux,  en fournissant une distribution a posteriori des coordonnées de la source. Cet outil statistique permet ainsi d'effectuer une analyse autour des incertitudes associées à l'estimation et se prête bien à un cadre d'aide à la décision dans un contexte opérationnel. L'information ponctuelle demeure également accessible, par le biais du calcul de l'estimateur MMSE. \\
 
  La démarche et a également permis de reconstruire un profil d'émission complet, fournissant une information temporelle sur les quantités émises par la source ainsi que ses temps de démarrage et d'arrêt. Cet aspect temporel présente un aspect innovant par rapport aux approches conventionnelles présentées dans la littérature, où l'hypothèse d'un débit d'émission constant est formulée, se traduisant dans la pratique par la recherche d'une unique valeur scalaire $q$. \\
  
-Cette étude a démontré que la quasi-totalité de la charge de calcul est concentrée sur la construction des matrices source-récepteur, plus précisément sur les appels au modèle de dispersion. Dans le cas d'un modèle gaussien les temps de calcul demeurent raisonnables, mais ils dépendent directement du nombre de particules échantillonnées par itération de l'AMIS. Nous avons pu vérifier que le fait de tirer plus de 100 particules par itération dans cette étude de cas n'améliorait pas significativement les résultats d'estimation, mais dans le cadre général un nombre trop faible de particules peut potentiellement dégrader la qualité de l'estimation, car l'exploration de l'espace des paramètres s'en trouve restreinte. De plus, à nombre égal de particules, si le contexte exige l'utilisation d'un modèle de dispersion plus élaboré (par exemple dans un milieu urbain), la charge et le temps de calcul seront bien plus importants. \\
+Cette étude a démontré que la quasi-totalité de la charge de calcul est concentrée sur la construction des matrices source-récepteur, plus précisément sur les appels au modèle de dispersion. Dans le cas d'un modèle gaussien les temps de calcul demeurent raisonnables, mais ils dépendent directement du nombre de particules échantillonnées par itération de l'AMIS. Nous avons pu vérifier que le fait de tirer plus de 100 particules par itération dans cette étude de cas n'améliorait pas significativement les résultats d'estimation, mais dans le cadre général un nombre trop faible de particules pourrait dégrader la qualité de l'estimation, car l'exploration de l'espace des paramètres s'en trouverait restreinte. De plus, à nombre égal de particules, si le contexte exige l'utilisation d'un modèle de dispersion plus élaboré (par exemple dans un milieu urbain), la charge et le temps de calcul seront bien plus importants. \\
 
-Une optimisation du mode de construction de ces matrices source-récepteur permettant une montée en charge sans augmentation excessive du temps de calcul est abordée dans le Chapitre 5.
+Une optimisation du mode de construction des matrices source-récepteur permettant une montée en charge sans augmentation excessive du temps de calcul est abordée dans le Chapitre 4.
 
 
 

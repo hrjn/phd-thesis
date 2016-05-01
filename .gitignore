@@ -2,6 +2,7 @@
 figures_psd/*
 figures_keynote/*
 figures_svd/*
+figures_fig/*
 outputs/*
 ## Temporary files
 *.swp
