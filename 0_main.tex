@@ -1,4 +1,4 @@
-\documentclass[draft]{book}
+\documentclass{book}
 
 %%%
 % Fichier principal du manuscrit de thèse, à utiliser pour compilation.
@@ -33,6 +33,12 @@
 
 % Pour améliorer le spacing entre mots, lettres:
 %\usepackage{microtype}
+
+% Pour les unités physiques:
+\usepackage[load-configurations = abbreviations]{siunitx}
+\sisetup{locale = FR,
+	detect-all,
+}
 
 % Pour mettre du boldface dans les maths:
 \usepackage{bm}

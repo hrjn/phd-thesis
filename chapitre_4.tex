@@ -96,21 +96,18 @@ En pratique, plusieurs fonctionnalités supplémentaires sont implémentées dan
 	\label{fig_spray_exemple}
 \end{figure}
 
-La combinaison de SWIFT et SPRAY permet ainsi de calculer un champ de concentration sur le domaine étudié, connaissant les paramètres du terme source qui sont soumis en entrée du modèle SPRAY. Dans ce chapitre, la chaîne de calcul PMSS est utilisée à a fois pour : \\
+La combinaison de SWIFT et SPRAY permet ainsi de calculer un champ de concentration sur le domaine étudié, connaissant les paramètres du terme source qui sont soumis en entrée du modèle SPRAY. Dans le contexte de ce chapitre, la chaîne de calcul PMSS permet de:
 
 \begin{itemize}
-	\item simuler un rejet induit par une source que l'on va chercher à retrouver: pour cela, on va récupérer les valeurs de concentration sur un nombre fini de points du domaine que nous définirons comme étant les valeurs d'observation fournies par les capteurs,
-	\item à construire les matrices source-récepteur nécessaires au processus d'estimation du terme source.\\
+	\item générer un jeu d'observations synthétiques en simulant un rejet induit par une source que l'on va chercher à retrouver: pour cela, on calcule les valeurs du champ de concentrations en un nombre fini de points du domaine que nous définirons comme étant les observations fournies par les capteurs,
+	\item construire les matrices source-récepteur lors de l'exécution de l'algorithme AMIS, nécessaires au processus d'estimation du terme source.\\
 \end{itemize}
-
-Sur ce dernier point, comme il s'agit désormais de travailler avec un outil de simulation relativement complet, et nécessitant \textit{de facto} des temps de calculs plus importants, il devient nécessaire d'optimiser le schéma algorithmique de l'estimation des paramètres de la source. Nous détaillons l'approche choisie dans la partie suivante.
-
 
 \subsection{Dualité \textit{forward-backward}}
 
 L'optimisation du calcul des matrices source-récepteur suivant le modèle de l'équation \eqref{eq_AE_4} est un point important: en effet dans une approche directe telle que présentée dans le chapitre précédent, la construction des $\MatC(\VecTheta)$ pour chaque particule $\VecTheta$ échantillonnée depuis la loi de proposition courante fait appel à autant de calculs de dispersion, ce qui rend l'opération d'estimation du terme source très coûteuse en temps de calcul.\\
 
-Nous proposons ici une amélioration du processus d'estimation privilégiant le calcul des matrices source-récepteur par une approche de type \textit{backward}, reposant sur l'utilisation d'un modèle de dispersion adjoint. Cette méthodologie a initialement été introduite dans \cite{Keats2007} pour ensuite être appliquée sur un algorithme d'estimation de type MCMC.
+Nous proposons dans la suite de ce chapitre une amélioration du processus d'estimation privilégiant le calcul des matrices source-récepteur par une approche de type \textit{backward}. Cette méthodologie a initialement été introduite dans \cite{Keats2007} pour ensuite être appliquée sur un algorithme d'estimation de type MCMC, nous en rappelons les bases ci-après.\\
 
 Soit une source ponctuelle $Q$ située au point de l'espace $\PosSource$, de débit massique constant $q_s$ et de temps d'activation et d'arrêt respectifs $t_{on}$ et $t_{off}$ définie par la distribution suivante:\\
 
@@ -136,7 +133,7 @@ La relation de \textit{dualité forward-backward} présentée par \cite{Keats200
 c_i = \int_0^t \int_V Q C^* ~ dtdV = \langle Q, C^*\rangle
 \label{eq_int_adjoint}
 \end{equation}
-où $C^*$ est le champ de rétro-concentrations induit par le $i$-ème capteur, et dont les valeurs sont obtenues par la résolution de l'équation \eqref{eqn_advection_diffusion_backward}. Dans la pratique, le champ $C^*$ est simulé par un \textit{modèle de dispersion adjoint}.
+où $C^*$ est le champ de rétro-concentrations induit par le $i$-ème capteur, et dont les valeurs sont obtenues par la résolution de l'équation \eqref{eqn_advection_diffusion_backward}. Dans la pratique, le champ $C^*$ est simulé par un \textit{modèle de dispersion dual}, ou \textit{modèle de rétro-dispersion}.\\
 
 La relation de dualité $\langle C,h\rangle = \langle Q,C^* \rangle$ est ainsi valable si l'équation adjointe d'advection-diffusion a été résolue de telle sorte que les conditions aux limites permettent d'annuler les termes de bord pouvant y apparaître. De plus:
 
@@ -152,17 +149,12 @@ C \simeq C^*
 \label{eq_equivalence}
 \end{equation}
 
-En pratique, l'égalité n'est pas stricte du fait de l'erreur des modèles directs et adjoints à partir desquels sont obtenus les deux champs, mais les valeurs sont relativement proches. \\
 
-Le fait de substituer un modèle adjoint au modèle direct permet de n'avoir à faire qu'un seul calcul de dispersion par capteur, qui donne alors l'ensemble des valeurs de rétro-concentrations sur le domaine. On peut alors réutiliser ces valeurs à chaque itération de l'algorithme AMIS, au lieu de relancer une série de calculs en mode \textit{forward}. En pratique, à paramètres identiques une simulation en \textit{forward} est aussi longue qu'en \textit{backward}, mais le gain en temps de calcul s'illustre par le fait de sortir cette simulation \textit{backward} du schéma itératif de l'algorithme d'estimation.
+\subsection{Intégration d'un modèle \textit{backward} au processus d'estimation}
 
+\subsubsection{Utilisation de RetroSPRAY dans l'AMIS}
 
-
-\subsection{Intégration de RetroSPRAY au processus d'estimation}
-
-\subsubsection{Principe théorique}
-
-Il nous est possible d'avoir recours au calcul des rétro-concentrations grâce à l'existence d'un modèle de dispersion adjoint appelé RetroSPRAY, associé à la suite de calcul PMSS. Ce dernier procède à la résolution des équations de Langevin en mode inverse: en prenant en compte un pas de temps positif, on a: 
+L'outil PMSS dispose d'une version \textit{backward} de SPRAY appelée RetroSPRAY, dont l'intégration dans la chaîne de calcul se fait de la même façon que pour SPRAY. Le modèle RetroSPRAY procède à la résolution des équations de Langevin en mode inverse: 
 
 \begin{equation}
 \begin{split}
@@ -201,11 +193,11 @@ C(R_{N_c},t_{T_c} | \VecTheta, t'_1) & C(R_{N_c},t_{T_c} | \VecTheta, t'_2) & \c
 \label{eq_matrix_forward}
 \end{equation}
 
-En appliquant la relation de dualité \textit{forward-backward}, dans l'espace dual où le modèle adjoint opère, les sources deviennent des "rétro-capteurs", et les capteurs deviennent des "rétro-sources". On définit alors $C^*(\VecTheta,t'_n | R_i, t_j)$ comme la rétro-concentration mesurée au point $\VecTheta$ à l'instant $t'_n$ provenant d'une rétro-source située à la position $R_i$ et ayant émis un rétro-rejet unitaire à l'instant $t_j$. La version \textit{backward} de $\MatC^f$ s'écrit alors:
+En appliquant la relation de dualité \textit{forward-backward}, dans l'espace dual où le modèle \textit{backward} opère, les sources deviennent des "rétro-capteurs", et les capteurs deviennent des "rétro-sources". On définit alors $C^*(\VecTheta,t'_n | R_i, t_j)$ comme la rétro-concentration mesurée au point $\VecTheta$ à l'instant $t'_n$ provenant d'une rétro-source située à la position $R_i$ et ayant émis un rétro-rejet unitaire à l'instant $t_j$. La version \textit{backward} de $\MatC^f$ s'écrit alors:
 
 \begin{equation}
-\begin{pmatrix}
 \MatC^b (\VecTheta)= 
+\begin{pmatrix}
 	C^*(\VecTheta, t'_1 | R_1, t_1) & C^*(\VecTheta, t'_2 | R_1, t_1) & \cdots & C^*(\VecTheta, t'_{T_s} | R_1, t_1) \\
 	C^*(\VecTheta, t'_1 | R_1, t_2) & C^*(\VecTheta, t'_2 | R_1, t_2) & \cdots & C^*(\VecTheta, t'_{T_s} | R_1, t_1) \\
 	\vdots & \vdots & & \vdots \\
@@ -218,39 +210,42 @@ En appliquant la relation de dualité \textit{forward-backward}, dans l'espace d
 \label{eq_matrix_backward}
 \end{equation}
 
-Il s'agira donc de privilégier $\MatC^b$ lors des applications pratiques, au moment de modéliser les concentrations comme il est fait  à l'équation \eqref{eq_AE_2} par exemple. Les tests préliminaires qui ont été effectués ont pu montrer l'équivalence entre les deux formulations matricielles, comme illustré à la figure \ref{fig_comparaison_matrices}.
+Dans l'algorithme AMIS, au moment de calculer la vraisemblance de chaque particule échantillonnée, on peut ainsi faire désormais intervenir $\MatC^b$ comme matrice source-récepteur.
 
-\begin{figure}[h!]
-	\centering
-	\begin{subfigure}[t]{0.5\textwidth}
-		\centering
-		\includegraphics[width=1\textwidth]{m_forward}
-		\caption{}
-		\label{forward}
-	\end{subfigure}%
-	\begin{subfigure}[t]{0.5\textwidth}
-		\centering
-		\includegraphics[width=1\textwidth]{m_backward}
-		\caption{}
-		\label{backward}
-	\end{subfigure}
-	\caption{Comparaison des matrices source-récepteur obtenues pour une source instantanée ayant émis un rejet unitaire: avec un calcul \textit{forward} (à gauche) et un calcul \textit{backward} (à droite)}
-	\label{fig_comparaison_matrices}	
-\end{figure}
+\subsubsection{Avantages}
 
-\subsubsection{Implémentation}
-
-Concrètement, l'utilisation de RetroSPRAY implique un transfert de la charge de calcul liée à l'exécution du modèle de dispersion en dehors du schéma itératif de l'AMIS. Avant tout calcul d'estimation, un ensemble de fichiers binaires contenant les différents champs de rétro-concentration sur tout le domaine est créé au cours d'une étape de pré-calcul. 
-
-Ainsi, durant le processus d'estimation, au moment de construire les matrices source-récepteur à partir des particules fournies par le tirage depuis la loi de proposition, au lieu d'envoyer les positions vers le modèle de dispersion \textit{forward} celles-ci sont redirigées vers une fonction dont le rôle est de renvoyer directement en mémoire les valeurs de $C^*$ nécessaires après lecture des fichiers binaires. Comme le montre la figure \ref{fig_schema_amis_optimise}, aucun calcul de dispersion à proprement parler n'est alors effectué dans le schéma itératif, seulement une série d'opérations de lecture de fichiers.\\
+Le fait de substituer un modèle \textit{backward} au modèle direct permet de n'avoir à faire qu'un seul calcul de rétro-dispersion par capteur, qui donne alors l'ensemble des valeurs de rétro-concentrations sur le domaine. De plus, ces calculs sont désormais opérés en amont du schéma itératif de l'AMIS: au lieu d'exécuter une boucle qui lance des calculs de dispersion pour chaque particule AMIS et à chaque itération, les champs $C^*$ sont pré-calculés et déjà disponibles au moment de l'estimation du terme source. \\
 
 \begin{figure}[h!]
 	\centering
 	\includegraphics[width=0.75\textwidth]{schema_amis_optimise}
+	\caption{Schéma de principe de la version \textit{backward} de l'algorithme d'estimation du terme source}
 	\label{fig_schema_amis_optimise}
-	\end{figure}
-	
-Dans les paragraphes suivants nous illustrons la mise en pratique de ce système optimisé sur plusieurs cas-tests simulés. \\
+\end{figure}
+
+Comme l'illustre la figure \ref{fig_schema_amis_optimise}, aucun calcul de dispersion n'est donc instancié durant la mise en oeuvre de l'algorithme, car les matrices source-récepteur sont désormais construites grâce à des opérations de lecture des fichiers dans lesquels ont été stockés les valeurs de $C^*$ pré-calculées. PMSS permet en effet d'agréger les résultats des calculs de dispersion dans des fichiers binaires, qui servent de base de données où les valeurs de rétro-concentration en chaque point du domaine peuvent être lues par un module d'entrée/sortie intégré à l'implémentation de l'AMIS.
+
+\subsubsection{Limitations}
+
+Il est toutefois important de rappeler que le fait d'associer le modèle \textit{backward} au modèle direct constitue une approximation. En effet, la partie "diffusion" du processus de dispersion atmosphérique est aléatoire, et ne peut être parfaitement reproduite dans le cas dual pour une configuration identique du modèle direct, créant ainsi un écart incompressible entre les champs $C$ et $C^*$. 
+
+Afin de réduire au mieux cet écart, il convient d'utiliser un nombre de PL suffisamment grand pour modéliser les rétro-rejets, en prenant toutefois garde à ne pas choisir une grandeur trop élevée, qui demanderait un temps de calcul trop important au modèle. En prenant cela en compte, il demeure nécessaire de quantifier cet écart. Pour cela, un test préliminaire a été effectué, afin de comparer les résultats obtenus par les deux approches (directe et \textit{backward}) lorsqu'il s'agit de simuler des données d'observation synthétiques. Concrètement, trois constructions du vecteur $\VecObs$ ont été étudiées:
+
+\begin{enumerate}
+	\item en spécifiant directement à SPRAY les paramètres temporels du rejet (débit),
+	\item en calculant une matrice source-récepteur avec SPRAY (modèle direct), puis en multipliant cette matrice par un vecteur de débit $\VecQSource$, de façon similaire au modèle de données de l'équation \eqref{eq_AE_3} mais sans ajout de bruit,
+	\item en reproduisant l'opération présentée en 2. mais avec une matrice source-récepteur obtenue par RetroSPRAY (modèle \textit{backward}).
+\end{enumerate} 
+
+\begin{figure}[h!]
+	\centering
+	\includegraphics[width=0.8\textwidth]{comparaison_3_obs.png}
+	\caption{Comparaison des observations synthétiques générées par une approche directe (en bleu et rouge) et en \textit{backward} (en vert)}
+	\label{fig_comparaison_3_obs}
+\end{figure}
+
+La figure \ref{fig_comparaison_3_obs} montre que les observations générées par l'approche \textit{backward} présentent un écart assez important avec les grandeurs équivalentes obtenues par la méthode directe. Afin de ne pas propager cette erreur dans l'estimation du terme source, nous avons choisi de n'utiliser que les observations obtenues par simulation \textit{backward} dans les cas pratiques illustrés par les prochains paragraphes.\\
+
 
 
 
@@ -260,67 +255,80 @@ Dans cette section nous présentons un première application sur une situation  
 
 \subsection{Présentation du cas-test}
 
-Nous considérons ici un cas-test en milieu rural de moyenne échelle reproduisant une émission accidentelle dans une zone située près de la commune de Beaune, en Bourgogne, en présence d'une topographie réelle. 
+Nous considérons ici un cas-test en milieu rural reproduisant une émission accidentelle depuis un site industriel dans une zone située près de la commune de Beaune, en Bourgogne, en présence d'une topographie réelle. 
 
 \begin{figure}[h!]
 	\centering
-	\includegraphics[width=0.7\textwidth]{beaune_relief_capteurs}
+	\includegraphics[width=0.8\textwidth]{beaune_relief_capteurs}
 	\caption{Superposition du relief, de l'emplacement des capteurs et de la source du cas-test Beaune}
 	\label{fig_beaune_relief}
 \end{figure}
 
 \subsubsection{Caractéristiques du domaine}
-Le domaine considéré est une surface carrée de $6 \text{km}^2$, avec une source unique et un réseau relativement dense de 25 capteurs disposés en quinconce et couvrant toute la superficie du domaine (figure \ref{fig_beaune_relief}).
+Le domaine considéré couvre une surface de \SI{6}{\square\kilo\meter} avec une source unique et un réseau relativement dense de 25 capteurs disposés en quinconce et couvrant toute la superficie du domaine (figure \ref{fig_beaune_relief}).
 
-Pour la simulation utilisant l'outil PMSS, le domaine est discrétisé en une grille de $300 \times 300$ mailles, avec une résolution du maillage en $x$ et $y$ de $20\text{m}$. 
+Pour la simulation, le domaine est discrétisé en une grille de $300 \times 300$ mailles, avec une résolution du maillage en $x$ et $y$ de \SI{20}{\meter}.
 
 \subsubsection{Paramètres météorologiques}
-Sur toute la durée de la simulation, nous considérons un vent constant en vitesse ($1.5\text{m/s}$) et en direction ($330\degres$). Cela produit un champ de vent relativement homogène (figure \ref{fig_beaune_vent}).
+Sur toute la durée de la simulation, nous considérons un vent constant en vitesse (\SI{1.5}{\m\per\second}) et en direction ($330\degres$). Le champ de vent produit par SWIFT est ainsi relativement homogène, comme observé en figure \ref{fig_beaune_vent}).
 
 \begin{figure}[h!]
 	\centering
-	\includegraphics[width=0.7\textwidth]{beaune_vent}
+	\includegraphics[width=0.8\textwidth]{beaune_vent}
 	\caption{Champ de vent calculé par SWIFT pour le cas-test Beaune}
 	\label{fig_beaune_vent}
 \end{figure}
 
 
 \subsubsection{Paramètres relatifs à la source}
-Afin de simuler les observations aux capteurs, on choisit une source unique située dans la partie nord (voir figure \ref{fig_beaune_relief}) afin que le panache résultant couvre une partie suffisante du domaine. La source est située à une altitude de 10m, et émet un rejet unique entre 10h15 et 11h, avec un débit constant de 1850 unités/s. Pour la simulation, cette source est modélisée comme étant un volume de 15m $\times$ 15m $\times$ 10m. \\
+On choisit ici de modéliser une source située dans la partie nord (voir figure \ref{fig_beaune_relief}) afin que le panache résultant couvre une partie suffisante du domaine. La source est située à une altitude de \SI{10}{\m}, et émet un rejet unique entre 10h15 et 11h, avec un débit constant de 1850 unités/s. Pour la simulation, cette source est modélisée comme étant un volume de \SI{20}{\m} $\times$ \SI{20}{\m} $\times$ \SI{10}{\m}. 
+
+\subsubsection{Paramètres relatifs aux capteurs}
+On considère un réseau de 25 capteurs disposés de façon à couvrir tout le domaine, et placés à une hauteur de \SI{10}{\meter}, égale à celle de la source. 
 
 \begin{figure}[h!]
 	\centering
-	\begin{subfigure}[t]{0.5\textwidth}
-		\centering
-		\includegraphics[width=1\textwidth]{source_1_12}
-		\caption{Instantané du panache à 10h55}
-		\label{panache}
-	\end{subfigure}%
-	\centering
-	\begin{subfigure}[t]{0.5\textwidth}
-		\centering
-		\includegraphics[width=1\textwidth]{obs_vent_330}
-		\caption{Concentrations aux capteurs}
-		\label{series_temporelles}
-	\end{subfigure}
-	\caption{Caractéristiques du rejet simulé: forme du panache (\ref{panache}) et concentrations moyennes aux capteurs impactés par le rejet (\ref{series_temporelles})}
-	\label{fig_rejet_beaune} 
+	\includegraphics[width=0.8\textwidth]{observations_25CAPTEURS.png}
+	\caption{Concentrations mesurées aux capteurs}
+	\label{fig_observations_25CAPTEURS}
 \end{figure}
 
-\missingfigure{Remplacer figure \ref{fig_rejet_beaune} par snapshots à 6 instants sur 1 page.}
-
-La figure \ref{panache} illustre l'allure du panache résultant de la source simulée par SPRAY, et sa propagation dans l'axe du vent. La figure \ref{series_temporelles} représente les séries temporelles de concentrations moyennes relevées aux capteurs impactés par le panache.
-
-\subsubsection{Paramètres relatifs aux capteurs}
-On considère un réseau de 25 capteurs disposés de façon à couvrir tout le domaine, et placés à une hauteur de 10m, égale à celle de la source. Chaque capteur est modélisé par un volume de 15m $\times$ 15m $\times$ 10m, et fournit des observations de concentrations moyennes entre 10h05 et 12h (voir figure \ref{series_temporelles}). La moyenne des concentrations s'effectue sur des plages de 5 minutes.
-
-\missingfigure{Concentrations mesurées aux capteurs et constituant le vecteur d'observation utilisé en entrée de l'algorithme AMIS}
+Chaque capteur est modélisé par un volume de \SI{15}{\meter} $\times$ \SI{15}{\meter} $\times$ \SI{10}{\meter}, et fournit des observations de concentrations moyennes entre 10h05 et 12h00, avec une plage de moyennage de 5 minutes. La figure \ref{fig_observations_25CAPTEURS} représente les séries temporelles des concentrations moyennes relevées aux capteurs impactés par la source. 
 
 \subsubsection{Tableau récapitulatif}
 
-\todoin{Faire un fat tableau récapitulant tous les paramètres précédemment énoncés}
+\begin{center}
+	\begin{tabular}{| l || c | }
+		\hline			
+		Coordonnées point SO (km) & $(642000;647980)$  \\
+		\hline
+		Coordonnées point NE (km) & $(5204000;5209980)$ \\
+		\hline
+		Nombre de mailles $(x,y)$ & $(300;300)$ \\
+		\hline
+		Résolution maille (m) & $20$ \\
+		\hline
+		Vitesse vent (\SI{}{\meter\per\second}) & 1.5 \\
+		\hline
+		Direction vent ($\degres$) & 330 \\
+		\hline
+		Durée du rejet (\SI{}{\minute}) & 45 \\
+		\hline
+		Débit du rejet (unités/s) & 1850 \\
+		\hline
+		Fenêtre d'observation & De 10h05 à 12h00 \\
+		\hline
+	\end{tabular}
+\end{center}
 
-\subsection{Analyse paramétrique sur $\varObs$}
+\subsubsection{Premiers résultats}
+
+Avec une initialisation uniforme sur le domaine et un total de 10 itérations, l'algorithme d'estimation du terme source parvient à fournir une bonne estimation des paramètres, aussi bien concernant la localisation de la source (FIG) que la reconstruction de son profil d'émission (FIG).\\
+
+
+
+
+\subsection{Influence de la variance d'observation $\varObs$}
 
 \subsection{Analyse paramétrique sur $\varQ$}
 

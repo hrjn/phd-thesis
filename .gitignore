@@ -4,6 +4,7 @@ figures_keynote/*
 figures_svd/*
 figures_fig/*
 outputs/*
+code_for_figures/*
 ## Temporary files
 *.swp
 ## Main output
