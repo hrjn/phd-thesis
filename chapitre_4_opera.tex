@@ -1,0 +1,68 @@
+
+
+\subsection{Influence de la variance d'observation $\varObs$}
+
+\subsection{Analyse paramétrique sur $\varQ$}
+
+\subsection{Modularité du réseau de capteurs}
+
+\section{Exemple d'application à un cas urbain}
+
+On considère à présent le cas d'un rejet bref dans un cadre urbain.\\
+
+\subsection{Présentation du cas-test}
+
+On se place à l'échelle d'un quartier, en l'occurrence celui de la Place de l'Opéra, à Paris: il s'agit ici d'une situation plus complexe par rapport au cas précédent, à cause de la présence d'obstacles multiples et de géométries variées sur le domaine (bâtiments). \\
+
+\missingfigure{Opéra: domaine et capteurs}
+
+\subsubsection{Caractéristiques du domaine}
+
+On se place sur un domaine de 808m $\times$ 882m, soit environ $844\text{m}^2$. La discrétisation choisie est plus fine que dans le cas précédent, car la topographie est plus complexe: le domaine est ainsi divisé en 404 mailles selon $x$ et 441 mailles selon $y$, avec une résolution de 2m sur chaque direction. \\
+
+\missingfigure{Schéma du domaine avec mise en évidence de l'aspect 3D}
+
+\subsubsection{Paramètres météorologiques}
+
+On choisit un vent de vitesse constante (3m/s) mais dont la direction change toutes les heures : \\
+
+\begin{center}
+\begin{tabular}{cccc}
+	\centering
+	Heure & 11:00:00 &  12:00:00 &  13:00:00\\ 
+	\hline
+	 Direction vent & $230\degres$ & $180\degres$ & $45\degres$
+\end{tabular} 
+\end{center}
+
+La combinaison de ces variations temporelles ainsi que de la présence d'obstacles sur le domaine fait que les champs de vent 3D diagnostiqués par SWIFT sont relativement complexes, comme l'atteste la figure FIG.
+
+\missingfigure{Champs de vent à 2m }
+
+\subsubsection{Paramètres relatifs à la source}
+
+On se place dans le cas d'une source unique située à 2m du sol, et qui émet un rejet bref d'une durée de 10 minutes entre 12h10 et 12h20, avec un débit constant de $10^4$ unités/s. Dans la simulation, cette source est modélisée par un volume de 4M $\times$ 4m $\times$ 2m. Ces caractéristiques se rapprochent de celles d'un rejet d'origine malveillante, par exemple suite à l'explosion d'une "bombe sale". \\
+
+\missingfigure{Illustration du rejet 12h15 --> 12h40}
+
+\subsubsection{Paramètres relatifs aux capteurs}
+
+Le domaine contient un réseau de 10 capteurs, qui sont placés aux centres de diverses intersections de rues, ainsi que sur des places publiques. Ils sont situés à la même hauteur que la source, et leur volume de contrôle est de 4m $\times$ 4m $\times$ 2m. Ils délivrent des valeurs de concentrations moyennées sur des plages de 5 minutes. \\
+
+\subsubsection{Tableau récapitulatif}
+
+
+
+
+\subsection{Initialisation optimisée de la loi de proposition}
+
+Dans une situation complexe comme celle du cas Opéra, il peut se révéler utile d'initialiser la loi de proposition pour l'AMIS de façon plus judicieuse qu'une simple hypothèse de répartition uniforme des particules sur le domaine. Une initialisation optimisée permettra ainsi d'explorer des zones potentiellement intéressantes plus rapidement, augmentant l'efficacité de l'algorithme d'estimation. \\
+
+Comme dans notre cas on a choisi une loi de proposition de type mixture de $D$ gaussiennes $\varphi_1, \dots, \varphi_D$, on va chercher à estimer les moyennes $\left(\VecMu_d\right)_{1:d}$ et les matrices de covariance $\left(\MatSigma_d\right)_{1:d}$ de chacune de ces composantes, ainsi que leurs facteurs d'influence $\left(\alpha_d\right)_{1:d}$. 
+
+Pour cela, in utilise les résultats issus d'un \textit{run} de rétro-propagation: suivant un modèle de dispersion adjoint, on construit une série de cartes des concentrations conjuguées sur tout le domaine, en transformant les capteurs en rétro-sources et en utilisant les concentrations mesurées comme valeurs de rétro-émission. Une fois ces cartes créées, elles sont vues comme des ébauches des densités de probabilité sur la position de la source pour différents temps d'émission. L'objectif est alors de caler les paramètres $\left(\alpha_d, \VecMu_d,\MatSigma_d \right)_{1:D}$ sur ces densités.\\
+
+On part de l'instant d'observation $t_0$ qui est celui où la concentration la plus élevée a été observée. On définit ensuite un instant $t_{RP}$ qui correspond à l'instant final de la rétro-propagation, avec $t_{RP} < t_0$. 
+
+\subsection{Résultats}
+
