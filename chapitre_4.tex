@@ -223,7 +223,9 @@ Le fait de substituer un modèle \textit{backward} au modèle direct permet de n
 	\label{fig_schema_amis_optimise}
 \end{figure}
 
-Comme l'illustre la figure \ref{fig_schema_amis_optimise}, aucun calcul de dispersion n'est donc instancié durant la mise en oeuvre de l'algorithme, car les matrices source-récepteur sont désormais construites grâce à des opérations de lecture des fichiers dans lesquels ont été stockés les valeurs de $C^*$ pré-calculées. PMSS permet en effet d'agréger les résultats des calculs de dispersion dans des fichiers binaires, qui servent de base de données où les valeurs de rétro-concentration en chaque point du domaine peuvent être lues par un module d'entrée/sortie intégré à l'implémentation de l'AMIS.
+Comme l'illustre la figure \ref{fig_schema_amis_optimise}, aucun calcul de dispersion n'est donc instancié durant la mise en oeuvre de l'algorithme, car les matrices source-récepteur sont désormais construites grâce à des opérations de lecture des fichiers dans lesquels ont été stockés les valeurs de $C^*$ pré-calculées. PMSS permet en effet d'agréger les résultats des calculs de dispersion dans des fichiers binaires, qui servent de base de données où les valeurs de rétro-concentration en chaque point du domaine peuvent être lues par un module d'entrée/sortie intégré à l'implémentation de l'AMIS.\\
+
+Même si cette opération n'est plus directement intégrée à l'algorithme d'estimation, elle demande néanmoins une certaine quantité de calculs. Cette dernière peut toutefois être réduite si on choisit de paralléliser l'opération de génération des fichiers binaires de rétro-concentration. Comme il s'agit de tâches parfaitement indépendantes les unes par rapport aux autres, la parallélisation est facilement réalisable (\textit{embarrasingly parallel jobs}). Si on doit générer $n_b$ fichiers binaires en allouant $n_p$ coeurs de calcul par opération de génération, cela requiert la disponibilité de $n_b \times n_p$ coeurs. Si une telle quantité de ressources n'est pas immédiatement disponible, il peut être plus judicieux de créer séquentiellement ces fichiers binaires. L'approche séquentielle est également à privilégier si on ne dispose pas d'une architecture de type \textit{cluster} permettant une parallélisation massive. 
 
 \subsubsection{Limitations}
 
@@ -323,6 +325,8 @@ Chaque capteur est modélisé par un volume de \SI{15}{\meter} $\times$ \SI{15}{
 
 \subsubsection{Premiers résultats}
 
+Pour tous les résultats présentés dans ce chapitre, le pré-calcul des fichiers binaires contenant les rétro-concentrations ainsi que l'algorithme AMIS ont été exécutés sur le supercalculateur AIRAIN du Très Grand Centre de Calcul (TGCC). \\
+
 Avec une initialisation uniforme sur le domaine et un total de 10 itérations, l'algorithme d'estimation du terme source parvient à fournir une bonne estimation des paramètres, aussi bien concernant la localisation de la source (figures \ref{fig_25C_prelim_X} et \ref{fig_25C_prelim_Y}) que la reconstruction de son profil d'émission (figure \ref{fig_25C_prelim_Q}).\\
 
  \begin{figure}[h!]
@@ -367,9 +371,51 @@ Avec une initialisation uniforme sur le domaine et un total de 10 itérations, l
  
  \subsection{Influence de la variance d'observation $\varObs$}
  
- La variance d'observation $\varObs$ est le paramètre qui reflète la "confiance" donnée aux observations $\VecObs$. Comme expliqué au Chapitre 3, elle caractérise l'ensemble des erreurs à l'origine de l'écart entre les valeurs issues du modèle de données et la réalité physique. 
+ La variance d'observation $\varObs$ est le paramètre qui reflète la "confiance" donnée aux observations $\VecObs$. Comme expliqué au Chapitre 3, elle caractérise l'ensemble des erreurs à l'origine de l'écart entre les valeurs issues du modèle de données et la réalité physique. Comme il a été expliqué précédemment, l'erreur d'observation est une agrégation de diverses sources individuelles d'erreur (modèle, instrumentation...). Sans chercher à mener une analyse approfondie sur la quantification des incertitudes autour des observations, nous cherchons plutôt ici à avoir une vision d'ensemble de l'influence du paramètre $\varObs$ sur la qualité de l'estimation du terme source. Pour cela, on fixe les paramètres suivants:\\
  
- Comme il a été expliqué précédemment, l'erreur d'observation est une agrégation de diverses sources individuelles d'erreur (modèle, instrumentation...). Sans chercher à mener une analyse approfondie sur la quantification des incertitudes autour des observations, nous cherchons plutôt ici à avoir une vision d'ensemble de l'influence du paramètre $\varObs$ sur la qualité de l'estimation du terme source.
+ \begin{itemize}
+ 	\item l'algorithme AMIS est exécuté sur 10 itérations, avec 100 particules échantillonnées par itération,
+ 	\item la loi de proposition est initialisée de façon uniforme sur le domaine,
+ 	\item les paramètres de la loi a priori de $\VecQSource$ sont $\varQ = 2\times10^6$ et $\VecMeanQ = (0,\cdots, 0)$.\\
+ \end{itemize}
+ 
+ On choisit ensuite une plage de valeurs de $\varObs$ à tester, et pour chacune de ces valeurs, on lance 100 \textit{runs} de l'AMIS: ce dernier faisant intervenir des tirages aléatoires, le fait de considérer les résultats issus d'un nombre suffisant de \textit{runs} permet de voir si la qualité des estimations n'est pas perturbée par ces aspects stochastiques. Les valeurs de variance choisies sont $10^{-7}, 5\times 10^{-7}, 10^{-6}, 5\times 10^{-6}, 10^{-5}, 5\times 10^{-5},10^{-4}$. \\
+   
+         Concernant la localisation de la source, on observe sur les figures \ref{fig_25C_analyse_varobs_x} et \ref{fig_25C_analyse_varobs_y} de l'Annexe A que les résultats sont plutôt réguliers: l'estimation de la position est bonne pour les valeurs inférieures à $5\times 10^{-6}$ puis se dégrade progressivement jusqu'à avoir du mal à définir une zone précise de l'espace (\ref{varF_x} et \ref{varF_y}).
+         
+         Pour le profil d'estimation sur la figure \ref{fig_25C_analyse_varobs_q} de l'Annexe A, celui-ci est relativement bien estimé pour $\varObs=10^{-7}$, les variations étant de plus en plus importantes au fur et à mesure que la valeur de la variance d'observation augmente. Certaines des valeurs estimées pour le débit soient négatives, or il a été constaté que l'application de la contrainte de positivité a tendance à surestimer les valeurs de $\tilde{\VecMeanQ}$, comme le montre l'exemple de la figure \ref{fig_sansavecPC}. Il a donc été décidé de ne pas implémenter cette contrainte, car malgré la présence de quelques valeurs négatives, le sens physique des résultats d'estimation est globalement respecté.\\
+       
+\begin{figure}[h!]
+    	\centering
+         	\begin{subfigure}[t]{0.5\textwidth}
+         		\centering
+         		\includegraphics[width=1\textwidth]{1part_sansPC.png}
+         		\caption{}
+         		\label{sansPC}
+         	\end{subfigure}%
+         	\begin{subfigure}[t]{0.5\textwidth}
+         		\centering
+         		\includegraphics[width=1\textwidth]{1part_avecPC.png}
+         		\caption{}
+         		\label{avecPC}
+         	\end{subfigure}
+         	\caption{Comparaison de l'estimation de $\tilde{\VecMeanQ}$ sur une particule dans la maille de la source sans (à gauche) et avec (à droite) la contrainte de positivité}
+         	\label{fig_sansavecPC}
+         \end{figure}
+
+En examinant les résultats des figures précédentes, on pourrait considérer la valeur $\varObs = 10^{-7}$ comme étant celle qui donne les meilleurs résultats. Il faut cependant rappeler que dans notre cas d'étude, nous utilisons des observations synthétiques non-bruitées, ce qui permet d'accorder une plus grande confiance à ces observations et donc de réduire la valeur de $\varObs$. On ne peut pas forcément en faire autant si des sources d'incertitudes supplémentaires entrent en jeu, par exemple avec des valeurs de concentrations expérimentales issues de mesures réelles. Pour illustrer cela, on  compare les résultats d'estimation pour une variance $\varObs = 10^{-7}$ avec et sans ajout de bruit dans le vecteur d'observation.\\
+
+\todoin{1) Comparaison avec et sans bruit 2) Conclusion}
+
+\subsection{Influence de la variance a priori du profil d'émission}
+
+La variance a priori $\varQ$ peut être vue comme une hypothèse de départ sur l'amplitude possible des valeurs du profil d'émission. Son influence s'applique à la fois sur la qualité de la reconstruction de $\VecQSource$, mais également sur celle de la localisation de la source, car $\varQ$ intervient dans l'algorithme AMIS lors du calcul de la vraisemblance des particules. 
+
+Pour cette analyse, on utilise le même procédé que pour l'étude de $\varObs$, avec un nombre identique d'itération et de particules échantillonnées, l'initialisation reste uniforme, et on fixe $\VecMeanQ = (0,\cdots,0)$ et $\varObs=10^{-6}$. Un total de 100 \textit{runs} de l'AMIS est exécuté, les valeurs de $\varQ$ couvertes étant: $2\times 10^5, 7\times 10^5, 2\times 10^6, 7\times 10^6, 2\times 10^7$ et $7\times 10^7$.
+
+ 
+ 
+ 
 
 
 
