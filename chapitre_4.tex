@@ -327,7 +327,7 @@ Chaque capteur est modélisé par un volume de \SI{15}{\meter} $\times$ \SI{15}{
 
 Pour tous les résultats présentés dans ce chapitre, le pré-calcul des fichiers binaires contenant les rétro-concentrations ainsi que l'algorithme AMIS ont été exécutés sur le supercalculateur AIRAIN du Très Grand Centre de Calcul (TGCC). \\
 
-Avec une initialisation uniforme sur le domaine et un total de 10 itérations, l'algorithme d'estimation du terme source parvient à fournir une bonne estimation des paramètres, aussi bien concernant la localisation de la source (figures \ref{fig_25C_prelim_X} et \ref{fig_25C_prelim_Y}) que la reconstruction de son profil d'émission (figure \ref{fig_25C_prelim_Q}).\\
+Avec une initialisation uniforme sur le domaine et un total de 10 itérations, l'algorithme d'estimation du terme source parvient à fournir une estimation relativement correcte des paramètres, aussi bien concernant la localisation de la source (figures \ref{fig_25C_prelim_X} et \ref{fig_25C_prelim_Y}) que la reconstruction de son profil d'émission (figure \ref{fig_25C_prelim_Q}).\\
 
  \begin{figure}[h!]
  	\centering
@@ -349,7 +349,7 @@ Avec une initialisation uniforme sur le domaine et un total de 10 itérations, l
  		\caption{Profil d'émission}
  		\label{fig_25C_prelim_Q}
  	\end{subfigure} 
- 	\caption{Résultats d'un \textit{run} de l'algorithme d'estimation sur le cas-test Beaune, avec les paramètres $\varObs=2\times 10^{-5}$ et $\varQ=2\times 10^6$}
+ 	\caption{Résultats d'un \textit{run} de l'algorithme d'estimation sur le cas-test Beaune, avec les paramètres $\varObs=2\times 10^{-6}$ et $\varQ=2\times 10^6$}
  	\label{fig_25C_prelim}
  \end{figure}
  
@@ -365,7 +365,13 @@ Avec une initialisation uniforme sur le domaine et un total de 10 itérations, l
  	\item $\widehat{\Vecx} _{MMSE}$ est l'estimation ponctuelle par MMSE de la position de la source obtenue via les particules et les poids d'importance fournis en sortie de l'AMIS.
  \end{itemize}
  
- Dans l'exemple de la figure \ref{fig_25C_prelim}, on obtient ainsi une erreur relative $r_d = 0.018$.\\
+ Pour mesurer l'erreur d'estimation du débit, on utilise l'erreur quadratique moyenne définie par:
+ \begin{equation}
+	 Err(\tilde{\VecMeanQ}) = \dfrac{1}{T_s} \sum\limits_{i=1}^{T_s}(\VecQSource^{(i)} - \tilde{\VecMeanQ}^{(i)})^2
+ \end{equation}
+ où $\VecQSource$ est le profil d'émission réel et $\tilde{\VecMeanQ}$ est le profil estimé.\\
+ 
+ Dans l'exemple de la figure \ref{fig_25C_prelim}, on obtient ainsi une erreur relative de $r_d = 0.017$ pour la position, et une erreur d'estimation du débit de $Err(\tilde{\VecMeanQ}) = 296.909$. \\
  
  Il a cependant été observé que la qualité des résultats d'estimation dépend fortement des paramètres de variance d'observation $\varObs$ et de variance a priori $\varQ$ du profil d'émission $\VecQSource$ . Comme il s'agit de grandeurs que l'utilisateur doit lui-même spécifier avant de lancer la procédure d'estimation, une étude paramétrique leur est consacrée dans les prochains paragraphes.
  
@@ -383,7 +389,17 @@ Avec une initialisation uniforme sur le domaine et un total de 10 itérations, l
    
          Concernant la localisation de la source, on observe sur les figures \ref{fig_25C_analyse_varobs_x} et \ref{fig_25C_analyse_varobs_y} de l'Annexe A que les résultats sont plutôt réguliers: l'estimation de la position est bonne pour les valeurs inférieures à $5\times 10^{-6}$ puis se dégrade progressivement jusqu'à avoir du mal à définir une zone précise de l'espace (\ref{varF_x} et \ref{varF_y}).
          
-         Pour le profil d'estimation sur la figure \ref{fig_25C_analyse_varobs_q} de l'Annexe A, celui-ci est relativement bien estimé pour $\varObs=10^{-7}$, les variations étant de plus en plus importantes au fur et à mesure que la valeur de la variance d'observation augmente. Certaines des valeurs estimées pour le débit soient négatives, or il a été constaté que l'application de la contrainte de positivité a tendance à surestimer les valeurs de $\tilde{\VecMeanQ}$, comme le montre l'exemple de la figure \ref{fig_sansavecPC}. Il a donc été décidé de ne pas implémenter cette contrainte, car malgré la présence de quelques valeurs négatives, le sens physique des résultats d'estimation est globalement respecté.\\
+         Pour le profil d'estimation sur la figure \ref{fig_25C_analyse_varobs_q} de l'Annexe A, celui-ci est relativement bien estimé pour $\varObs=10^{-7}$, les variations étant de plus en plus importantes au fur et à mesure que la valeur de la variance d'observation augmente. Les courbes d'erreur de la figure \ref{fig_25C_varobs_erreurs} donnent un aperçu de l'influence générale de la variance d'observation.
+         
+         \begin{figure}[h!]
+         	\centering
+         	\includegraphics[width=0.8\textwidth]{25C_varobs_errors.png}
+         	\caption{Courbes d'erreur pour l'analyse paramétrique de $\varObs$}
+         	\label{fig_25C_varobs_erreurs}
+         \end{figure}
+         
+         
+         Certaines des valeurs estimées pour le débit soient négatives, or il a été constaté que l'application de la contrainte de positivité a tendance à surestimer les valeurs de $\tilde{\VecMeanQ}$, comme le montre l'exemple de la figure \ref{fig_sansavecPC}. Il a donc été décidé de ne pas implémenter cette contrainte, car malgré la présence de quelques valeurs négatives, le sens physique des résultats d'estimation est globalement respecté.\\
        
 \begin{figure}[h!]
     	\centering
@@ -411,7 +427,52 @@ En examinant les résultats des figures précédentes, on pourrait considérer l
 
 La variance a priori $\varQ$ peut être vue comme une hypothèse de départ sur l'amplitude possible des valeurs du profil d'émission. Son influence s'applique à la fois sur la qualité de la reconstruction de $\VecQSource$, mais également sur celle de la localisation de la source, car $\varQ$ intervient dans l'algorithme AMIS lors du calcul de la vraisemblance des particules. 
 
-Pour cette analyse, on utilise le même procédé que pour l'étude de $\varObs$, avec un nombre identique d'itération et de particules échantillonnées, l'initialisation reste uniforme, et on fixe $\VecMeanQ = (0,\cdots,0)$ et $\varObs=10^{-6}$. Un total de 100 \textit{runs} de l'AMIS est exécuté, les valeurs de $\varQ$ couvertes étant: $2\times 10^5, 7\times 10^5, 2\times 10^6, 7\times 10^6, 2\times 10^7$ et $7\times 10^7$.
+Pour cette analyse, on utilise le même procédé que pour l'étude de $\varObs$, avec un nombre identique d'itération et de particules échantillonnées, l'initialisation reste uniforme, et on fixe $\VecMeanQ = (0,\cdots,0)$ et $\varObs=10^{-6}$. Un total de 100 \textit{runs} de l'AMIS est exécuté, les valeurs de $\varQ$ couvertes étant: $2\times 10^5, 7\times 10^5, 2\times 10^6, 7\times 10^6, 2\times 10^7$ et $7\times 10^7$.\\
+
+Pour l'estimation de la position, on constate que plus la valeur de $\varQ$ considérée est grande, plus la source aura tendance à être estimée en amont sur l'axe du panache par rapport à la direction du vent. Ce phénomène est bien visible sur la figure \ref{fig_25C_varQ_boxplots}, où les \textit{boxplots} des estimations ponctuelles sont tracées pour chacune des valeurs de $\varQ$ testées.
+
+\begin{figure}[h!]
+	\centering
+         	\begin{subfigure}[t]{0.5\textwidth}
+         		\centering
+         		\includegraphics[width=1\textwidth]{25C_varQ_boxplot_x.png}
+         		\caption{}
+         		\label{varQ_boxplot_x}
+         	\end{subfigure}%         	
+         \begin{subfigure}[t]{0.5\textwidth}
+         	\centering
+         	\includegraphics[width=1\textwidth]{25C_varQ_boxplot_y.png}
+         	\caption{}
+         	\label{varQ_boxplot_y}
+         \end{subfigure}%
+         \caption{\textit{Boxplots} des estimations par MMSE de la position de la source sur 100 runs, comparaison avec les valeurs réelles (en pointillés noirs)}
+         \label{fig_25C_varQ_boxplots}
+	
+\end{figure}
+
+La meilleure estimation du profil d'émission est obtenue pour $\varQ=2\times 10^6$ (voir figure \ref{fig_25C_analyse_varq_q} de l'Annexe A), ce qui coïncide avec la meilleure position estimée dans la figure \ref{fig_25C_varQ_boxplots}. Pour des valeurs plus faibles de $\varQ$ le débit est sous-estimé, à l'inverse pour des valeurs plus élevées le débit est surestimé. On peut résumer ce comportement grâce aux courbes d'erreur de la figure \ref{fig_25C_varq_erreurs}.
+
+         \begin{figure}[h!]
+         	\centering
+         	\includegraphics[width=0.8\textwidth]{25C_varQ_errors.png}
+         	\caption{Courbes d'erreur pour l'analyse paramétrique de $\varQ$}
+         	\label{fig_25C_varq_erreurs}
+         \end{figure}
+
+\subsection{Influence de la densité du réseau de capteurs}
+
+Le nombre et de la répartition des capteurs constitue un facteur important: 
+
+\begin{itemize}
+	\item du point de vue théorique, son étude permet de mieux comprendre le comportement de l'algorithme d'estimation et quantifier son importance par rapport aux autres variables,
+	\item en pratique, l'analyse des résultats d'estimation en fonction de la configuration des capteurs permet un meilleur dimensionnement du réseau de mesure.\\
+\end{itemize}
+
+\subsubsection{Impact du capteur R8}
+
+Dans un premier temps, nous nous intéressons à l'influence du capteur R8, dont les mesures (figure \ref{fig_observations_25CAPTEURS}) semblent être les plus informatives. Pour cela, nous le retirons du réseau, et nous effectuons l'opération d'estimation du terme source avec les observations issues des 24 capteurs restants. En pratique, cela reviendrait par exemple à simuler la panne du capteur R8 durant la fenêtre temporelle d'observation.\\
+
+
 
  
  
