@@ -325,9 +325,15 @@ Chaque capteur est modélisé par un volume de \SI{15}{\meter} $\times$ \SI{15}{
 
 \subsubsection{Premiers résultats}
 
-Pour tous les résultats présentés dans ce chapitre, le pré-calcul des fichiers binaires contenant les rétro-concentrations ainsi que l'algorithme AMIS ont été exécutés sur le supercalculateur AIRAIN du Très Grand Centre de Calcul (TGCC). \\
+Un \textit{run} préliminaire de l'AMIS servant de \textit{benchmark} a été lancé avec les paramètres suivants:
+\begin{itemize}
+	\item 10 itérations,
+	\item 100 particules générées par itération,
+	\item $\varObs = 2\times 10^{-6}$, qui fixe un degré d'incertitude suffisant autour des observations de la figure \ref{fig_observations_25CAPTEURS},
+	\item une discrétisation temporelle de la source par paliers de 5 minutes, avec les paramètres a priori $\VecMeanQ = (0,\cdots,0)$ et $\varQ = 2\times 10^6$.
+\end{itemize}
 
-Avec une initialisation uniforme sur le domaine et un total de 10 itérations, l'algorithme d'estimation du terme source parvient à fournir une estimation relativement correcte des paramètres, aussi bien concernant la localisation de la source (figures \ref{fig_25C_prelim_X} et \ref{fig_25C_prelim_Y}) que la reconstruction de son profil d'émission (figure \ref{fig_25C_prelim_Q}).\\
+Avec ces paramètres, l'algorithme d'estimation parvient à fournir une reconstruction relativement correcte des paramètres, aussi bien concernant la localisation de la source (figures \ref{fig_25C_prelim_X} et \ref{fig_25C_prelim_Y}) que la reconstruction de son profil d'émission (figure \ref{fig_25C_prelim_Q}).\\
 
  \begin{figure}[h!]
  	\centering
@@ -346,10 +352,10 @@ Avec une initialisation uniforme sur le domaine et un total de 10 itérations, l
  	\begin{subfigure}[t]{0.65\textwidth}
  		\centering
  		\includegraphics[width=1\textwidth]{25C_prelim_Q.png}
- 		\caption{Profil d'émission}
+ 		\caption{Profil d'émission avec intervalle de confiance à  $\pm 2 \tilde{\sigma}_q^2$ (gris)}
  		\label{fig_25C_prelim_Q}
  	\end{subfigure} 
- 	\caption{Résultats d'un \textit{run} de l'algorithme d'estimation sur le cas-test Beaune, avec les paramètres $\varObs=2\times 10^{-6}$ et $\varQ=2\times 10^6$}
+ 	\caption{Résultats du \textit{benchmark} de l'algorithme d'estimation sur le cas-test Beaune}
  	\label{fig_25C_prelim}
  \end{figure}
  
@@ -373,19 +379,11 @@ Avec une initialisation uniforme sur le domaine et un total de 10 itérations, l
  
  Dans l'exemple de la figure \ref{fig_25C_prelim}, on obtient ainsi une erreur relative de $r_d = 0.017$ pour la position, et une erreur d'estimation du débit de $Err(\tilde{\VecMeanQ}) = 296.909$. \\
  
- Il a cependant été observé que la qualité des résultats d'estimation dépend fortement des paramètres de variance d'observation $\varObs$ et de variance a priori $\varQ$ du profil d'émission $\VecQSource$ . Comme il s'agit de grandeurs que l'utilisateur doit lui-même spécifier avant de lancer la procédure d'estimation, une étude paramétrique leur est consacrée dans les prochains paragraphes.
+ Nous étudions dans les paragraphes suivants l'influence des paramètres de variance d'observation $\varObs$ et de variance a priori $\varQ$ du profil d'émission $\VecQSource$ sur la qualité de l'estimation. Une telle étude paramétrique permet en effet de donner du sens à ces paramètres, ceux-ci devant être spécifiés par l'utilisateur parmi les variables d'entrée de l'algorithme d'estimation. 
  
- \subsection{Influence de la variance d'observation $\varObs$}
+ \subsection{Influence de la variance d'observation}
  
- La variance d'observation $\varObs$ est le paramètre qui reflète la "confiance" donnée aux observations $\VecObs$. Comme expliqué au Chapitre 3, elle caractérise l'ensemble des erreurs à l'origine de l'écart entre les valeurs issues du modèle de données et la réalité physique. Comme il a été expliqué précédemment, l'erreur d'observation est une agrégation de diverses sources individuelles d'erreur (modèle, instrumentation...). Sans chercher à mener une analyse approfondie sur la quantification des incertitudes autour des observations, nous cherchons plutôt ici à avoir une vision d'ensemble de l'influence du paramètre $\varObs$ sur la qualité de l'estimation du terme source. Pour cela, on fixe les paramètres suivants:\\
- 
- \begin{itemize}
- 	\item l'algorithme AMIS est exécuté sur 10 itérations, avec 100 particules échantillonnées par itération,
- 	\item la loi de proposition est initialisée de façon uniforme sur le domaine,
- 	\item les paramètres de la loi a priori de $\VecQSource$ sont $\varQ = 2\times10^6$ et $\VecMeanQ = (0,\cdots, 0)$.\\
- \end{itemize}
- 
- On choisit ensuite une plage de valeurs de $\varObs$ à tester, et pour chacune de ces valeurs, on lance 100 \textit{runs} de l'AMIS: ce dernier faisant intervenir des tirages aléatoires, le fait de considérer les résultats issus d'un nombre suffisant de \textit{runs} permet de voir si la qualité des estimations n'est pas perturbée par ces aspects stochastiques. Les valeurs de variance choisies sont $10^{-7}, 5\times 10^{-7}, 10^{-6}, 5\times 10^{-6}, 10^{-5}, 5\times 10^{-5},10^{-4}$. \\
+ La variance d'observation $\varObs$ est le paramètre qui reflète la "confiance" donnée aux observations $\VecObs$. Comme expliqué au Chapitre 3, elle caractérise l'ensemble des erreurs à l'origine de l'écart entre les valeurs issues du modèle de données et la réalité physique. Comme il a été expliqué précédemment, l'erreur d'observation est une agrégation de diverses sources individuelles d'erreur (modèle, instrumentation...). Sans chercher à mener une analyse approfondie sur la quantification des incertitudes autour des observations, nous cherchons plutôt ici à avoir une vision d'ensemble de l'influence du paramètre $\varObs$ sur la qualité de l'estimation du terme source. Pour cela, on garde les mêmes paramètres que le \textit{benchmark} de la figure \ref{fig_25C_prelim}, on choisit ensuite une plage de valeurs de $\varObs$ à tester, et pour chacune de ces valeurs, on lance 100 \textit{runs} de l'AMIS. Ce dernier faisant intervenir des tirages aléatoires, le fait de considérer les résultats issus d'un nombre suffisant de \textit{runs} permet de voir si la qualité des estimations n'est pas perturbée par ces aspects stochastiques. Les valeurs de variance choisies sont $10^{-7}, 5\times 10^{-7}, 10^{-6}, 5\times 10^{-6}, 10^{-5}, 5\times 10^{-5},10^{-4}$. \\
    
          Concernant la localisation de la source, on observe sur les figures \ref{fig_25C_analyse_varobs_x} et \ref{fig_25C_analyse_varobs_y} de l'Annexe A que les résultats sont plutôt réguliers: l'estimation de la position est bonne pour les valeurs inférieures à $5\times 10^{-6}$ puis se dégrade progressivement jusqu'à avoir du mal à définir une zone précise de l'espace (\ref{varF_x} et \ref{varF_y}).
          
@@ -399,7 +397,7 @@ Avec une initialisation uniforme sur le domaine et un total de 10 itérations, l
          \end{figure}
          
          
-         Certaines des valeurs estimées pour le débit soient négatives, or il a été constaté que l'application de la contrainte de positivité a tendance à surestimer les valeurs de $\tilde{\VecMeanQ}$, comme le montre l'exemple de la figure \ref{fig_sansavecPC}. Il a donc été décidé de ne pas implémenter cette contrainte, car malgré la présence de quelques valeurs négatives, le sens physique des résultats d'estimation est globalement respecté.\\
+         Certaines des valeurs estimées pour le débit soient négatives, or il a été constaté que l'application de la contrainte de positivité a tendance à surestimer les valeurs de $\tilde{\VecMeanQ}$, comme le montre l'exemple de la figure \ref{fig_sansavecPC}. Il a donc été décidé de ne pas implémenter cette contrainte, car malgré la présence de quelques valeurs négatives, le sens physique des résultats d'estimation est globalement respecté.
        
 \begin{figure}[h!]
     	\centering
@@ -419,17 +417,44 @@ Avec une initialisation uniforme sur le domaine et un total de 10 itérations, l
          	\label{fig_sansavecPC}
          \end{figure}
 
-En examinant les résultats des figures précédentes, on pourrait considérer la valeur $\varObs = 10^{-7}$ comme étant celle qui donne les meilleurs résultats. Il faut cependant rappeler que dans notre cas d'étude, nous utilisons des observations synthétiques non-bruitées, ce qui permet d'accorder une plus grande confiance à ces observations et donc de réduire la valeur de $\varObs$. On ne peut pas forcément en faire autant si des sources d'incertitudes supplémentaires entrent en jeu, par exemple avec des valeurs de concentrations expérimentales issues de mesures réelles. Pour illustrer cela, on  compare les résultats d'estimation pour une variance $\varObs = 10^{-7}$ avec et sans ajout de bruit dans le vecteur d'observation.\\
-
-\todoin{1) Comparaison avec et sans bruit 2) Conclusion}
+En examinant les résultats des figures précédentes, on pourrait considérer la valeur $\varObs = 10^{-7}$ comme étant celle qui donne les meilleurs résultats. Il faut cependant rappeler que dans notre cas d'étude, nous utilisons des observations synthétiques non-bruitées, ce qui permet d'accorder une plus grande confiance à ces observations et donc de réduire la valeur de $\varObs$. On ne peut pas forcément en faire autant si des sources d'incertitudes supplémentaires entrent en jeu, par exemple avec des valeurs de concentrations expérimentales issues de mesures réelles, car cela reviendrait à diminuer la marge d'incertitude sur les mesures alors que le caractère aléatoire de ces dernières est plus accentué. 
+%
+%Pour illustrer le rôle de l'incertitude des mesures dans le choix du paramètre $\varObs$, on perturbe le vecteur d'observation $\VecObs$ avec un bruit additif gaussien centré, et pour préserver la cohérence physique de la simulation, on ramène les observations bruitées négatives à 0. L'intensité de la perturbation du signal d'observation est ainsi caractérisée par la variance du bruit $\varBruit$ choisie: on considère ici 3 différents niveaux dont l'impact sur $\VecObs$ est illustré par la figure \ref{fig_25_obs_noisy}.\\
+%\begin{figure}[h!]
+%	\centering
+%	\begin{subfigure}[t]{0.33\textwidth}
+%		\centering
+%		\includegraphics[width=1\textwidth]{25C_obs_noisy_1E4.png}
+%		\caption{}
+%		\label{}
+%	\end{subfigure}%
+%	\begin{subfigure}[t]{0.33\textwidth}
+%		\centering
+%		\includegraphics[width=1\textwidth]{25C_obs_noisy_5E4.png}
+%		\caption{}
+%		\label{}
+%	\end{subfigure}%
+%	\begin{subfigure}[t]{0.33\textwidth}
+%		\centering
+%		\includegraphics[width=1\textwidth]{25C_obs_noisy_1E3.png}
+%		\caption{}
+%		\label{}
+%	\end{subfigure}%
+%	\caption{Perturbation du vecteur d'observations $\VecObs$ par différentes intensités de bruit}
+%	\label{fig_25C_obs_noisy}
+%\end{figure}
+%
+%On  étudie ensuite les résultats d'estimation obtenus avec chacun de ces nouveaux vecteurs d'observations pour une variance $\varObs = 10^{-7}$ afin de comparer les différences de résultats avec et sans ajout de bruit.\\
+%
+%\todoin{1) Comparaison avec et sans bruit 2) Conclusion}
 
 \subsection{Influence de la variance a priori du profil d'émission}
 
 La variance a priori $\varQ$ peut être vue comme une hypothèse de départ sur l'amplitude possible des valeurs du profil d'émission. Son influence s'applique à la fois sur la qualité de la reconstruction de $\VecQSource$, mais également sur celle de la localisation de la source, car $\varQ$ intervient dans l'algorithme AMIS lors du calcul de la vraisemblance des particules. 
 
-Pour cette analyse, on utilise le même procédé que pour l'étude de $\varObs$, avec un nombre identique d'itération et de particules échantillonnées, l'initialisation reste uniforme, et on fixe $\VecMeanQ = (0,\cdots,0)$ et $\varObs=10^{-6}$. Un total de 100 \textit{runs} de l'AMIS est exécuté, les valeurs de $\varQ$ couvertes étant: $2\times 10^5, 7\times 10^5, 2\times 10^6, 7\times 10^6, 2\times 10^7$ et $7\times 10^7$.\\
+Pour cette analyse, on utilise le même procédé que pour l'étude de $\varObs$, en reprenant les paramètres du \textit{benchmark} et en exécutant 100 \textit{runs} de l'AMIS, les valeurs de $\varQ$ couvertes étant: $2\times 10^5, 7\times 10^5, 2\times 10^6, 7\times 10^6, 2\times 10^7$ et $7\times 10^7$.\\
 
-Pour l'estimation de la position, on constate que plus la valeur de $\varQ$ considérée est grande, plus la source aura tendance à être estimée en amont sur l'axe du panache par rapport à la direction du vent. Ce phénomène est bien visible sur la figure \ref{fig_25C_varQ_boxplots}, où les \textit{boxplots} des estimations ponctuelles sont tracées pour chacune des valeurs de $\varQ$ testées.
+Pour l'estimation de la position, on constate que plus la valeur de $\varQ$ considérée est grande, plus la source aura tendance à être estimée en amont  par rapport à la direction du vent. En effet, pour la même position potentielle de la source, des valeurs plus élevées pour les quantités de polluant rejetées impliquent des mesures de concentration plus importantes aux capteurs: l'algorithme va donc ajuster cette position en remontant l'axe du vent pour avoir une meilleure vraisemblance par rapport aux observations. Ce phénomène de décalage spatial est bien visible sur la figure \ref{fig_25C_varQ_boxplots}, où les \textit{boxplots} des estimations ponctuelles sont tracées pour chacune des valeurs de $\varQ$ testées.
 
 \begin{figure}[h!]
 	\centering
@@ -470,7 +495,110 @@ Le nombre et de la répartition des capteurs constitue un facteur important:
 
 \subsubsection{Impact du capteur R8}
 
-Dans un premier temps, nous nous intéressons à l'influence du capteur R8, dont les mesures (figure \ref{fig_observations_25CAPTEURS}) semblent être les plus informatives. Pour cela, nous le retirons du réseau, et nous effectuons l'opération d'estimation du terme source avec les observations issues des 24 capteurs restants. En pratique, cela reviendrait par exemple à simuler la panne du capteur R8 durant la fenêtre temporelle d'observation.\\
+Dans un premier temps, nous nous intéressons à l'influence du capteur R8, qui est le récepteur le plus proche de la source à mesurer des concentrations non-nulles. Pour cela, nous le retirons du réseau, et nous effectuons l'opération d'estimation du terme source avec les observations issues des 24 capteurs restants, en suivant les paramètres du \textit{benchmark}. En pratique, cela reviendrait par exemple à simuler la panne du capteur R8 durant la fenêtre temporelle d'observation.\\
+
+
+\begin{figure}[h!]
+	\centering
+	\begin{subfigure}[t]{0.5\textwidth}
+		\centering
+		\includegraphics[width=1\textwidth]{R8_kde_x_compare.png}
+		\caption{Position en $x$}
+		\label{R8_x}
+	\end{subfigure}%
+	\begin{subfigure}[t]{0.5\textwidth}
+		\centering
+		\includegraphics[width=1\textwidth]{R8_kde_y_compare.png}
+		\caption{Position en $y$}
+		\label{R8_y}
+	\end{subfigure}
+	\begin{subfigure}[t]{0.65\textwidth}
+		\centering
+		\includegraphics[width=1\textwidth]{R8_q_est_compare.png}
+		\caption{Profil d'émission avec intervalle de confiance à  $\pm 2 \tilde{\sigma}_q^2$}
+		\label{R8_q}
+	\end{subfigure} 
+	\caption{Résultats d'un \textit{run} de l'algorithme d'estimation sans (jaune) et avec (bleu) le capteur R8}
+	\label{fig_R8_compare}
+\end{figure}
+
+A paramètres identiques, la source est vue plus en amont sur l'axe du vent par rapport à sa position réelle (figures \ref{R8_x} et \ref{R8_y}). De plus, sans le capteur R8, le débit est relativement sous-estimé par rapport aux valeurs attendues, et le rejet reconstitué commence et s'achève plus tôt que prévu (figure \ref{R8_q}). On observe ainsi que les mesures fournies par le capteur R8 apportent une information non-négligeable permettant d'accroître la précision de l'estimation, à la fois sur les aspects spatiaux, temporels, et de quantité émise. 
+
+\subsubsection{Impact d'un réseau réduit}
+
+On a vu que le rôle individuel des capteurs peut être important pour pouvoir reconstruire correctement un terme source. Nous cherchons ici à savoir comment varie la qualité de cette reconstruction si l'ensemble du réseau est modifié.
+
+On réduit ainsi la taille de notre réseau à 9 capteurs (figure \ref{fig_reseaux_25_9}), répartis de façon homogène sur le domaine. Cela permet de simuler une situation où le nombre d'instruments de mesure des concentrations est moindre (par exemple, dans le cas où les capteurs sont coûteux à acheter et à déployer), et également d'apprécier le comportement de l'algorithme d'estimation lorsque la représentativité spatiale des mesures est limitée. Les paramètres d'entrée de l'algorithme d'estimation sont toujours ceux du \textit{benchmark}.\\
+
+\begin{figure}[h!]
+	\centering
+	\begin{subfigure}[t]{0.5\textwidth}
+		\centering
+		\includegraphics[width=1\textwidth]{reseau_25C.png}
+		\caption{}
+		\label{reseau_25C}
+	\end{subfigure}%
+	\begin{subfigure}[t]{0.5\textwidth}
+		\centering
+		\includegraphics[width=1\textwidth]{reseau_9C.png}
+		\caption{}
+		\label{reseau_9C}
+	\end{subfigure}
+	\caption{Réduction de la densité du réseau de capteurs: passage de 25 (gauche) à 9 (droite) capteurs}
+	\label{fig_reseaux_25_9}
+\end{figure}
+
+
+\begin{figure}[h!]
+	\centering
+	\begin{subfigure}[t]{0.5\textwidth}
+		\centering
+		\includegraphics[width=1\textwidth]{kde_x_compare_all.png}
+		\caption{}
+		\label{kde_x_all}
+	\end{subfigure}%
+	\begin{subfigure}[t]{0.5\textwidth}
+		\centering
+		\includegraphics[width=1\textwidth]{kde_y_compare_all.png}
+		\caption{}
+		\label{kde_y_all}
+	\end{subfigure}
+	\begin{subfigure}[t]{0.33\textwidth}
+		\centering
+		\includegraphics[width=1\textwidth]{q_9C.png}
+		\caption{}
+		\label{q_9C}
+	\end{subfigure}%
+	\begin{subfigure}[t]{0.33\textwidth}
+		\centering
+		\includegraphics[width=1\textwidth]{q_24C.png}
+		\caption{}
+		\label{q_24C}
+	\end{subfigure}%
+	\begin{subfigure}[t]{0.33\textwidth}
+		\centering
+		\includegraphics[width=1\textwidth]{q_25C.png}
+		\caption{}
+		\label{q_25C}
+	\end{subfigure}
+	\caption{Résultats d'un \textit{run} de l'algorithme d'estimation sans (jaune) et avec (bleu) le capteur R8, comparaison avec un réseau réduit (vert)}
+	\label{}
+\end{figure}
+
+Les résultats de  localisation de la source montrent une dégradation de l'estimation de la position similaire au cas où le capteur R8 n'est pas présent (figures \ref{kde_x_all} et \ref{kde_y_all}). Il en va de même pour pour l'estimation du profil de rejet (figures \ref{q_9C}, \ref{q_24C} et \ref{q_25C}), où la marge d'incertitude est même légèrement moins grande dans la configuration à capteurs. 
+
+On peut ainsi en déduire que les capteurs n'observant aucune concentration  non-nulle et qui ont été retirés pour établir la configuration à 9 capteurs ont bien un rôle informatif utile au processus d'estimation, et leur apport qualitatif par rapport à la présence du capteur R8 dans le réseau à 25 capteurs semble de même importance.\\
+
+De façon générale, on peut ainsi voir que l'efficacité de l'estimation du terme source repose sur un certain nombre de paramètres d'entrée pour l'algorithme AMIS. Ceux-ci peuvent dépendre entièrement de la configuration du cas-test (nombre de capteur et disposition sur le domaine), ou être définis manuellement par l'utilisateur. Dans ce dernier cas, on a constaté qu'il est difficile d'établir des critères empiriques pour choisir des valeurs par défaut à affecter aux paramètres de variance $\varObs$ et $\varQ$. Pour la variance d'observation, un choix qualitatif a été fait par rapport à l'allure des mesures de la figure \ref{fig_observations_25CAPTEURS}, mais dans d'autres situations pratiques, l'évaluation de $\varObs$ peut se révéler plus compliquée:
+\begin{itemize}
+	\item si on sait d'avance que certains capteurs du réseau sont plus fiables que d'autres et qu'on choisit d'accorder une plus grande confiance à ces capteurs, alors l'hypothèse d'une loi d'incertitude identiquement distribuée sur les éléments du vecteur d'observation n'est plus valable,
+	\item dans un cas opérationnel où on aurait choisi une variance d'observation trop faible, le biais par rapport à la position réelle de la source peut se révéler suffisamment important pour que cette dernière ne soit pas incluse dans l'intervalle de confiance accordé à l'estimation.
+\end{itemize}
+
+Pour la variance a priori $\varQ$, le problème est similaire à celui du choix de la matrice d'erreur de \textit{background} en assimilation de données, où la qualité de l'ébauche du terme source fournie influe directement sur la qualité de la reconstruction. 
+
+Une alternative plausible à cette recherche difficile des paramètres initiaux consisterait à travailler sur un ensemble de scénarios possibles, et ainsi d'étudier plusieurs possibilités quant aux valeurs des variances à fournir. Cela demeure possible grâce au gain d'efficacité de calcul permis par l'approche \textit{backward} de l'AMIS, et permettrait d'envisager différents niveaux de confiance accordés aux observation (pour $\varObs$), ainsi que plusieurs hypothèses sur le profil du rejet (pour $\varQ$). Le résultat serait alors un ensemble d'estimations  sur les termes sources possibles selon ces valeurs d'entrée, dont la pertinence serait alors évaluée par les décideurs et les experts en fonction de leur expérience et de la réalité du terrain.
+
 
 
 
