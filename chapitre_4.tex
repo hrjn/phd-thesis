@@ -223,37 +223,19 @@ Le fait de substituer un modèle \textit{backward} au modèle direct permet de n
 	\label{fig_schema_amis_optimise}
 \end{figure}
 
-Comme l'illustre la figure \ref{fig_schema_amis_optimise}, aucun calcul de dispersion n'est donc instancié durant la mise en oeuvre de l'algorithme, car les matrices source-récepteur sont désormais construites grâce à des opérations de lecture des fichiers dans lesquels ont été stockés les valeurs de $C^*$ pré-calculées. PMSS permet en effet d'agréger les résultats des calculs de dispersion dans des fichiers binaires, qui servent de base de données où les valeurs de rétro-concentration en chaque point du domaine peuvent être lues par un module d'entrée/sortie intégré à l'implémentation de l'AMIS.\\
+Comme l'illustre la figure \ref{fig_schema_amis_optimise}, aucun calcul de dispersion n'est donc instancié durant la mise en oeuvre de l'algorithme, car les matrices source-récepteur sont désormais construites grâce à des opérations de lecture des fichiers dans lesquels ont été stockés les valeurs de $C^*$ pré-calculées. PMSS permet en effet d'agréger les résultats des calculs de dispersion dans des fichiers binaires, qui servent de base de données où les valeurs de rétro-concentration en chaque point du domaine peuvent être lues par un module d'entrée/sortie intégré à l'implémentation de l'AMIS.
 
-Même si cette opération n'est plus directement intégrée à l'algorithme d'estimation, elle demande néanmoins une certaine quantité de calculs. Cette dernière peut toutefois être réduite si on choisit de paralléliser l'opération de génération des fichiers binaires de rétro-concentration. Comme il s'agit de tâches parfaitement indépendantes les unes par rapport aux autres, la parallélisation est facilement réalisable (\textit{embarrasingly parallel jobs}). Si on doit générer $n_b$ fichiers binaires en allouant $n_p$ coeurs de calcul par opération de génération, cela requiert la disponibilité de $n_b \times n_p$ coeurs. Si une telle quantité de ressources n'est pas immédiatement disponible, il peut être plus judicieux de créer séquentiellement ces fichiers binaires. L'approche séquentielle est également à privilégier si on ne dispose pas d'une architecture de type \textit{cluster} permettant une parallélisation massive. 
-
-\subsubsection{Limitations}
-
-Il est toutefois important de rappeler que le fait d'associer le modèle \textit{backward} au modèle direct constitue une approximation. En effet, la partie "diffusion" du processus de dispersion atmosphérique est aléatoire, et ne peut être parfaitement reproduite dans le cas dual pour une configuration identique du modèle direct, créant ainsi un écart incompressible entre les champs $C$ et $C^*$. 
-
-Afin de réduire au mieux cet écart, il convient d'utiliser un nombre de PL suffisamment grand pour modéliser les rétro-rejets, en prenant toutefois garde à ne pas choisir une grandeur trop élevée, qui demanderait un temps de calcul trop important au modèle. En prenant cela en compte, il demeure nécessaire de quantifier cet écart. Pour cela, un test préliminaire a été effectué, afin de comparer les résultats obtenus par les deux approches (directe et \textit{backward}) lorsqu'il s'agit de simuler des données d'observation synthétiques. Concrètement, trois constructions du vecteur $\VecObs$ ont été étudiées:
-
-\begin{enumerate}
-	\item en spécifiant directement à SPRAY les paramètres temporels du rejet (débit),
-	\item en calculant une matrice source-récepteur avec SPRAY (modèle direct), puis en multipliant cette matrice par un vecteur de débit $\VecQSource$, de façon similaire au modèle de données de l'équation \eqref{eq_AE_3} mais sans ajout de bruit,
-	\item en reproduisant l'opération présentée en 2. mais avec une matrice source-récepteur obtenue par RetroSPRAY (modèle \textit{backward}).
-\end{enumerate} 
-
-\begin{figure}[h!]
-	\centering
-	\includegraphics[width=0.8\textwidth]{comparaison_3_obs.png}
-	\caption{Comparaison des observations synthétiques générées par une approche directe (en bleu et rouge) et en \textit{backward} (en vert)}
-	\label{fig_comparaison_3_obs}
-\end{figure}
-
-La figure \ref{fig_comparaison_3_obs} montre que les observations générées par l'approche \textit{backward} présentent un écart assez important avec les grandeurs équivalentes obtenues par la méthode directe. Afin de ne pas propager cette erreur dans l'estimation du terme source, nous avons choisi de n'utiliser que les observations obtenues par simulation \textit{backward} dans les cas pratiques illustrés par les prochains paragraphes.\\
+Même si cette opération n'est plus directement intégrée à l'algorithme d'estimation, elle demande néanmoins une certaine quantité de calculs. Cette dernière peut toutefois être réduite si on choisit de paralléliser l'opération de génération des fichiers binaires de rétro-concentration. Comme il s'agit de tâches parfaitement indépendantes les unes par rapport aux autres, la parallélisation est facilement réalisable (\textit{embarrasingly parallel jobs}). Si on doit générer $n_b$ fichiers binaires en allouant $n_p$ coeurs de calcul par opération de génération, cela requiert la disponibilité de $n_b \times n_p$ coeurs. Si une telle quantité de ressources n'est pas immédiatement disponible, il peut être plus judicieux de créer séquentiellement ces fichiers binaires. L'approche séquentielle est également à privilégier si on ne dispose pas d'une architecture de type \textit{cluster} permettant une parallélisation massive. \\
 
 
+Il est néanmoins important de rappeler que le fait d'associer le modèle \textit{backward} au modèle direct constitue une approximation. En effet, la partie "diffusion" du processus de dispersion atmosphérique est aléatoire, et ne peut être parfaitement reproduite dans le cas dual pour une configuration identique du modèle direct, créant ainsi un écart incompressible entre les champs $C$ et $C^*$. 
+
+Cet écart peut être minimisé en utilisant un nombre de PL suffisamment grand pour modéliser les rétro-rejets. Il faut toutefois prendre garde à ne pas choisir une grandeur trop élevée, qui demanderait un temps de calcul trop important au modèle. 
 
 
 \section{Exemple d'application en rase campagne}
 
-Dans cette section nous présentons un première application sur une situation  simple dans un contexte non-urbain.
+Dans cette section nous présentons un première application sur une situation  simple dans un contexte non-urbain. Il s'agit d'un exemple synthétique dont les données et les paramètres sont issus d'une simulation ayant permis la validation du modèle RetroSPRAY.
 
 \subsection{Présentation du cas-test}
 
@@ -282,46 +264,55 @@ Sur toute la durée de la simulation, nous considérons un vent constant en vite
 \end{figure}
 
 
-\subsubsection{Paramètres relatifs à la source}
-On choisit ici de modéliser une source située dans la partie nord (voir figure \ref{fig_beaune_relief}) afin que le panache résultant couvre une partie suffisante du domaine. La source est située à une altitude de \SI{10}{\m}, et émet un rejet unique entre 10h15 et 11h, avec un débit constant de 1850 unités/s. Pour la simulation, cette source est modélisée comme étant un volume de \SI{20}{\m} $\times$ \SI{20}{\m} $\times$ \SI{10}{\m}. 
+\subsubsection{Capteurs, source et simulation des observations}
+On considère un réseau de 25 capteurs disposés de façon à couvrir tout le domaine, et placés à une hauteur de \SI{10}{\meter}, égale à celle de la source. Chaque capteur fournit des observations de concentrations moyennes entre 10h05 et 12h00, avec une plage de moyennage de 5 minutes.
 
-\subsubsection{Paramètres relatifs aux capteurs}
-On considère un réseau de 25 capteurs disposés de façon à couvrir tout le domaine, et placés à une hauteur de \SI{10}{\meter}, égale à celle de la source. 
+Concernant la source, celle-ci est placée dans la partie nord (voir figure \ref{fig_beaune_relief}) afin que le panache résultant couvre une partie suffisante du domaine. Elle est située à une altitude de \SI{10}{\m}, identique à celle des capteurs: lors du processus d'estimation, on fait l'hypothèse que cette information est connue afin de limiter la reconstruction de la position aux coordonnées $(x,y)$. La source émet un rejet unique entre 10h15 et 11h, avec un débit constant de 1850 unités/s. \\
+
+Il existe trois façons possibles de simuler le vecteur d'observation $\VecObs$ avec PMSS: 
+
+\begin{enumerate}
+	\item en spécifiant directement à SPRAY la position voulue pour la source ainsi que ses paramètres temporels d'émission,
+	\item en calculant une matrice source-récepteur \textit{forward} $\MatC^f$ via SPRAY à la position voulue, puis en multipliant cette matrice par le profil d'émission $\VecQSource$ désiré,
+	\item en calculant une matrice source \textit{backward} $\MatC^b$ via RetroSPRAY à la position voulue, puis en multipliant cette matrice par le profil d'émission $\VecQSource$ désiré.\\
+	
+\end{enumerate}
+
+Si les représentations 1. et 2. sont équivalentes, la correspondance entre 2. et 3. n'est cependant pas immédiate : 
+
+\begin{itemize}
+	\item dans les configurations \textit{forward}, on définit un volume élémentaire $\Delta v_s^f$ pour la source et un volume de contrôle $\Delta v_c^f$ pour chacun des capteurs,
+	\item dans le cas \textit{backward}, il faut également attribuer un volume élémentaire $\Delta v_s^b$ pour les rétro-sources et un volume de contrôle $\Delta v_c^b $ pour les points où sont simulés les concentrations conjuguées.\\
+	
+\end{itemize}
+
+Pour avoir équivalence entre 2. et 3., il faut alors avoir: 
+
+\begin{equation}
+\begin{split}
+\Delta v_s^f &= \Delta v_c^b \\
+\Delta v_c^f &= \Delta v_s^b
+\end{split}
+\label{eq_dim_volumes}
+\end{equation}
+
+Or les paramètres d'origine de la simulation du cas-test Beaune spécifiaient des valeurs différentes pour $\Delta v_s^f$ (\SI{15}{\meter}$\times$\SI{15}{\meter}$\times$\SI{10}{\meter}) et $\Delta v_c^b$ (\SI{20}{\meter}$\times$\SI{20}{\meter}$\times$\SI{10}{\meter}) . Les résultats de la figure \ref{fig_comparaison_3_obs} reflètent ainsi les divergences engendrées par le non-respect des conditions \eqref{eq_dim_volumes}.
 
 \begin{figure}[h!]
 	\centering
-	\includegraphics[width=0.8\textwidth]{observations_25CAPTEURS.png}
+	\includegraphics[width=0.8\textwidth]{comparaison_3_obs.png}
+	\caption{Cas-test Beaune: différents modes de construction du vecteur $\VecObs$}
+	\label{fig_comparaison_3_obs}
+\end{figure}
+
+Pour remédier à cela, on choisit alors de représenter la source comme un volume de dimension $\Delta v_c^b$ (autrement dit la source choisie couvre toute une maille du domaine), et d'utiliser la matrice source-récepteur \textit{backward} pour générer les observations. Cela permet en outre de s'assurer que la construction de $\VecObs$ est compatible avec la représentation des rétro-concentrations qui est utilisée dans l'algorithme d'estimation pour calculer la vraisemblance $p(\VecObs | \VecTheta)$ de chaque particule $\VecTheta$ tirée depuis la loi de proposition. Les mesures simulées par capteur sont représentées en figure \ref{fig_observations_25CAPTEURS}.
+
+\begin{figure}[h!]
+	\centering
+	\includegraphics[width=0.8\textwidth]{concentrations_beaune.png}
 	\caption{Cas-test Beaune: concentrations mesurées aux capteurs}
 	\label{fig_observations_25CAPTEURS}
 \end{figure}
-
-Chaque capteur est modélisé par un volume de \SI{15}{\meter} $\times$ \SI{15}{\meter} $\times$ \SI{10}{\meter}, et fournit des observations de concentrations moyennes entre 10h05 et 12h00, avec une plage de moyennage de 5 minutes. La figure \ref{fig_observations_25CAPTEURS} représente les séries temporelles des concentrations moyennes relevées aux capteurs impactés par la source. 
-
-\subsubsection{Tableau récapitulatif}
-
-\begin{center}
-	\begin{tabular}{| l || c | }
-		\hline			
-		Coordonnées point SO (km) & $(642000;647980)$  \\
-		\hline
-		Coordonnées point NE (km) & $(5204000;5209980)$ \\
-		\hline
-		Nombre de mailles $(x,y)$ & $(300;300)$ \\
-		\hline
-		Résolution maille (m) & $20$ \\
-		\hline
-		Vitesse vent (\SI{}{\meter\per\second}) & 1.5 \\
-		\hline
-		Direction vent ($\degres$) & 330 \\
-		\hline
-		Durée du rejet (\SI{}{\minute}) & 45 \\
-		\hline
-		Débit du rejet (unités/s) & 1850 \\
-		\hline
-		Fenêtre d'observation & De 10h05 à 12h00 \\
-		\hline
-	\end{tabular}
-\end{center}
 
 \subsubsection{Premiers résultats}
 
@@ -584,6 +575,8 @@ On réduit ainsi la taille de notre réseau à 9 capteurs (figure \ref{fig_resea
 	\caption{Résultats d'un \textit{run} de l'algorithme d'estimation sans (jaune) et avec (bleu) le capteur R8, comparaison avec un réseau réduit (vert)}
 	\label{}
 \end{figure}
+
+
 
 Les résultats de  localisation de la source montrent une dégradation de l'estimation de la position similaire au cas où le capteur R8 n'est pas présent (figures \ref{kde_x_all} et \ref{kde_y_all}). Il en va de même pour pour l'estimation du profil de rejet (figures \ref{q_9C}, \ref{q_24C} et \ref{q_25C}), où la marge d'incertitude est même légèrement moins grande dans la configuration à capteurs. 
 
