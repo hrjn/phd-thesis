@@ -42,7 +42,7 @@ Pour ce cas-test, on choisit des paramètres météorologiques instationnaires, 
 	\end{tabular} 
 \end{center}
 
-La combinaison de ces variations temporelles ainsi que de la présence d'obstacles sur le domaine fait que les champs de vent 3D diagnostiqués par SWIFT sont relativement complexes, comme l'illustre la figure FIG.
+La combinaison de ces variations temporelles ainsi que de la présence d'obstacles sur le domaine fait que les champs de vent 3D diagnostiqués par SWIFT sont relativement complexes, comme l'illustre la figure \ref{fig_opera_vent}.
 
 \begin{figure}[h!]
 	\centering
@@ -149,7 +149,7 @@ on peut écrire les règles de mise à jour des paramètres de la $k$-ième mixt
 \end{split}
 \end{equation}
 
-La figure (\ref{opera_fitting}) présente le résultat de l'initialisation avec l'ensemble des données de rétro-propagation utilisées (figure \ref{opera_carte_fitting}) pour déterminer les paramètres de la loi de proposition, ainsi que la densité de probabilité résultante  (figure \ref{opera_resultat_fitting}), qui sert donc de point de départ pour l'algorithme AMIS. On observe déjà que la zone à privilégier est bien au voisinage de la source à retrouver.\\
+La figure (\ref{fig_opera_fitting}) présente le résultat de l'initialisation avec l'ensemble des données de rétro-propagation utilisées (figure \ref{opera_carte_fitting}) pour déterminer les paramètres de la loi de proposition, ainsi que la densité de probabilité résultante  (figure \ref{opera_resultat_fitting}), qui sert donc de point de départ pour l'algorithme AMIS. On observe déjà que la zone à privilégier est bien au voisinage de la source à retrouver.\\
 
 \begin{figure}[h!]
 	\centering
@@ -191,7 +191,7 @@ La figure \ref{fig_opera_amis} présente le résultat d'un \textit{run} de 10 it
 	\end{subfigure}
 	\begin{subfigure}[t]{0.65\textwidth}
 		\centering
-		\includegraphics[width=1\textwidth]{opera_amis_Q.png}
+		\includegraphics[width=1\textwidth]{opera_amis_q.png}
 		\caption{Profil d'émission avec intervalle de confiance à  $\pm 2 \widetilde{\sigma}_q^2$ (gris)}
 		\label{opera_amis_q}
 	\end{subfigure} 

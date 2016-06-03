@@ -1,11 +1,14 @@
-\chapter{Calcul des matrices source-récepteur par un modèle lagrangien adjoint}
+\chapter{Optimiser l'AMIS: modèle lagrangien \textit{backward} pour les matrices source-récepteur}
 
 L'étude de cas sur l'expérience FFT07 présentée dans le Chapitre 3 a montré que la charge de calcul de la procédure d'estimation du terme source est en grande majorité focalisée sur le calcul de la matrice source-récepteur. Cette étape nécessite une quantité d'appels au modèle de dispersion égale au nombre de particules échantillonnées par itération multiplié par le nombre d'itérations, soit en pratique 1000 instances dans le cas de FFT07. \\
 
 Si pour les cas les plus simples il est possible de se limiter à des modèles de dispersion suffisamment rapides, la situation change dès qu'il s'agit de considérer un contexte plus élaboré, avec des outils de calculs permettant certes une meilleure représentation des phénomènes de dispersion, mais dont l'exécution devient bien plus coûteuse en termes d'implémentation et de temps de calcul. \\
 
-L'objet de ce chapitre est ainsi de présenter une façon d'optimiser le calcul des matrices source-récepteur lorsque celui-ci doit faire appel à un code de dispersion plus complexe que le modèle à bouffées gaussiennes précédemment évoqué. La présentation de cet outil de calcul constituera la première partie de ce chapitre, avec notamment une explication de son fonctionnement, puis une présentation de son intégration optimale à la chaîne de calcul et d'estimation existante. La suite du chapitre se concentrera sur les aspects pratiques autour de la mise en application de cette méthodologie améliorée, avec la présentation des résultats sur plusieurs cas-tests de simulation.
-
+L'objectif de ce chapitre est double: 
+\begin{itemize}
+	\item dans un premier temps, il s'agit d'introduire un nouveau type de modèle de dispersion capable de gérer des situations complexes, ainsi que de présenter la méthodologie permettant d'utiliser cet outil de façon optimale, c'est-à-dire sans une augmentation excessive du temps de calcul nécessaire,
+	\item dans un deuxième temps, deux exemples sous forme de cas-test simulés sont utilisés pour valider le système d'estimation amélioré, à la fois dans un contexte simple pour bien comprendre certains points de fonctionnement de l'algorithme, puis dans un cas plus réaliste, où le but est d'évaluer la qualité de l'estimation du terme source en situation complexe.
+\end{itemize}
 
 \section{Le code de calcul PMSS}
 
@@ -35,7 +38,7 @@ où:
 	
 \end{itemize}
 
-L'expression des fonctions $a_i$ et $b_{i,j}$ varie selon les hypothèses que l'on se fixe sur la nature de la turbulence: une présentation plus détaillée de leur calcul est disponible dans \cite{Wilson1996}. Une fois que ceux-ci sont définis,l'équation \eqref{eq_langevin} est discrétisée et sa résolution permet de calculer un ensemble de trajectoires de PL émanant d'une source dont les paramètres sont connus. Les concentrations volumiques moyennes simulées sont alors obtenues par la somme des particules présentes dans un volume élémentaire $d\Vecx$ autour du point d'observation $\Vecx$ durant un certain temps de résidence. En d'autres termes, on peut écrire la concentration moyenne au point $\Vecx$ et à l'instant $t$ comme étant : 
+L'expression des fonctions $a_i$ et $b_{i,j}$ varie selon les hypothèses que l'on se fixe sur la nature de la turbulence: une présentation plus détaillée de leur calcul est disponible dans \cite{Wilson1996}. Une fois que ceux-ci sont définis, l'équation \eqref{eq_langevin} est discrétisée et sa résolution permet de calculer un ensemble de trajectoires de PL émanant d'une source dont les paramètres sont connus. Les concentrations volumiques moyennes simulées sont alors obtenues par la somme des particules présentes dans un volume élémentaire $d\Vecx$ autour du point d'observation $\Vecx$ durant un certain temps de résidence. En d'autres termes, on peut écrire la concentration moyenne au point $\Vecx$ et à l'instant $t$ comme étant : 
 
 \begin{equation}
 	C(\Vecx, t) = \int _{-\infty}^{t} \int_{V} S(\Vecx',t')p(\Vecx, t | \Vecx', t')d\Vecx'dt
@@ -54,7 +57,7 @@ Afin de calculer le champ d'écoulement auquel sont soumises les PL, plusieurs m
 
 \subsection{La chaîne de calcul SWIFT-SPRAY}
 
-L'outil \textit{Parallel Micro-SWIFT-SPRAY} (PMSS) est une chaîne de calcul constituée de deux éléments distincts: un outil de CFD simplifiée (SWIFT) et un modèle de dispersion lagrangien stochastique (SPRAY). Il est généralement appliqué dans des études à petite échelle (par exemple, au niveau d'un quartier), mais grâce à sa version parallèle, il a récemment été utilisé sur des domaines plus grands, à l'exemple du cas AirCity (REF) où le modèle a été exécuté sur l'ensemble de la ville de Paris.\\
+L'outil \textit{Parallel Micro-SWIFT-SPRAY} (PMSS) est une chaîne de calcul constituée de deux éléments distincts: un outil de CFD simplifiée (SWIFT) et un modèle de dispersion lagrangien stochastique (SPRAY). Il est généralement appliqué dans des études à petite échelle (par exemple, au niveau d'un quartier), mais grâce à sa version parallèle, il a récemment été utilisé sur des domaines plus grands, à l'exemple du cas AirCity \cite{Moussafir2014} où le modèle a été exécuté sur l'ensemble de la ville de Paris.\\
 
 \subsubsection{SWIFT}
 
@@ -105,7 +108,7 @@ La combinaison de SWIFT et SPRAY permet ainsi de calculer un champ de concentrat
 
 \subsection{Dualité \textit{forward-backward}}
 
-L'optimisation du calcul des matrices source-récepteur suivant le modèle de l'équation \eqref{eq_AE_4} est un point important: en effet dans une approche directe telle que présentée dans le chapitre précédent, la construction des $\MatC(\VecTheta)$ pour chaque particule $\VecTheta$ échantillonnée depuis la loi de proposition courante fait appel à autant de calculs de dispersion, ce qui rend l'opération d'estimation du terme source très coûteuse en temps de calcul.\\
+L'optimisation du calcul des matrices source-récepteur suivant le modèle de l'équation \eqref{eq_AE_4} est un point important: en effet dans une approche directe (\textit{forward}) telle que présentée dans le chapitre précédent, la construction des $\MatC(\VecTheta)$ pour chaque particule $\VecTheta$ échantillonnée depuis la loi de proposition courante fait appel à autant de calculs de dispersion, ce qui rend l'opération d'estimation du terme source très coûteuse en temps de calcul.\\
 
 Nous proposons dans la suite de ce chapitre une amélioration du processus d'estimation privilégiant le calcul des matrices source-récepteur par une approche de type \textit{backward}. Cette méthodologie a initialement été introduite dans \cite{Keats2007} pour ensuite être appliquée sur un algorithme d'estimation de type MCMC, nous en rappelons les bases ci-après.\\
 
@@ -135,7 +138,7 @@ c_i = \int_0^t \int_V Q C^* ~ dtdV = \langle Q, C^*\rangle
 \end{equation}
 où $C^*$ est le champ de rétro-concentrations induit par le $i$-ème capteur, et dont les valeurs sont obtenues par la résolution de l'équation \eqref{eqn_advection_diffusion_backward}. Dans la pratique, le champ $C^*$ est simulé par un \textit{modèle de dispersion dual}, ou \textit{modèle de rétro-dispersion}.\\
 
-La relation de dualité $\langle C,h\rangle = \langle Q,C^* \rangle$ est ainsi valable si l'équation adjointe d'advection-diffusion a été résolue de telle sorte que les conditions aux limites permettent d'annuler les termes de bord pouvant y apparaître. De plus:
+La relation de dualité $\langle C,h\rangle = \langle Q,C^* \rangle$ est ainsi valable si l'équation duale d'advection-diffusion a été résolue de telle sorte que les conditions aux limites permettent d'annuler les termes de bord pouvant y apparaître. De plus:
 
 \begin{enumerate}
 	\item sous l'hypothèse d'un capteur idéal, sa résolution est infinie, ce qui se traduit en pratique par $h$ prenant la forme d'une distribution de Dirac,
@@ -214,7 +217,7 @@ Dans l'algorithme AMIS, au moment de calculer la vraisemblance de chaque particu
 
 \subsubsection{Avantages}
 
-Le fait de substituer un modèle \textit{backward} au modèle direct permet de n'avoir à faire qu'un seul calcul de rétro-dispersion par capteur, qui donne alors l'ensemble des valeurs de rétro-concentrations sur le domaine. De plus, ces calculs sont désormais opérés en amont du schéma itératif de l'AMIS: au lieu d'exécuter une boucle qui lance des calculs de dispersion pour chaque particule AMIS et à chaque itération, les champs $C^*$ sont pré-calculés et déjà disponibles au moment de l'estimation du terme source. \\
+Le fait de substituer un modèle \textit{backward} au modèle \textit{forward} permet de n'avoir à faire qu'un seul calcul de rétro-dispersion par capteur, qui donne alors l'ensemble des valeurs de rétro-concentrations sur le domaine. De plus, ces calculs sont désormais opérés en amont du schéma itératif de l'AMIS: au lieu d'exécuter une boucle qui lance des calculs de dispersion pour chaque particule AMIS et à chaque itération, les champs $C^*$ sont pré-calculés et déjà disponibles au moment de l'estimation du terme source. \\
 
 \begin{figure}[h!]
 	\centering
@@ -228,7 +231,7 @@ Comme l'illustre la figure \ref{fig_schema_amis_optimise}, aucun calcul de dispe
 Même si cette opération n'est plus directement intégrée à l'algorithme d'estimation, elle demande néanmoins une certaine quantité de calculs. Cette dernière peut toutefois être réduite si on choisit de paralléliser l'opération de génération des fichiers binaires de rétro-concentration. Comme il s'agit de tâches parfaitement indépendantes les unes par rapport aux autres, la parallélisation est facilement réalisable (\textit{embarrasingly parallel jobs}). Si on doit générer $n_b$ fichiers binaires en allouant $n_p$ coeurs de calcul par opération de génération, cela requiert la disponibilité de $n_b \times n_p$ coeurs. Si une telle quantité de ressources n'est pas immédiatement disponible, il peut être plus judicieux de créer séquentiellement ces fichiers binaires. L'approche séquentielle est également à privilégier si on ne dispose pas d'une architecture de type \textit{cluster} permettant une parallélisation massive. \\
 
 
-Il est néanmoins important de rappeler que le fait d'associer le modèle \textit{backward} au modèle direct constitue une approximation. En effet, la partie "diffusion" du processus de dispersion atmosphérique est aléatoire, et ne peut être parfaitement reproduite dans le cas dual pour une configuration identique du modèle direct, créant ainsi un écart incompressible entre les champs $C$ et $C^*$. 
+Il est néanmoins important de rappeler que le fait d'associer le modèle \textit{backward} au modèle \textit{forward} constitue une approximation. En effet, la partie "diffusion" du processus de dispersion atmosphérique est aléatoire, et ne peut être parfaitement reproduite dans le cas dual pour une configuration identique du modèle \textit{forward}, créant ainsi un écart incompressible entre les champs $C$ et $C^*$. 
 
 Cet écart peut être minimisé en utilisant un nombre de PL suffisamment grand pour modéliser les rétro-rejets. Il faut toutefois prendre garde à ne pas choisir une grandeur trop élevée, qui demanderait un temps de calcul trop important au modèle. 
 
@@ -330,19 +333,19 @@ Avec ces paramètres, l'algorithme d'estimation parvient à fournir une reconstr
  	\centering
  	\begin{subfigure}[t]{0.5\textwidth}
  		\centering
- 		\includegraphics[width=1\textwidth]{25C_prelim_X.png}
+ 		\includegraphics[width=1\textwidth]{beaune_25C_prelim_x}
  		\caption{Position en $x$}
  		\label{fig_25C_prelim_X}
  	\end{subfigure}%
  	\begin{subfigure}[t]{0.5\textwidth}
  		\centering
- 		\includegraphics[width=1\textwidth]{25C_prelim_Y.png}
+ 		\includegraphics[width=1\textwidth]{beaune_25C_prelim_y}
  		\caption{Position en $y$}
  		\label{fig_25C_prelim_Y}
  	\end{subfigure}
  	\begin{subfigure}[t]{0.65\textwidth}
  		\centering
- 		\includegraphics[width=1\textwidth]{25C_prelim_Q.png}
+ 		\includegraphics[width=1\textwidth]{beaune_25C_prelim_q}
  		\caption{Profil d'émission avec intervalle de confiance à  $\pm 2 \widetilde{\sigma}_q^2$ (gris)}
  		\label{fig_25C_prelim_Q}
  	\end{subfigure} 
