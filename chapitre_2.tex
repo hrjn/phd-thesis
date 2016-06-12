@@ -13,7 +13,7 @@ Ce chapitre présente la philosophie et les objectifs de l'inférence bayésienn
 	La physique de l'atmosphère ainsi que les systèmes instrumentaux permettant d'en mesurer les variables sont soumis à des phénomènes de fluctuations aléatoires dont il est par définition impossible  de quantifier la nature exacte. Le fait d'utiliser un cadre de travail probabiliste et de considérer la nature statistique des grandeurs d'intérêt prend donc tout son sens dans un tel contexte. Une approche statistique permet en effet de s'appuyer sur le socle théorique rigoureux des probabilités afin de chercher à estimer non plus des valeurs ponctuelles par des méthodes déterministes, mais plutôt des distributions de probabilité liées à ces valeurs. Il devient alors possible : 
 	\begin{itemize}
 		\item de modéliser \textit{l'incertitude relative aux données observées} en considérant qu'elles sont affectées par un certain type de \textit{bruit}, qui est alors défini comme suivant une loi de probabilité spécifique,
-		\item de quantifier \textit{l'incertitude autour des valeurs estimées} pour la grandeur d'intérêt, en l'occurrence les paramètres d'un terme source dans notre cas. Comme on travaille désormais sur des distributions statistiques, on peut s'appuyer sur un \textit{estimateur} afin de caractériser le résultat recherché, ainsi que sur la \textit{variance} qui lui est associée pour évaluer le degré de plausibilité du résultat d'estimation.
+		\item de quantifier \textit{l'incertitude autour des valeurs estimées} pour la grandeur d'intérêt, en l'occurrence les paramètres d'un terme source dans notre cas. Comme on travaille désormais sur des distributions statistiques, on peut s'appuyer sur un \textit{estimateur} afin de caractériser le résultat recherché, ainsi que, \NdFS{par exemple}, sur la \textit{variance} qui lui est associée pour évaluer le degré de plausibilité du résultat d'estimation.
 	\end{itemize}
 	
 
@@ -150,9 +150,6 @@ Une autre possibilité consiste à choisir la fonction-coût 0-1, qui associe un
 
 En pratique il s'agit simplement du mode de la loi a posteriori $\PosteriorTheta$.\\
 
-\textbf{Remarque}: Si le support de la loi a priori est non-borné (i.e. si $\int_{\Theta}p(\VecTheta) = +\infty$, par exemple pour une loi uniforme sur un domaine ouvert), alors le risque bayésien \eqref{eq_risque_bayesien} devient infini et entraîne l'impossibilité de définir un estimateur optimal. Cela souligne l'intérêt de choisir un support borné pour $p(\VecTheta)$ comme expliqué à fin du paragraphe §\ref{paragraphe_paradigme_bayesien}.\\
-
-
 \section{Méthodes de Monte Carlo}
 
 \subsection{Définitions et principes}
@@ -177,14 +174,18 @@ où $\delta_{\valXMC^{(i)}}(\VecXMC)$ représente la distribution de Dirac centr
 On peut utiliser l'approximation de Monte Carlo pour approcher l'espérance de n'importe quelle fonction d'une variable aléatoire: il suffit pour cela de tirer des échantillons depuis la loi de cette variable, puis de calculer la moyenne arithmétique de la fonction en question appliquée aux échantillons. En d'autres termes, l'intégrale sur la variable aléatoire $X$ suivante:
 
 \begin{equation}
-\mathbb{E}_\psi[X] = \int \psi(x) p(x)dx
+\NdFS{
+\mathbb{E}_p [\psi(X)] = \int \psi(x) p(x)dx
 \label{eq_integrale_MC_intractable}
+}
 \end{equation}
 peut ainsi être approximée par:
 
 \begin{equation}
-\mathbb{E}_\psi[X] \simeq \dfrac{1}{N}\sum\limits_{i=1}^N \psi(x^{(i)})
+\NdFS{
+\mathbb{E}_p[\psi(X)] \simeq \dfrac{1}{N}\sum\limits_{i=1}^N \psi(x^{(i)})
 \label{eq_integrale_MC_approximation}
+}
 \end{equation}
 
 La loi forte des grands nombres permet alors d'affirmer que $I_N(\psi)$ converge presque sûrement vers $I(\psi)$.\\
@@ -232,7 +233,7 @@ La propriété qui nous intéresse concerne la \textit{loi de probabilité stati
 où $\pi$ est la distribution stationnaire de la chaîne. 
 
 
-La stratégie des méthodes MCMC consiste ainsi à définir une chaîne de Markov ergodique dont la distribution stationnaire est la loi cible recherchée, soit dans le cadre bayésien la loi a posteriori $\PosteriorTheta$, que nous noterons $\pi(\VecTheta)$. Une fois l'état stationnaire atteint, les éléments tirés depuis la loi associée permettent d'approximer la loi cible en construisant son histogramme, et d'en calculer les estimateurs.\\
+La stratégie des méthodes MCMC consiste ainsi à définir une chaîne de Markov ergodique dont la distribution stationnaire est la loi cible recherchée, soit dans le cadre bayésien la loi a posteriori $\PosteriorTheta$, que nous noterons $\pi(\VecTheta)$. Une fois l'état stationnaire atteint, les éléments tirés depuis la loi associée permettent d'approximer \NdFS{empiriquement} la loi cible.
 
 \subsubsection{Algorithme de Metropolis-Hastings}
 
@@ -240,24 +241,29 @@ C'est une méthode qui fût originalement présentée dans \cite{Metropolis1953}
 
 On choisit souvent $\kernel$ comme étant une distribution gaussienne symétrique et centrée sur l'état courant, i.e. $\kernel(\VecThetaCourant, \VecThetaCandidat) = \mathcal{N}(\VecThetaCandidat | \VecThetaCourant, \MatSigma)$\footnote{La notation $\mathcal{N}(x|\mu,\sigma^2)$ désigne l'évaluation au point $x$ de la densité de probabilité d'une loi normale de moyenne $\mu$ et de variance $\sigma^2$.}: on parle alors de \textit{Random Walk Metropolis}. Une autre possibilité consiste à utiliser un noyau de transition où le nouvel état ne dépend pas de l'état courant, autrement dit $\kernel(\VecThetaCourant, \VecThetaCandidat) = \kernel(\VecThetaCandidat)$ : cette approche est alors logiquement appelée \textit{Independent Metropolis-Hastings}. \\
 
-En pratique, une fois que $\VecThetaCandidat$ est obtenu, on cherche à déterminer si on accepte ou non ce candidat, en calculant une probabilité d'acceptation $r$. Si $\kernel$ est symétrique, alors cette grandeur est donnée par : 
+En pratique, une fois que $\VecThetaCandidat$ est obtenu, on cherche à déterminer si on accepte ou non ce candidat, en calculant une probabilité d'acceptation $r$ définie par:
 
 \begin{equation}
-	r = \min\left\{1,\dfrac{\pi(\VecThetaCandidat)}{\pi(\VecThetaCourant)}\right\}
-	\label{eq_acceptation_metropolis}
-\end{equation}
-
-On voit facilement que si $\VecThetaCandidat$ est plus proche de la loi cible que $\VecThetaCourant$, alors il devient avec certitude le nouvel état, car $\dfrac{\pi(\VecThetaCandidat)}{\pi(\VecThetaCourant)} > 1$. Toutefois, si ce n'est pas le cas, on tire une valeur $u$ suivant une loi uniforme sur $[0,1]$, et le passage de $\VecThetaCandidat$ au statut de nouvel état est alors conditionné par la valeur de $r$ par rapport à celle de $u$. Une telle démarche permet ainsi de ne pas complètement discriminer les états candidats dont la probabilité est moins élevée. \\
-
-Dans les cas où $\kernel$ n'est pas symétrique, il peut potentiellement favoriser certaines valeurs lors du tirage du candidat $\VecThetaCandidat$. Pour compenser cela, il est possible d'ajouter un facteur correctif à $r$, qui devient alors : 
-
-\begin{equation}
- \label{eq_acceptation_MH}
+\NdFS{
+\label{eq_acceptation_MH}
 \begin{split}
 r & =\min\{1,\beta\} \\
 \beta & =\dfrac{\pi(\VecThetaCandidat)\kernel(\VecThetaCandidat, \VecThetaCourant)}{\pi(\VecThetaCourant)\kernel(\VecThetaCourant, \VecThetaCandidat)}
 \end{split}
+}
 \end{equation}
+
+\NdFS{
+Si $\kernel$ est symétrique, alors cette grandeur est donnée par : 
+}
+\begin{equation}
+\NdFS{
+	r = \min\left\{1,\dfrac{\pi(\VecThetaCandidat)}{\pi(\VecThetaCourant)}\right\}
+	\label{eq_acceptation_metropolis}
+}
+\end{equation}
+
+On voit facilement que si $\VecThetaCandidat$ est plus proche de la loi cible que $\VecThetaCourant$, alors il devient avec certitude le nouvel état, car $\dfrac{\pi(\VecThetaCandidat)}{\pi(\VecThetaCourant)} > 1$. Toutefois, si ce n'est pas le cas, on tire une valeur $u$ suivant une loi uniforme sur $[0,1]$, et le passage de $\VecThetaCandidat$ au statut de nouvel état est alors conditionné par la valeur de $r$ par rapport à celle de $u$. Une telle démarche permet ainsi de ne pas complètement discriminer les états candidats dont la probabilité est moins élevée. \\
 
 La génération des différents états de la chaîne de Markov s'effectue ainsi suivant un schéma itératif décrit dans l'algorithme (\ref{algo_metropolis_hastings}). \\
 \IncMargin{1em}
@@ -293,14 +299,14 @@ Le paramètre $\gamma$ permet de définir l'influence de chacune des composantes
 \end{figure}
 
 
- Supposons que l'on cherche à échantillonner depuis cette distribution: nous définissons un noyau de transition de type gaussien afin d'appliquer une méthodologie de type random-walk Metropolis: 
+ Supposons que l'on cherche à échantillonner depuis cette distribution: nous définissons un noyau de transition  gaussien afin d'appliquer une méthodologie de type \textit{random-walk Metropolis}: 
 
 \begin{equation}
 \kernel(\VecTheta, \VecThetaCandidat ) = \mathcal{N}(\VecThetaCandidat | \VecTheta, \sigma_{K}^2)
 \label{eq_noyau_gaussien}
 \end{equation}
 
-La figure \ref{fig_courbe_4_histogrammes_exemple_1} illustre ainsi l'approximation de $\pi$ grâce aux histogrammes des éléments obtenus à différentes itérations de l'algorithme. 
+La figure \ref{fig_courbe_4_histogrammes_exemple_1} illustre ainsi l'approximation de $\pi$ grâce aux histogrammes des \NdFS{échantillons} obtenus à différentes itérations de l'algorithme. 
 
 \begin{figure}[h!]
 	\centering
@@ -364,25 +370,29 @@ Le parcours des composantes de $\VecTheta$ peut se faire de façon déterministe
 Pour illustrer le fonctionnement de ce type d'algorithme, nous allons chercher à échantillonner depuis une gaussienne bivariée à deux dimensions. Dans ce cas, on va donc noter $\VecTheta = (\theta_1, \theta_2)^T$, on a ainsi $\VecTheta \sim \mathcal{N}(\VecMu, \MatSigma)$ avec: 
 
 \begin{equation}
+\NdFS{
 \label{eq_caracs_gaussienne_bivariee}
 \begin{split}
 \VecMu &= (\mu_1, \mu_2)^T \\
 \MatSigma &= \begin{pmatrix}
-\sigma_{1}^2 & \corr_{\theta_1\theta_2} \sigma_1 \sigma_2 \\
- \corr_{\theta_1\theta_2} \sigma_1 \sigma_2 & \sigma_{2}^2 
+\sigma_{1}^2 & \corr\\
+ \corr & \sigma_{2}^2 
 \end{pmatrix}
 \end{split}
+}
 \end{equation} 
-où $\sigma_1^2$ et $\sigma_2^2$ sont les variances respectives de $\theta_1$ et $\theta_2$, et $\corr_{\theta_1\theta_2}$ est la corrélation entre $\theta_1$ et $\theta_2$ définie par: $$\corr_{\theta_1\theta_2} = \dfrac{\text{Cov}(\theta_1,\theta_2)}{\sigma_1\sigma_2}$$.
+où $\sigma_1^2$ et $\sigma_2^2$ sont les variances respectives de $\theta_1$ et $\theta_2$, et \NdFS{$\corr$} est la corrélation entre $\theta_1$ et $\theta_2$ définie par: \NdFS{$$\corr = \dfrac{\text{Cov}(\theta_1,\theta_2)}{\sigma_1\sigma_2}$$.}
 
 Le cas gaussien bivarié est relativement facile à traiter, car on sait calculer directement les expressions des lois conditionnelles, qui sont elle-mêmes gaussiennes, et qui s'écrivent sous la forme suivante:
 
  \begin{equation}
+ \NdFS{
  \label{eq_conditionnelles_gaussienne_bivariee}
  \begin{split}
- p(\theta_1 | \theta_2) &= \mathcal{N}\left(\theta_1 \middle\vert \mu_1 + \sigma_1 \corr_{\theta_1\theta_2} \left(\dfrac{\theta_2 - \mu_2}{\sigma_2}\right), \sigma_1^2 (1-\corr_{\theta_1\theta_2}^2)\right) \\
- p(\theta_2 | \theta_1) &= \mathcal{N}\left(\theta_2 \middle\vert \mu_2 + \sigma_2 \corr_{\theta_1\theta_2} \left(\dfrac{\theta_1 - \mu_1}{\sigma_1}\right), \sigma_2^2 (1-\corr_{\theta_1\theta_2}^2)\right)
+ p(\theta_1 | \theta_2) &= \mathcal{N}\left(\theta_1 \middle\vert \mu_1 + \sigma_1 \corr\left(\dfrac{\theta_2 - \mu_2}{\sigma_2}\right), \sigma_1^2 (1-\corr\right) \\
+ p(\theta_2 | \theta_1) &= \mathcal{N}\left(\theta_2 \middle\vert \mu_2 + \sigma_2 \corr\left(\dfrac{\theta_1 - \mu_1}{\sigma_1}\right), \sigma_2^2 (1-\corr\right)
  \end{split}
+}
  \end{equation}
  
 \begin{figure}[h!]
@@ -410,29 +420,30 @@ Cette famille d'algorithmes, contrairement à l'approche MH, n'effectue pas de s
  
  \subsection{Echantillonnage d'importance classique (IS)}
  
- Avec les approches MCMC, on a vu qu'il existait plusieurs façons de traiter les éléments générés par la loi de proposition: on peut les soumettre à une procédure d'acceptation-rejet, ou alors tous les garder. Une autre vision du problème est proposée par les méthodes dites d'échantillonnage d'importance, ou \textit{importance sampling} (IS), où l'utilisation de poids permettent de quantifier la pertinence de chaque élément. Dans la suite de ce paragraphe, nous emploierons le terme de \textit{particules} afin de désigner les éléments d'un échantillon.\\
+\NdFS{Les algorithmes MCMC se basent sur une procédure d'acceptation-rejet pour corriger le processus de tirage depuis la loi cible. Une autre approche de ce problème est proposée par les méthodes d'échantillonnage d'importance, ou \textit{importance sampling} (IS), où la correction se fait cette fois via une procédure de pondération de chacun des échantillons tirés depuis la loi de proposition.}
+ Dans la suite de ce paragraphe, nous emploierons le terme de \textit{particules} afin de désigner les éléments d'un échantillon.\\
  
  L'idée de départ des méthodes IS est de chercher à approximer des intégrales de la forme : 
  
  \begin{equation}
-  I = \mathbb{E}_\pi[f(\VecTheta)] = \int f(\VecTheta)\pi(\theta)d\VecTheta
+  I = \mathbb{E}_\pi[f(\VecTheta)] = \int f(\VecTheta)\pi(\VecTheta)d\VecTheta
   \label{eq_IS_integrale_1}
  \end{equation}
  
  Pour cela, on définit une loi de proposition $\propFonc$ permettant de réécrire l'équation \eqref{eq_IS_integrale_1} sous la forme:
  
  \begin{equation}
-\mathbb{E}_\pi[f(\VecTheta)] = \int  f(\VecTheta) \dfrac{\pi(\theta)}{\propFonc(\VecTheta)}\propFonc(\VecTheta)d\VecTheta = \int  f(\VecTheta) w(\VecTheta) \propFonc(\VecTheta)d\VecTheta 
+\mathbb{E}_\pi[f(\VecTheta)] = \int  f(\VecTheta) \dfrac{\pi(\VecTheta)}{\propFonc(\VecTheta)}\propFonc(\VecTheta)d\VecTheta = \int  f(\VecTheta) w(\VecTheta) \propFonc(\VecTheta)d\VecTheta 
 \label{eq_IS_integrale_2}
  \end{equation}
- où $w(\VecTheta) = \dfrac{\pi(\VecTheta)}{\propFonc(\VecTheta)}$ définit le vecteur des \textit{poids d'importance}.  La forme de l'intégrale obtenue permet alors de dire que:
+ où $w(\VecTheta) = \dfrac{\pi(\VecTheta)}{\propFonc(\VecTheta)}$ \NdFS{définit les \textit{poids d'importance}, et $\propFonc$ est telle que $\propFonc(\VecTheta) >0 $ pour tout $\VecTheta$ où $\pi(\VecTheta) > 0$, autrement dit le support de $\propFonc$ inclut celui de $\pi$. } La forme de l'intégrale obtenue permet alors de dire que:
  
 \begin{equation}
 \mathbb{E}_\pi[f(\VecTheta)] = \mathbb{E}_\propFonc[f(\VecTheta)w(\VecTheta)] 
 \label{eq_IS_integrale_2_1}
 \end{equation}
 
-D'après la loi forte des grands nombres, $\sum\limits_{i=1}^N f(\VecTheta^{(i)}) w^{(i)}$ converge presque sûrement vers  $\mathbb{E}_\varphi[f(\VecTheta)w(\VecTheta)]$ pour $N \rightarrow + \infty$. En associant cela avec l'équation \eqref{eq_IS_integrale_2_1}, on obtient ainsi:
+D'après la loi forte des grands nombres, \NdFS{en notant $w^{(i)}(\VecTheta) = \dfrac{\pi^{(i)}(\VecTheta)}{\propFonc^{(i)}(\VecTheta)}$, la quantité} $\sum\limits_{i=1}^N f(\VecTheta^{(i)}) w^{(i)}$ converge presque sûrement vers  $\mathbb{E}_\varphi[f(\VecTheta)w(\VecTheta)]$ pour $N \rightarrow + \infty$. En associant cela avec l'équation \eqref{eq_IS_integrale_2_1}, on obtient ainsi:
  
  \begin{equation}
  \mathbb{E}_\pi[f(\VecTheta)] \simeq I_N = \dfrac{1}{N}\sum\limits_{i=1}^N f(\VecTheta^{(i)})  w^{(i)}
@@ -463,9 +474,9 @@ L'équation \eqref{eq_IS_approximation_loi_cible} permet ainsi d'obtenir des par
 	\label{fig_IS_gmm_1D}
 \end{figure}
 
-En reprenant l'exemple de la mixture de deux gaussiennes utilisé précédemment (voir équation  \eqref{eq_mixture_2_gaussiennes_1D"}), on observe sur la figure \ref{fig_IS_gmm_1D} que si la loi de proposition est bien choisie, alors on obtient une bonne approximation de la loi cible. Le choix de cette loi est en fait un point crucial des méthodes IS, et présente certaines difficultés s'il est impossible d'associer "intuitivement" une distribution $\varphi$ à une loi cible $\pi$, par exemple lorsqu'on se place dans des grandes dimensions, ou plus généralement lorsque $\pi$ est trop complexe pour être rattachée à une famille de lois connue. 
+En reprenant l'exemple de la mixture de deux gaussiennes \NdFS{dont la loi cible est présentée en équation \eqref{eq_mixture_2_gaussiennes_1D}}, on observe sur la figure \ref{fig_IS_gmm_1D} que si la loi de proposition est bien choisie, alors on obtient une bonne approximation de la loi cible. Le choix de cette loi est en fait un point crucial des méthodes IS, et présente certaines difficultés s'il est impossible d'associer "intuitivement" une distribution $\varphi$ à une loi cible $\pi$, par exemple lorsqu'on se place dans des grandes dimensions, ou plus généralement lorsque $\pi$ est trop complexe pour être rattachée à une famille de lois connue. 
 
-Une loi de proposition mal choisie peut engendrer un ralentissement de la convergence de l'algorithme, voire une impossibilité à approximer correctement la loi cible. Par exemple, sur la figure \ref{courbe_IS_bad_proposal}, la nouvelle loi de proposition ne permet pas d'échantillonner correctement depuis le premier mode à -20.
+\NdFS{Une loi de proposition mal choisie peut engendrer un ralentissement de la convergence de l'algorithme: par exemple, }sur la figure \ref{courbe_IS_bad_proposal}, la nouvelle loi de proposition ne permet pas d'échantillonner correctement depuis le premier mode à -20.
 
 \begin{figure}[h!]
 	\centering
@@ -483,7 +494,7 @@ On observe également que les valeurs des poids des particules tirés autour du 
 
 Dans le cas le plus extrême où une unique particule à un poids égal à 1 et toutes les autres ont un poids nul, on a $\ESS = 1$. Plus sa valeur croît, plus la loi de proposition est proche de la loi cible, le cas parfait étant $\ESS = N$ où $\propFonc$ et $\pi$ sont identiques.\\
 
-Une façon de contourner le problème de la dégénérescence consiste à ré-échantillonner sur les points où les poids d'importance sont élevés: cette méthode fût développée par \cite{Rubin1988} sous le nom d'algorithme \textit{Sampling Importance Resampling} (SIR). Une autre alternative revient à moduler la loi de proposition en fonction des valeurs de poids obtenues, ce qui est possible grâce aux méthodes d'\textit{échantillonnage d'importance adaptatives} sur lesquelles nous allons à présent nous pencher.\\
+Une façon de contourner le problème de la dégénérescence consiste à ré-échantillonner sur les points où les poids d'importance sont élevés: cette méthode fût développée par \cite{Rubin1988} sous le nom d'algorithme \textit{Sampling Importance Resampling} (SIR). Une autre alternative \NdFS{plus intéressante} revient à moduler la loi de proposition en fonction des valeurs de poids obtenues, ce qui est possible grâce aux méthodes d'\textit{échantillonnage d'importance adaptatives} sur lesquelles nous allons à présent nous pencher.\\
 
 \subsection{Méthodes d'échantillonnage d'importance adaptatif}
 
@@ -494,7 +505,7 @@ Le facteur-clé de la performance d'un algorithme de type IS réside dans l'util
 Les travaux présentés dans \cite{Cappe2004} illustrent une première approche, appelée \textit{Population Monte Carlo} (PMC), qui peut être vue comme une version itérative de l'IS visant à adapter la loi de proposition afin de la rapprocher au mieux de la loi cible. Plus précisément, à chaque itération $k$: 
 \begin{enumerate}
 	\item on tire un échantillon $\VecTheta_k = (\theta_{1,k}, \dots, \theta_{N_p,k})$ de particules obtenues par une perturbation stochastique qui revient à appliquer un noyau de transition de type "marche aléatoire" sur chacun des $\theta_{1,k-1}, \dots, \theta_{N_p,k-1}$, à la façon d'une chaîne de Markov,
-	\item on calcule le vecteur des poids d'importance normalisés $\VecPoidsNorm_t$ de ces particules,
+	\item on calcule le vecteur des poids d'importance normalisés $\VecPoidsNorm_k$ de ces particules,
 	\item on génère un nouvel échantillon $(\tilde{\theta}_{1,k}, \dots, \tilde{\theta}_{N_p,k})$ obtenu par \textit{resampling} de $ (\theta_{1,k}, \dots, \theta_{N_p,k})$ en utilisant les poids $\VecPoidsNorm_k$.
 
 \end{enumerate}
@@ -535,13 +546,14 @@ La procédure d'adaptation qui en découle s'inspire de l'algorithme dit d'\text
 \label{eq_KL_pour_EM}
 \end{equation} 
 
-On se ramène ainsi à un problème similaire à celui du calcul d'un estimateur du maximum de vraisemblance pour un modèle de mixture, d'où l'emploi d'une méthode de type EM. 
-
+On se ramène ainsi à un problème similaire à celui du calcul d'un estimateur du maximum de vraisemblance pour un modèle de mixture, d'où l'emploi d'une méthode de type EM. \NdFS{$\pi(\VecTheta)$ est alors approchée par l'exécution itérative des formules d'approximation empirique présentées dans \cite{Cappe2008}.}
 Ce type de méthode est particulièrement approprié si on choisit la loi de proposition comme étant une mixture de gaussiennes multivariées, i.e. dont la densité en dimension $p$ prend la forme suivante : 
 
 \begin{equation}
-\forall d = 1, \dots, D, ~ q_d(\VecTheta|\nu_d) = \dfrac{1}{\left((2\pi)^p\det \Sigma_d\right)^{1/2}}\exp\left(-\dfrac{1}{2}(\VecTheta - \mu_d)^T \Sigma_d^{-1}(\VecTheta - \mu_d)\right)
+\NdFS{
+\forall d = 1, \dots, D, ~ \propFonc_d(\VecTheta|\nu_d) = \dfrac{1}{\bigl((2\pi)^p\det \Sigma_d\bigr)^{1/2}}\exp\left(-\dfrac{1}{2}(\VecTheta - \mu_d)^T \Sigma_d^{-1}(\VecTheta - \mu_d)\right)
 \label{eq_def_multivariate_gaussian}
+}
 \end{equation}
 où $\nu_d = (\mu_d, \Sigma_d)$ représente les paramètres classiques (moyenne et matrice de covariance) de la $d$-ième composante. En effet, dans ce cas-là, les équations de mise à jour de $\nu_d$ peuvent être obtenues de façon analytique. Pour cela, en se plaçant à l'itération $k$ sur la $d$-ième composante et pour la $i$-ème particule, on définit tout d'abord la grandeur intermédiaire suivante:
 
@@ -561,7 +573,7 @@ La mise à jour de $\alpha_d^k$ et des éléments $\mu_d^k$ et $\Sigma_d^k$ de $
 \end{equation}
 
 
-Une démonstration de ces résultats est détaillée dans \cite{Bilmes1998}. \\
+Une démonstration de ces résultats est détaillée dans \NdFS{\cite{Douc2007}.} \\
 
 
 A chaque itération $k \in {1, \dots, K}$, l'approche M-PMC permet ainsi, à partir des particules échantillonnées depuis la loi de proposition courante et de leurs poids d'importance respectifs, d'obtenir la nouvelle proposition $\propFonc_{\alpha^{k+1}, \nu^{k+1}}$ qui sera réutilisée à l'itération suivante. Contrairement à la version originale du PMC, ici le tirage des nouvelles particules ne dépend plus directement des anciennes, qui ne sont pas explicitement considérées comme des paramètres de la loi de tirage. \\
@@ -592,7 +604,7 @@ Le fait de coupler au sein d'un même algorithme : \\
 \end{itemize}
 constitue ainsi le coeur des travaux présentés dans \cite{Cornuet2012}, qui ont mené à la création de l'algorithme d'\textit{Adaptive Multiple Importance Sampling} (AMIS). \\
 
-L'AMIS permet donc de ré-exploiter toutes l'information disponible (sur les poids et les lois de proposition) de façon optimale, son fonctionnement est détaillée dans l'algorithme \ref{algo_AMIS}. 
+\NdFS{La caractéristique principale de l'AMIS est la combinaison d'une loi de proposition adaptive et d'une "mise en mémoire" progressive des populations de particules générées au fil des itérations. Cela permet à l'algorithme de ne pas se limiter aux particules de l'itération courante, mais de travailler sur l'ensemble des populations de particules générées depuis la première itération. L'AMIS ré-exploite ainsi toute l'information disponible sur les poids d'importance et les particules de façon optimale, et son fonctionnement est détaillé dans l'algorithme \ref{algo_AMIS}.}
 
 \IncMargin{1em}
 \begin{algorithm}
@@ -612,7 +624,7 @@ L'AMIS permet donc de ré-exploiter toutes l'information disponible (sur les poi
 	\For{$i=1, \dots, N_p$}{
 		$\tilde{w}_0^{(i)} = \dfrac{w_0^{(i)}}{\sum\limits_{j=1}^{N_p}w_0^{(j)}}$
 		}
-	Mettre à jour la loi de proposition en calculant $\alpha^1$ et $\nu^1$ à partir de $\alpha^0$, $\nu^0$ et $\tilde{w}_0$ \\
+	Mettre à jour la loi de proposition en calculant $\alpha^1$ et $\nu^1$ à partir de $\alpha^0$, $\nu^0$, $\tilde{w}_0$ \NdFS{et $\theta_0$}\\
 	\For{$k=1, \dots, K$}{
 		Générer $N_p$ particules $\theta_k^{(1)}, \dots, \theta_k^{(N_p)}$ depuis la loi de proposition courante $\propFonc_{\alpha^k, \nu^k}$:\\
 		\For{$i=1, \dots, N_p$}{
@@ -633,7 +645,7 @@ L'AMIS permet donc de ré-exploiter toutes l'information disponible (sur les poi
 				$\tilde{w}_l^{(i)} = \dfrac{w_l^{(i)}}{\sum\limits_{l'=1}^k\sum\limits_{j=1}^{N_p} w_{l'}^{(j)}}$
 				}
 			}
-		Mettre à jour la loi de proposition en calculant $\alpha^{k+1}$ et $\nu^{k+1}$ à partir de $\alpha^k$, $\nu^k$ et de la concaténation des poids recyclés normalisés $\tilde{w}_0, \dots, \tilde{w}_k$\\
+		Mettre à jour la loi de proposition en calculant $\alpha^{k+1}$ et $\nu^{k+1}$ à partir de $\alpha^k$, $\nu^k$ , de la concaténation des poids recyclés normalisés $\tilde{w}_0, \dots, \tilde{w}_k$ \NdFS{et des particules correspondantes $\theta_0, \cdots, theta_K$}\\\
 		}
 		\Output{ La collection de toutes les particules: $\theta_0^{(1)}, \dots, \theta_0^{(N_p)}, \theta_1^{(1)}, \dots, \theta_K^{(1)}, \dots, \theta_K^{(N_p)}$
 			
@@ -645,9 +657,10 @@ L'AMIS permet donc de ré-exploiter toutes l'information disponible (sur les poi
 	\label{algo_AMIS}
 \end{algorithm}
 
-\subsubsection{Exemple d'application de l'AMIS}
+\NdFS{
+\subsubsection{Exemple comparatif sur les méthodes à base d'IS}
 
-Afin d'illustrer le fonctionnement et les résultats de l'AMIS, nous reprenons le cas du mélange de gaussiennes présenté à l'équation \eqref{eq_mixture_2_gaussiennes_1D}. Supposons qu'on dispose d'un vecteur d'observations $\Vecy$ suivant cette distribution, avec $\sigma_1 = \sigma_2 = 1$ et $\gamma = 0.3$. Le vecteur $\VecTheta = (\mu_1, \mu_2)$ des moyennes de chaque composante du mélange constitue l'inconnue à estimer.\\
+Nous illustrons ici les résultats de trois approches basées sur l'échantillonnage d'importance: l'algorithme classique, le M-PMC et l'AMIS. Pour cela, }nous reprenons le cas du mélange de gaussiennes présenté à l'équation \eqref{eq_mixture_2_gaussiennes_1D}. Supposons qu'on dispose d'un vecteur d'observations $\Vecy$ suivant cette distribution, avec $\sigma_1 = \sigma_2 = 1$ et $\gamma = 0.3$. Le vecteur $\VecTheta = (\mu_1, \mu_2)$ des moyennes de chaque composante du mélange constitue l'inconnue à estimer.\\
 
 Si on formule le problème sous sa forme bayésienne, celui-ci peut s'écrire sous la forme suivante:
 \begin{equation}
@@ -687,10 +700,12 @@ En reprenant l'algorithme \ref{algo_AMIS} et en l'appliquant à notre exemple, o
 	
 	\item  on met les paramètres de la loi de proposition à jour: comme on est dans un cadre gaussien, on peut reprendre les équations \ref{eq_maj_gaussien}, on a alors : 
 	\begin{equation*}
+	\NdFS{
 	\begin{split}
-		\Vecmup^{k+1} &= \sum\limits_{i=1}^N \tilde{w}_k^{(i)}\VecTheta_k^{(i)} \\
-		\MatSigmap^{k+1} &= \sum\limits_{i=1}^N \tilde{w}_k^{(i)}(\VecTheta_k^{(i)} - \Vecmup^{k+1} )
-(\VecTheta_k^{(i)} - \Vecmup^{k+1} )^T	\end{split}
+		\Vecmup^{k+1} &= \sum\limits_{l=1}^k\sum\limits_{i=1}^N \tilde{w}_l^{(i)}\VecTheta_l^{(i)} \\
+		\MatSigmap^{k+1} &= \sum\limits_{l=1}^k\sum\limits_{i=1}^N \tilde{w}_l^{(i)}(\VecTheta_l^{(i)} - \Vecmup^{l+1} )
+(\VecTheta_l^{(i)} - \Vecmup^{l+1} )^T	\end{split}
+}
 	\end{equation*}
 \end{enumerate}
 
@@ -702,52 +717,67 @@ Au bout de $K$ itérations, l'approximation de la loi a posteriori est ainsi don
 
 \begin{figure}[h!]
 	\centering
-	\begin{subfigure}[t]{0.5\textwidth}
+	\begin{subfigure}[t]{0.33\textwidth}
 		\centering
-		\includegraphics[width=0.9\textwidth]{posterior_mu1}
+		\includegraphics[width=0.9\textwidth]{mu1_is}
 		\caption{}
-		\label{posterior_mu1}
+		\label{mu1_is}
 	\end{subfigure}%
 	~ 
-	\begin{subfigure}[t]{0.5\textwidth}
+		\begin{subfigure}[t]{0.33\textwidth}
+			\centering
+			\includegraphics[width=0.9\textwidth]{mu1_pmc}
+			\caption{}
+			\label{mu1_pmc}
+		\end{subfigure}%
+		~ 
+		\begin{subfigure}[t]{0.33\textwidth}
+			\centering
+			\includegraphics[width=0.9\textwidth]{mu1_amis}
+			\caption{}
+			\label{mu1_amis}
+		\end{subfigure}
+
+	\begin{subfigure}[t]{0.33\textwidth}
 		\centering
-		\includegraphics[width=0.9\textwidth]{posterior_mu2.png}
+		\includegraphics[width=0.9\textwidth]{mu2_is}
 		\caption{}
-		\label{posterior_mu2}
+		\label{mu2_is}
+	\end{subfigure}%
+	~ 
+	\begin{subfigure}[t]{0.33\textwidth}
+		\centering
+		\includegraphics[width=0.9\textwidth]{mu2_pmc}
+		\caption{}
+		\label{mu2_pmc}
+	\end{subfigure}%
+	~ 
+	\begin{subfigure}[t]{0.33\textwidth}
+		\centering
+		\includegraphics[width=0.9\textwidth]{mu2_amis}
+		\caption{}
+		\label{mu2_amis}
 	\end{subfigure}
-	\caption{Estimation (en bleu) par KDE des densités a posteriori marginales $p(\mu_1 | \Vecy)$ (\ref{posterior_mu1}) et $p(\mu_2 | \Vecy)$ (\ref{posterior_mu2}) après 5 itérations de l'AMIS, comparaison avec les valeurs attendues (en rouge).}
+	\caption{\NdFS{Estimation des densités a posteriori marginales $p(\mu_1 | \Vecy)$ (en bleu) et $p(\mu_2 | \Vecy)$ (en magenta) avec l'IS (gauche), le M-PMC (milieu) et l'AMIS (droite)}}
+	\label{fig_mus}
 \end{figure}
 
-Les figures \ref{posterior_mu1} et \ref{posterior_mu2} permettent de représenter explicitement les résultats de l'estimation de $\mu_1$ et $\mu_2$ grâce au procédé d'\textit{estimation par noyau} ou \textit{kernel density estimation} (KDE): si $\theta^{(1)}, \theta^{(2)}, \dots, \theta^{(n)}$ est un échantillon issu d'une variable aléatoire $\VecTheta$, alors l'estimateur de $\VecTheta$ par la méthode KDE est donné par :
+Les éléments de la figure \ref{fig_mus} permettent de représenter explicitement les résultats de l'estimation de $\mu_1$ et $\mu_2$ grâce au procédé d'\textit{estimation par noyau} ou \textit{kernel density estimation} (KDE): si $\theta^{(1)}, \theta^{(2)}, \dots, \theta^{(n)}$ est un échantillon issu d'une variable aléatoire $\VecTheta$, alors l'estimateur de $\VecTheta$ par la méthode KDE est donné par :
 
  \begin{equation}
 	\widehat{f}_h(\theta) = \dfrac{1}{nh}\sum\limits_{i=1}^n K\left(\dfrac{\theta - \theta^{(i)}}{h}\right)
 	\label{eq_KDE} 
  \end{equation} 
- où $K$ est un noyau arbitrairement choisi et $h$ est la fenêtre du noyau, qui règle le degré de lissage de l'estimation. $K$ est ici choisi comme étant gaussien centré réduit, un choix fréquent dans ce genre de démarche. De plus, comme l'illustre la figure \ref{fig_boxplot_mu12}, les estimations fournies par l'AMIS sont relativement robustes.
+ où $K$ est un noyau arbitrairement choisi et $h$ est la fenêtre du noyau, qui règle le degré de lissage de l'estimation. $K$ est ici choisi comme étant gaussien centré réduit, un choix fréquent dans ce genre de démarche. \\
  
-\begin{figure}[h!]
-	\centering
-	\begin{subfigure}[t]{0.5\textwidth}
-		\centering
-		\includegraphics[width=0.9\textwidth]{boxplot_mmse_mu1}
-		\caption{}
-		\label{boxplot_mu1}
-	\end{subfigure}%
-	~ 
-	\begin{subfigure}[t]{0.5\textwidth}
-		\centering
-		\includegraphics[width=0.9\textwidth]{boxplot_mmse_mu2}
-		\caption{}
-		\label{boxplot_mu2}
-	\end{subfigure}
-	\caption{Distribution statistique des estimateurs MMSE pour $p(\mu_1 | \Vecy)$ (\ref{boxplot_mu1}) et $p(\mu_2 |\Vecy)$ (\ref{boxplot_mu2}) pour 200 exécutions distinctes de l'algorithme, comparaison avec les valeurs attendues (en vert)}
-	\label{fig_boxplot_mu12}
-\end{figure}
-
-Dans cet exemple, l'algorithme AMIS produit rapidement de bons résultats, l'incertitude étant légèrement plus élevée pour l'estimation de $\mu_1$ car de par la nature de la loi cible (modèle de mélange), comme $\rho=0.3$ seuls 30\% des observations sont représentatifs de la composante associée. \\
-
-L'AMIS constitue ainsi une méthode aboutie pour l'échantillonnage d'importance adaptatif, c'est pourquoi son choix est privilégié pour l'application de l'inférence bayésienne à l'estimation du terme source dans la suite de ce manuscrit, plus particulièrement pour la localisation de la source. Les deux chapitres suivants présentent plus en détail sa mise en application sur différents types de cas pratiques. 
-
-
+ \NdFS{
+ Comme on peut le voir sur les figures \ref{mu1_is} et \ref{mu2_is}, l'utilisation de l'IS ne permet pas une estimation suffisamment précise des paramètres $\mu_1$ et $\mu_2$: cela est dû à la nature "statique" de la loi de proposition. En effet celle-ci n'est visiblement pas assez proche de la loi cible recherchée pour produire un résultat significatif.
+ 
+ Le M-PMC (figures \ref{mu1_pmc} et \ref{mu2_pmc}) parvient à restreindre les probabilités a posteriori de $\mu_1$ et $\mu_2$ à des intervalles réduits, permettant une meilleure inférence sur les valeurs des paramètres recherchés. Toutefois, en termes de précision relative, il y a un certain décalage entre les valeurs à retrouver et le mode des densités de probabilité, $\mu_1$ étant même presque en dehors de la zone de probabilité non-nulle fournie par le M-PMC. 
+ 
+ C'est finalement l'AMIS (figures \ref{mu1_amis} et \ref{mu2_amis})  qui obtient les meilleurs résultats, avec une estimation précise des densités $p(\mu_1 | \Vecy)$ et $p(\mu_2 | \Vecy)$ autour des vraies valeurs. Cela atteste à la fois du gain en qualité par rapport à une approche IS standard, ainsi que d'une plus grande souplesse sur l'exploitation des particules échantillonnées. En effet, le gain par rapport au M-PMC peut s'expliquer par le fait que l'AMIS ne s'est pas limité à l'exploitation de la dernière itération de l'algorithme (comme c'est le cas avec le M-PMC), mais a su tirer parti de l'information présente dans les poids d'importance et les particules générés dès la première itération. Il a ainsi pu définir des densités de probabilité plus en accord avec les valeurs réelles de $\mu_1$ et $\mu_2$. \\
+ 
+ Les avantages que présentent l'AMIS en font un choix privilégié pour la suite des travaux présentés dans ce manuscrit: les deux prochains chapitres introduisent son application à la problématique d'estimation du terme source dans différents cas pratiques.
+ 
+}
 
