@@ -205,6 +205,8 @@ Une solution envisagée a été d'implémenter le ré-échantillonnage systémat
 
 Une autre alternative plus simple consisterait à augmenter le nombre de particules par itération, afin d'accroître la proportion d'échantillons tirés en extérieur, ce qui n'impacte pas directement le temps de calcul du fait de l'implémentation optimale de l'opération de lecture des fichiers binaires. 
 
+\NdFS{Test test 1 2}
+
 %Il a donc fallu chercher un moyen d'initialiser la loi de proposition pour l'AMIS de façon plus judicieuse qu'une simple hypothèse de répartition uniforme des particules sur le domaine. Une initialisation optimisée permet en effet d'explorer des zones potentiellement intéressantes plus rapidement, augmentant l'efficacité de l'algorithme d'estimation. \\
 
 %Comme dans notre cas on a choisi une loi de proposition de type mixture de $D$ gaussiennes $\varphi_1, \dots, \varphi_D$, on va chercher à estimer les moyennes $\left(\VecMu_d\right)_{1:d}$ et les matrices de covariance $\left(\MatSigma_d\right)_{1:d}$ de chacune de ces composantes, ainsi que leurs facteurs d'influence $\left(\alpha_d\right)_{1:d}$. 

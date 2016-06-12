@@ -1,4 +1,4 @@
-\documentclass{book}
+\documentclass[draft]{book}
 
 %%%
 % Fichier principal du manuscrit de thèse, à utiliser pour compilation.
@@ -106,6 +106,9 @@
 
 % Pour écrire des algorithmes en pseudo-code:
 \usepackage[ruled, lined, linesnumbered, algochapter]{algorithm2e}
+
+
+
 %=======
 	
 % Pour citer proprement les références:
@@ -131,6 +134,7 @@
 \newcommand{\CostF}{{\mathcal{J}}}
 \newcommand{\MatR}{{\bm{R}}}
 \newcommand{\MatB}{{\bm{B}}}
+\newcommand{\MatId}{{\bm{I}}}
 \newcommand{\VecX}{{\bm{x}}}
 \newcommand{\PosteriorTheta}{{p(\VecTheta | \VecObs)}}
 \newcommand{\MatSigma}{{\bm{\Sigma}}}
@@ -169,6 +173,10 @@
 \newcommand{\MatSigmap}{{\bm{\Sigma}_\varphi}}
 \newcommand{\varBruit}{{\sigma_{\mathcal{B}}^2}}
 
+% Corrections
+\newcommand{\NdFS}[1]{{\leavevmode\color{teal}#1}}
+
+
 \begin{document}
 	\tableofcontents
 	
@@ -178,17 +186,17 @@
 	
 	\input{chapitre_1_v2}
 
-	\input{chapitre_2}
+	%\input{chapitre_2}
 	
-	\input{chapitre_3}
+	%\input{chapitre_3}
 	
-	\input{chapitre_4}
+	%\input{chapitre_4}
 	
-	\input{chapitre_4_opera}
+	%\input{chapitre_4_opera}
 	
-	\appendix
-	\chapter{Ensemble des résultats pour les analyses paramétriques du cas-test Beaune}
-	\input{annexe_chap4}
+	%\appendix
+	%\chapter{Ensemble des résultats pour les analyses paramétriques du cas-test Beaune}
+	%\input{annexe_chap4}
 	
 	\bibliographystyle{apalike}
 	\bibliography{_biblio}
