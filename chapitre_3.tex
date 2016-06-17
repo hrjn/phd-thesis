@@ -1,5 +1,6 @@
 \setcounter{chapter}{2}
-\chapter{Validation de la méthodologie AMIS sur un cas expérimental}
+
+\chapter{\NdFS{Application de la méthodologie AMIS au cas expérimental FFT07}}
 
 Dans ce chapitre, nous appliquons l'algorithme AMIS à un problème STE avec des données d'observations réelles issues d'une campagne expérimentale de mesures. Nous présentons dans un premier temps le contexte de la campagne, puis nous détaillons l'approche méthodologique ainsi que les résultats obtenus. Le contenu de ce chapitre reprend les travaux illustrés dans \cite{Rajaona2015}.
 
@@ -80,19 +81,13 @@ qui n'est autre que l'équivalent de l'équation \eqref{eq_relation_SR_non_param
 \label{eq_AE_3_plus}
 \end{equation}
 
-$\VecErreur \in \mathbb{R}^{N_cT_c}$ est un vecteur d'erreur qui suit, comme présenté à l'équation \eqref{eq_bruit_obs}, une loi normale centrée de matrice de covariance $\MatR \in \mathbb{R}^{N_cT_c \times N_cT_c}$. De plus, on considère que ce vecteur de bruit affecte les observations de façon indépendante et identiquement distribuée (i.i.d.): par conséquent, la matrice $\MatR$ est diagonale:
+$\VecErreur \in \mathbb{R}^{N_cT_c}$ est un vecteur d'erreur qui suit, comme présenté à l'équation \eqref{eq_bruit_obs}, une loi normale centrée de matrice de covariance $\MatR \in \mathbb{R}^{N_cT_c \times N_cT_c}$. De plus, on considère que ce vecteur de bruit affecte les observations de façon indépendante et identiquement distribuée (i.i.d.): par conséquent, la matrice $\MatR$ est diagonale: 
 
 
 \begin{equation}
-\MatR = 
-\begin{pmatrix}
-\diagentry{\varObs}\\
-&\diagentry{\varObs}\\
-&&\diagentry{\xddots}\\
-&&&&\diagentry{\varObs}\\
-&&&&&\diagentry{\varObs}\\
-\end{pmatrix}
-\label{eq_AE_covariance_obs}
+	\NdFS{
+		\MatR = \varObs \MatId_{N_c T_c}
+		}
 \end{equation}
 
 Le terme $\MatC(\PosSource) \in \mathbb{R}^{N_cT_c \times T_s}$ est la matrice source-récepteur suivante:
@@ -122,7 +117,9 @@ p(\VecThetaMaj | \VecObs) = \dfrac{p(\VecObs | \VecThetaMaj)p(\VecThetaMaj)}{p(\
 Comme expliqué au paragraphe \ref{paragraphe_paradigme_bayesien}, on cherche à estimer cette loi a posteriori à un facteur multiplicatif près, l'équation \eqref{eq_AE_1} devient alors:
 
 \begin{equation}
-p(\VecThetaMaj | \VecObs) \propto p(\VecObs | \VecThetaMaj)p(\VecThetaMaj)p(\VecObs)
+\NdFS{
+p(\VecThetaMaj | \VecObs) \propto p(\VecObs | \VecThetaMaj)p(\VecThetaMaj)
+}
 \label{eq_AE_1_prop}
 \end{equation}
 
@@ -176,51 +173,34 @@ En appliquant la règle du conditionnement en chaîne, ou \textit{chain rule}\fo
 p(\PosSource, \VecQSource | \VecObs) = p(\VecQSource | \PosSource, \VecObs)p(\PosSource | \VecObs)
 \label{eq_AE_9}
 \end{equation}
-où $p(\VecQSource | \PosSource, \VecObs)$ et $p(\PosSource | \VecObs)$ sont les lois a posteriori marginales respectives du profil d'émission et de la position de la source. \\
+où $p(\VecQSource | \PosSource, \VecObs)$ et $p(\PosSource | \VecObs)$ sont \NdFS{les lois a posteriori respectives du profil d'émission conditionnellement à la position de la source}. \\
 
 \subsection{A priori gaussien et solution analytique}
 
-Afin de passer de $p(\VecQSource)$ à $p(\VecQSource |\PosSource, \VecObs)$, on utilise une version statique des équations du \textit{filtre de Kalman}.\\
 
-Le filtre de Kalman \cite{Kalman1961} est une méthode classique pour l'estimation d'état séquentielle dans le cas d'un phénomène qui n'est pas complètement observable et qui est défini par un système linéaire. Concrètement, il peut s'appliquer aux systèmes de la forme suivante:
-
-\begin{equation}
-\begin{split}
-\VecQSource_t & = \bm{A}_n\VecQSource_{t-1} + \bm{b}_t\\
-\VecObs_t & = \MatC_t(\PosSource) \VecQSource_t + \VecErreur_t
-\end{split}
-\label{eq_filtre_kalman_dynamique}
-\end{equation}
-où $\VecQSource_t$ représente l'état non-observable et $\VecObs_t$ le processus observable, en l'occurence les mesures de concentration, au temps $t$. L'opérateur $\bm{A}$ est une matrice de transition entre les états $\VecQSource_{t-1}$ et $\VecQSource_t$, et $\bm{b}_t$ est un bruit gaussien centré de variance connue.
-
- On suppose connu l'état initial $\VecQSource_0$ de $\VecQSource$,  autrement dit les paramètres $\bm{\mu}_{q_{0}}$ et $\bm{\Sigma}_{q_0}$ de sa loi a priori $p(\VecQSource_0)$ sont donnés. Le principe du filtre de Kalman consiste alors à calculer de façon récursive des estimateurs $\PostMeanQ_t$ et $\PostCovQ_t$ caractérisant l'état $\VecQSource_t$.\\
- 
- Ici, notre problème est stationnaire, donc dans l'équation \eqref{eq_filtre_kalman_dynamique} on a $\bm{A}_n$ = $\bm{I}$ où $\bm{I}$ désigne la matrice identité, $\bm{b}_t = 0$ et la dépendance temporelle en $t$ disparaît: il n'y a qu'une unique étape de mise à jour, celle du passage de $p(\VecQSource)$ à $p(\VecQSource|\PosSource, \VecObs)$. Dans ce cas, les équations du filtre de Kalman permettent alors d'écrire les mises à jour suivantes:
- 
- \begin{equation}
- \begin{split}
- \PostMeanQ & = \VecMeanQ + \MatK(\VecObs - \MatC(\PosSource)\VecMeanQ) \\
- \PostCovQ & = \MatCovQ - \MatK\MatC(\PosSource)\MatCovQ
- \end{split}
- \label{eq_filtre_kalman_statique}
- \end{equation}
- où $\MatK$ est la \textit{matrice de gain de Kalman} définie par:
- 
- \begin{equation}
- \MatK = \MatCovQ\MatC(\PosSource)^T(\MatC(\PosSource)\MatCovQ\MatC(\PosSource)^T + \MatR)^{-1}
- \end{equation}
- 
- 
- 
- 
- 
-  De plus, si les observations sont soumises à un bruit gaussien et que la loi a priori $p(\VecQSource)$ est également gaussienne, alors le système \eqref{eq_filtre_kalman_dynamique} est gaussien, et par conséquent la loi a posteriori $p(\VecQSource|\PosSource, \VecObs)$ est également gaussienne, de moyenne $\PostMeanQ$ et de covariance $ \PostCovQ$ : 
-  
-  \begin{equation}
-  p(\VecQSource|\PosSource, \VecObs) = \mathcal{N}(\VecQSource | \PostMeanQ, \PostCovQ)
-  \label{eq_AE_13}
-  \end{equation}
-  
+\NdFS{
+	Etant donnés les paramètres $\VecMeanQ$ et $\MatSigma_q$ définis à l'équation \eqref{eq_AE_8} et la formulation du modèle de l'équation \eqref{eq_AE_3}  il est possible de réécrire la vraisemblance sous la forme suivante:
+	
+	\begin{equation}
+		p(\VecObs | \VecQSource, \PosSource) = \mathcal{N}(\VecObs | \MatC(\PosSource)\VecMeanQ, \MatC(\PosSource)\MatSigma_q\MatC(\PosSource)^T + \MatR)
+		\label{eq_lk_gaussian}
+	\end{equation}
+	
+	La loi a priori de $\VecQSource$ ainsi que la vraisemblance de l'équation \eqref{eq_lk_gaussian} suivant toutes deux des lois normales, alors la loi a posteriori marginale de $\VecQSource$ suit également une loi normale de moyenne $\PostMeanQ$ et de matrice de covariance $\PostCovQ$, dont les valeurs sont obtenues par les formules empiriques: 
+	 \begin{equation}
+	 \begin{split}
+	 \PostMeanQ & = \VecMeanQ + \MatK(\VecObs - \MatC(\PosSource)\VecMeanQ) \\
+	 \PostCovQ & = \MatCovQ - \MatK\MatC(\PosSource)\MatCovQ
+	 \end{split}
+	 \label{eq_filtre_kalman_statique}
+	 \end{equation}
+	  où $\MatK$ est définie par:
+	  
+	  \begin{equation}
+	  \MatK = \MatCovQ\MatC(\PosSource)^T(\MatC(\PosSource)\MatCovQ\MatC(\PosSource)^T + \MatR)^{-1}
+	  \end{equation}
+	
+	}
   Les paramètres $\PostMeanQ$ et $\PostCovQ$ sont ainsi obtenus de façon analytique (i.e. sans approximation) par les équations \eqref{eq_filtre_kalman_statique}. 
 
 \subsection{Contrainte de positivité}
@@ -302,39 +282,66 @@ La figure \ref{fig_AE_2} résume bien le fonctionnement de l'algorithme \ref{alg
 
 \section{Localisation de la source avec l'algorithme AMIS}
 
-Il s'agit ici d'étudier la loi a posteriori marginale $p(\PosSource | \VecObs)$ de la position de la source. Contrairement au profil d'émission, il est plus difficile d'obtenir une solution analytique pour caractériser cette distribution. Par conséquent, l'approche par simulation stochastique sera privilégiée, le but étant de chercher à approximer la distribution $p(\PosSource | \VecObs)$. \\
+Il s'agit ici d'étudier la loi a posteriori marginale $p(\PosSource | \VecObs)$ de la position de la source. Contrairement au profil d'émission, il est \NdFS{impossible} d'obtenir une solution analytique pour caractériser cette distribution. Par conséquent, \NdFS{l'idée est d'utiliser les méthodes de simulation stochastique afin d'}approximer la distribution $p(\PosSource | \VecObs)$. \\
 
 \subsection{Principe}
 
-Nous appliquons l'algorithme AMIS décrit dans le chapitre 2 afin de localiser la source. Pour cela, on va ainsi construire une procédure itérative basée sur l'algorithme \ref{algo_AMIS} afin de créer sur $K$ itérations et en générant $N_p$ particules par itération un échantillon de $KN_p$ particules $\left\{\VecTheta_k^{(i)}\right\}_{0\leq k \leq K}^{1\leq i \leq N_p}$ dont la distribution approxime celle de la loi marginale a posteriori $p(\PosSource | \VecObs)$ de la position de la source.\\
+Nous appliquons l'algorithme AMIS décrit dans le chapitre 2 afin de localiser la source. Pour cela, on va ainsi construire une procédure itérative basée sur l'algorithme \ref{algo_AMIS} afin de créer sur $K$ itérations et en générant $N_p$ particules par itération un échantillon de $KN_p$ particules \NdFS{$\left\{\PosSource_k^{(i)}\right\}_{0\leq k \leq K}^{1\leq i \leq N_p}$} dont la distribution approxime celle de la loi marginale a posteriori \NdFS{$p(\PosSource | \VecObs)$} de la position de la source.\\
 
 Dans un cadre bayésien, la loi cible recherchée peut alors s'écrire à une constante multiplicative près, suivant la relation de proportionnalité suivante:
 
 \begin{equation}
-p(\VecTheta | \VecObs) \propto p(\VecObs | \VecTheta)p(\VecTheta)
+\NdFS{
+p(\PosSource | \VecObs) \propto p(\VecObs | \PosSource)p(\PosSource)
 \label{eq_AE_20}
+}
 \end{equation}
 
-La fonction de vraisemblance $p(\VecTheta | \PosSource)$ est définie par l'équation \eqref{eq_AE_5} (ou \eqref{eq_AE_17} si on choisit d'appliquer la contrainte de positivité), et la loi a priori $p(\VecTheta)$ par l'équation \eqref{eq_AE_7}. L'équation \eqref{eq_AE_20} permet ainsi d'évaluer la loi cible toute particule $\VecTheta$ échantillonnée depuis la loi de proposition courante, afin de calculer les poids d'importance associé. La structure globale de la démarche est décrite par la figure \ref{schema_amis}.\\
+La fonction de vraisemblance \NdFS{$p(\VecObs | \PosSource)$} est définie par l'équation \eqref{eq_AE_5} (ou \eqref{eq_AE_17} si on choisit d'appliquer la contrainte de positivité), et la loi a priori \NdFS{$p(\PosSource)$} par l'équation \eqref{eq_AE_7}. L'équation \eqref{eq_AE_20} permet ainsi d'évaluer la loi cible toute particule \NdFS{$\PosSource$} échantillonnée depuis la loi de proposition courante, afin de calculer les poids d'importance associé. La structure globale de la démarche est décrite par la figure \ref{schema_amis}.\\
 
-\begin{figure}[h!]
-	\centering
-	\includegraphics[width=1\textwidth]{schema_amis_capture}
-	\caption{Diagramme de fonctionnement de l'algorithme AMIS (sur la $k$-ième itération) pour la localisation de la source.}
-	\label{schema_amis}
-\end{figure}
+%\begin{figure}[h!]
+%	\centering
+%	\includegraphics[width=1\textwidth]{schema_amis_capture}
+
+%\end{figure}
+\begin{figure} 
+		\centering
+        \begin{tikzpicture}[retour/.style={->,>=stealth’,thick,dashed}]
+        \node[draw, text width = 7cm, align=center] (step_1) at (0,0) {Echantillonner $\PosSource_k^{(1)}, \dots, \PosSource_k^{(N_p)}$  depuis la loi de proposition courante $\varphi_{\alpha(k), \nu(k)}$};
+        \node[draw, text width = 7cm, align=center] (step_2) at (0,-1.75) {Construire les matrices source-récepteur $\MatC(\PosSource_k^{(1)}), \dots, \MatC(\PosSource_k^{(N_p)})$ avec $N_p$ \\appels au modèle de dispersion direct};
+        \node[draw, text width = 7cm, align=center] (step_3) at (0,-3.5) {Calculer les vraisemblances \\ $p(\VecObs | \PosSource_k^{(1)}), \dots, p(\VecObs | \PosSource_k^{(N_p)})$};
+        \node[draw, text width = 7cm, align=center] (step_4) at (0,-6.5) {Pour chaque $i \in \{1, \cdots, N_p\}$, calculer les poids d'importance \\ $ w_k^{(i)} = \dfrac{p(\VecObs | \PosSource_k^{(i)})p(\PosSource_k^{(i)})}{\varphi_{\alpha(k), \nu(k)}(\PosSource_k^{(i)})}$ \\et normaliser: \\$\widetilde{w}_k^{(i)} = \dfrac{w_k^{(i)}}{\sum\limits_{j=1}^{N_p} w_k^{(j)}}$};
+        \node[draw, text width = 7cm, align=center] (step_5) at (0,-9.75) {Recycler les poids d'importance des itérations précédentes \\ $\widetilde{w}_l^{(1)}, \dots, \widetilde{w}_l^{(N_p)}$ avec $l \in \{0, \dots, k-1\}$}; 
+        \node[draw, text width = 7cm, align=center] (step_6) at (0,-12) {En utilisant $\PosSource_l^{(1)}, \dots, \PosSource_l^{(N_p)}$ et $\widetilde{w}_l^{(1)}, \dots, \widetilde{w}_l^{(N_p)}$ avec $l \in \{0, \dots, k\}$, générer les nouveaux paramètres \\ $\alpha(k+1)$ et $\nu(k+1)$ de la loi de proposition };
+        %\draw[retour] (step_6)--(step_1);
+        \draw[->,>=latex] (step_1) -- (step_2);
+        \draw[->,>=latex] (step_2) -- (step_3);
+        \draw[->,>=latex] (step_3) -- (step_4);
+        \draw[->,>=latex] (step_4) -- (step_5);
+        \draw[->,>=latex] (step_5) -- (step_6);
+        \end{tikzpicture}
+        \caption{Diagramme de fonctionnement de l'algorithme AMIS sur la $k$-ième itération pour la localisation de la source.}
+        \label{schema_amis}
+ \end{figure}
 
 \subsection{Choix de la loi de proposition}
 
-L'algorithme AMIS requiert une loi de proposition paramétrique qui soit suffisamment flexible pour pouvoir envisager plusieurs configurations d'initialisation, qu'il s'agisse de partir d'une répartition uniforme des particules ou d'une distribution favorisant une zone cible pré-définie. Suivant la logique développée dans \cite{Cappe2008}, on choisit ainsi une mixture de $D$ distribution gaussiennes bivariées:
+L'algorithme AMIS requiert une loi de proposition paramétrique qui soit suffisamment flexible pour:
+\NdFS{
+	\begin{itemize}
+		\item pouvoir s'adapter de façon à être capable d'approximer correctement la loi cible une fois ses paramètres ajustés,
+		\item effectuer simplement l'opération d'adaptation des paramètres. Sur ce point, le choix d'une mixture de gaussiennes telle que présentée dans \cite{Cappe2008} est cohérent, car les formules de mise à jour sont directement disponibles via l'algorithme EM.
+	\end{itemize}
+
+On définit donc la loi de proposition comme} une mixture de $D$ distribution gaussiennes bivariées:
 
 \begin{equation}
-\varphi_{(\alpha,\nu)}(\VecTheta) = \sum\limits_{d=1}^D \alpha_d \varphi_d(\VecTheta | \nu_d)
+\varphi_{(\alpha,\nu)}(\NdFS{\PosSource}) = \sum\limits_{d=1}^D \alpha_d \varphi_d(\NdFS{\PosSource} | \nu_d)
 \label{eq_AE_21}
 \end{equation}
 où les $\alpha_d$ sont les facteurs d'influence de chacune des composantes de la mixture, et $\nu_d$ représente le vecteur des paramètres de la $d$-ième composante, telle que : 
 \begin{equation}
-\varphi_d(\VecTheta | \nu_d) = \mathcal{N}(\VecTheta | \VecMu_d, \MatSigma_d)
+\varphi_d(\NdFS{\PosSource} | \nu_d) = \mathcal{N}(\NdFS{\PosSource} | \VecMu_d, \MatSigma_d)
 \label{eq_AE_21_bis}
 \end{equation}
 avec $\VecMu_d \in \mathbb{R}^2$ et $\MatSigma_d \in \mathbb{R}^{2\times2}$.
@@ -365,7 +372,9 @@ avec $\VecMu_d \in \mathbb{R}^2$ et $\MatSigma_d \in \mathbb{R}^{2\times2}$.
  	 \label{fig_init_amis}	
  \end{figure}
  
-  Pour la suite, on choisit $D=4$, ce qui est suffisant pour bien couvrir le domaine sans pour autant avoir de recouvrement entre les particules échantillonnées depuis différentes composantes. Le choix des paramètres initiaux permet de régler la surface couverte par chacune des composantes afin d'obtenir une répartition relativement homogène des particules, illustrant une absence de connaissance a priori sur une localisation potentielle de la source (voir figure \ref{fig_init_amis}). En pratique, nous avons:
+  Le choix des paramètres initiaux permet de régler la surface couverte par chacune des composantes afin d'obtenir une répartition relativement homogène des particules, illustrant une absence de connaissance a priori sur une localisation potentielle de la source (voir figure \ref{fig_init_amis}). \\
+  
+  En pratique, nous avons:
   
   \begin{enumerate}
   	\item divisé le domaine en quatre quadrants de surface égale, 
@@ -373,7 +382,9 @@ avec $\VecMu_d \in \mathbb{R}^2$ et $\MatSigma_d \in \mathbb{R}^{2\times2}$.
   	\item réglé les matrices de covariance $\MatSigma_d$ de façon à ce que chacune des composantes de la mixture fournisse des échantillons couvrant toute la surface de son quadrant.\\
   \end{enumerate}
   
-  Les paramètres $\alpha_d, \VecMu_d et \MatSigma_d$ sont mis à jour après chaque itération grâce aux formules des équations \eqref{eq_maj_gaussien}.\\
+ \NdFS{Si une information a priori est disponible (par exemple, des zones particulières du domaine à exclure ou à favoriser), les paramètres $\alpha_d, \VecMu_d$ et $\MatSigma_d$ avec $d \in \{1,\dots,D\}$ peuvent être préalablement ajustés afin d'orienter en conséquence l'échantillonnage des particules dès la première itération. Un exemple de ce type d'initialisation est présenté au Chapitre 4.
+ 	
+ 	Une fois l'algorithme lancé, à chaque itération, ces paramètres  sont mis à jour grâce aux formules des équations \eqref{eq_maj_gaussien}.}\\
 
 
 \section{Description du modèle de dispersion à bouffées gaussiennes}
@@ -439,8 +450,7 @@ Les modèles gaussiens permettent de représenter la dispersion à petite échel
  \end{split}
  \end{equation}
  où $a_x, a_y, b_x, b_y$ sont des coefficients empiriques qui dépendent de la classe de stabilité atmosphérique \cite{Pasquill1983} et $d(\PosSource, \bm{x}_p)$ est la distance entre la source $\PosSource$ et le centre $\bm{x}_p$ de la bouffée courante. On utilise ici la classe de Pasquill D, qui est la plus appropriée pour des conditions stables en topographie non-urbaine. 
- Comme les valeurs de la composante verticale du vent qui ont été relevées sont relativement faibles, et étant donné que les capteurs et la source se trouvent assez près du sol (2m), on ne tient pas non plus compte du terme en $z$ qui apparaît dans l'exponentielle dans la formulation générale du modèle gaussien. 
-
+ Comme les valeurs de la composante verticale du vent qui ont été relevées sont relativement faibles, et étant donné que les capteurs et la source se trouvent assez près du sol (2m), on ne tient pas non plus compte du terme en $z$ qui apparaît dans l'exponentielle dans la formulation générale du modèle \NdFS{à bouffées gaussiennes}.
 
 \section{Présentation des résultats}
 
@@ -449,7 +459,7 @@ Les modèles gaussiens permettent de représenter la dispersion à petite échel
 
 Dans un premier temps, afin de valider la méthode, le choix a été fait de se placer dans un cadre synthétique, à savoir reproduire les conditions de l'expérience FFT07 et simuler les concentrations mesurées aux capteurs grâce à l'exécution d'un modèle de dispersion, en l'occurence le modèle gaussien défini au paragraphe précédent. Ainsi, les positions des capteurs et des sources sont exactement les mêmes que celles des \textit{trials} 7 et 30 de FFT07. Les données météorologiques sont ajustées afin que les concentrations simulées soient les plus proches possibles des relevés expérimentaux, et le vent est considéré constant en direction et en vitesse. \\
 
-L'algorithme AMIS a été exécuté sur $K = 10$ itérations, avec $N_p = 100$ particules échantillonnées par itération. Les observations synthétiques ont été générées avec un ajout de bruit gaussien centré de variance $10^{-5}$ afin de simuler les différents éléments d'erreurs présents dans le cas expérimental. La variance d'observation est fixée à $\varObs = 10^{-5}$. La loi a priori de $\VecQSource$ a été choisie telle que $\VecMeanQ = 0$ et $\MatCovQ = \varQ \bm{I}$ avec $\varQ = 10^{-3}$. En pratique, diminuer $\varQ$ revient à supposer que la source est proche des capteurs ayant mesuré une concentration non-nulle, et à l'inverse une variance $\varQ$ élevée implique une source potentiellement plus éloignée. 
+L'algorithme AMIS a été exécuté sur $K = 10$ itérations, avec $N_p = 100$ particules échantillonnées par itération. \NdFS{La loi de proposition comporte $D=4$ composantes.} Les observations synthétiques ont été générées avec un ajout de bruit gaussien centré de variance $10^{-5}$ afin de simuler les différents éléments d'erreurs présents dans le cas expérimental. La variance d'observation est fixée à $\varObs = 10^{-5}$. La loi a priori de $\VecQSource$ a été choisie telle que $\VecMeanQ = 0$ et $\MatCovQ = \varQ \bm{I}$ avec $\varQ = 10^{-3}$. En pratique, diminuer $\varQ$ revient à supposer \NdFS{a priori} que la source est proche des capteurs ayant mesuré une concentration non-nulle, et à l'inverse une variance $\varQ$ élevée implique une source potentiellement plus éloignée. 
 La valeur choisie pour les différents paramètres énumérés ci-dessus sont celles ayant permis d'obtenir les résultats les plus plausibles, présentés ci-après. \\
 
 \subsubsection{Estimation de la position}
@@ -483,10 +493,10 @@ L'algorithme a été testé avec deux positions de source différentes, correspo
  
   Le fait de visualiser une distribution de probabilité permet ainsi une vision plus explicite des aspects liés aux incertitudes autour de l'estimation,  en comparaison avec des méthodes de type optimisation où seule une estimation ponctuelle est donnée.
   
-  Pour obtenir les distributions présentées à la figure \ref{fig_5_AE}, une estimation de type KDE a été effectuée afin de construire une densité de probabilité à partir d'une population statistique, en l'occurence les particules $\left\{\VecTheta_k^{(i)}\right\}_{0\leq k \leq K}^{1\leq i \leq N_p}$ associées à leurs poids d'importance respectifs $\left\{\widetilde{w}_k^{(i)}\right\}_{0\leq k \leq K}^{1\leq i \leq N_p}$. \\
+  Pour obtenir les distributions présentées à la figure \ref{fig_5_AE}, \NdFS{un lissage par noyau} a été effectué afin de construire une densité de probabilité à partir d'une population statistique, en l'occurence les particules $\left\{\VecTheta_k^{(i)}\right\}_{0\leq k \leq K}^{1\leq i \leq N_p}$ associées à leurs poids d'importance respectifs $\left\{\widetilde{w}_k^{(i)}\right\}_{0\leq k \leq K}^{1\leq i \leq N_p}$. \\
   
   
-  Néanmoins, il est toujours possible d'obtenir un estimateur ponctuel à partir des lois a posteriori, il suffit pour cela de calculer le MMSE selon la formule suivante: 
+  Néanmoins, il est toujours possible d'obtenir un estimateur ponctuel à partir des lois a posteriori, il suffit pour cela de calculer, \NdFS{par exemple}, le MMSE selon la formule suivante: 
   
   \begin{equation}
   \widehat{\PosSource} = \sum\limits_{k=0}^K\sum\limits_{i=1}^{N_p} \tilde{w}_k^{(i)}\VecTheta_{k}^{(i)}
@@ -534,7 +544,7 @@ L'algorithme a été testé avec deux positions de source différentes, correspo
   	\label{fig_AE_7}	
   \end{figure}
   
-  Comme présenté en figure \ref{fig_AE_7}, la méthode parvient à fournir une bonne estimation du profil de rejet dans les trois cas présentés. Sachant que l'estimation de la loi a posteriori de $\VecQSource$ consiste à estimer à la fois $\PostMeanQ$ et $\PostCovQ$, il est possible de représenter la marge d'incertitude associée à chaque valeur estimée: pour chacun des cas de la figure \ref{fig_AE_7} la valeur réelle du débit est bien incluse dans l'intervalle à $\pm 2\widetilde{\sigma_q}$, où $\widetilde{\sigma_q}^2 = \text{diag}(\PostCovQ)$. Dans le cas de la figure \ref{fig_AE_7_C}, le pic à la limite de l'intervalle d'émission est dû au fait que le rejet est plus long que la période d'observation: en l'absence d'information, l'algorithme ne peut fournir une estimation correcte, mais demeure cohérent  en augmentant fortement la taille de la marge d'incertitude, signifiant ainsi que l'information manque. \\
+  Comme présenté en figure \ref{fig_AE_7}, la méthode parvient à fournir une bonne estimation du profil de rejet dans les trois cas présentés. Sachant que l'estimation de la loi a posteriori de $\VecQSource$ consiste à estimer à la fois $\PostMeanQ$ et $\PostCovQ$, il est possible de représenter la marge d'incertitude associée à chaque valeur estimée: pour chacun des cas de la figure \ref{fig_AE_7} la valeur réelle du débit est bien incluse dans l'intervalle à $\pm 2\widetilde{\sigma}_q$, où $\widetilde{\sigma}_q^2 = \text{diag}(\PostCovQ)$. Dans le cas de la figure \ref{fig_AE_7_C}, le pic à la limite de l'intervalle d'émission est dû au fait que le rejet est plus long que la période d'observation: en l'absence d'information, l'algorithme ne peut fournir une estimation correcte, mais demeure cohérent  en augmentant fortement la taille de la marge d'incertitude, signifiant ainsi que l'information manque. \\
   
   \subsubsection{Robustesse statistique de l'estimation}
     
@@ -547,7 +557,7 @@ L'algorithme a été testé avec deux positions de source différentes, correspo
     		
     		Contrainte de positivité & $\bar{d}(\widehat{\PosSource},\PosSource)$ (m)& $\sigma_{\widehat{x_s}}$ (m)& $\sigma_{\widehat{y_s}}$ (m)\\
     		\hline
-    		OUI                   & 0  	& 0.9        & 3.2        \\
+    		OUI                   & \NdFS{$<1$}  	& 0.9        & 3.2        \\
     		NON                   & 10.44   & 0.4        & 1.0 \\      
     		\hline
     	\end{tabular}
@@ -577,13 +587,13 @@ Un test de robustesse statistique a ensuite été effectué, en changeant de fa�
     	
     	\begin{tabular}{cccc}
     		
-    		Algorithme & $\widehat{\PosSource}$ (m)& $\sigma_{\widehat{x_s}}$ (m)& $\sigma_{\widehat{y_s}}$ (m)\\
+    		Algorithme &\NdFS{ $\bar{d}(\widehat{\PosSource},\PosSource)$ (m)}& $\sigma_{\widehat{x_s}}$ (m)& $\sigma_{\widehat{y_s}}$ (m)\\
     		\hline
-    		AMIS                   & (331.759;4439.966)  	& 0.9        & 3.2        \\
-    		MCMC                   & (331.742;4439.981)   & 130        & 95 \\      
+    		AMIS                   & \NdFS{$<1$}  	& 0.9        & 3.2        \\
+    		MCMC                   & \NdFS{22.7}  & 130        & 95 \\      
     		\hline
     	\end{tabular}
-    	\caption{Evaluation statistique des estimations sur 40 \textit{runs} de l'AMIS et du MCMC avec application de la contrainte de positivité. Ici, $\widehat{\PosSource}$ représente la moyenne des estimateurs ponctuels MMSE obtenus pour chaque \textit{run} . $\sigma_{\widehat{x_s}}$ et $\sigma_{\widehat{y_s}}$ sont respectivement les moyennes des écarts-types des distributions a posteriori marginales $p(x_s | \VecObs)$ et $p(y_s | \VecObs)$. }
+    	\caption{Evaluation statistique des estimations sur 40 \textit{runs} de l'AMIS et du MCMC avec application de la contrainte de positivité.}
     	\label{table_2_AE}
     \end{table}
     
@@ -594,7 +604,7 @@ Un test de robustesse statistique a ensuite été effectué, en changeant de fa�
  \begin{figure}[h!]
  	\centering
  	\includegraphics[width=0.7\textwidth]{fig_8}
- 	\caption{Comparaison de la vitesse de convergence entre MCMC (en bleu) et AMIS (en magenta)}
+ 	\caption{Comparaison empirique de la vitesse de convergence entre MCMC (en bleu) et AMIS (en magenta)}
  	\label{fig_8_AE} 	
  \end{figure}
 
@@ -620,7 +630,7 @@ Un test de robustesse statistique a ensuite été effectué, en changeant de fa�
  	\label{fig_9_AE}
  \end{figure}
  
- On observe sur la figure \ref{fig_9_AE} que l'ESS prend un certain temps avant d'atteindre des valeurs suffisamment élevées, néanmoins l'estimation de la position de la source devient rapidement pertinente si on se réfère à la figure \ref{fig_8_AE}. En pratique, cela illustre le fait que l'AMIS a tendance à affecter un poids relativement élevé à un nombre restreint de particules (voire à une particule unique) proches de la vraie source. Une façon de remédier à cela consiste à augmenter la valeur de la variance d'observation $\varObs$ choisie pour l'exécution de l'algorithme.
+ On observe sur la figure \ref{fig_9_AE} que l'ESS prend un certain temps avant d'atteindre des valeurs suffisamment élevées, néanmoins l'estimation de la position de la source devient rapidement pertinente si on se réfère à la figure \ref{fig_8_AE}. En pratique, cela illustre le fait que l'AMIS a tendance à affecter un poids relativement élevé à un nombre restreint de particules (voire à une particule unique) proches de la vraie source. 
  
  
  \subsection{Résultats obtenus avec des données expérimentales}
@@ -651,7 +661,7 @@ Le choix d'un modèle de dispersion à bouffées gaussiennes permet ainsi d'int�
 
 \subsubsection{Estimation de la position (\textit{trials} 7 et 30)}
 
-De même que pour le cas synthétique, nous avons calculé par KDE les distributions a posteriori de la position de la source sur chacun des axes, et représenté les résultats pour les \textit{trials} 7 et 30 sur les figures \ref{fig_12_AE} et \ref{fig_13_AE}. Les paramètres suivants ont été utilisés:
+De même que pour le cas synthétique, nous avons \NdFS{obtenu} par KDE les distributions a posteriori de la position de la source sur chacun des axes, et représenté les résultats pour les \textit{trials} 7 et 30 sur les figures \ref{fig_12_AE} et \ref{fig_13_AE}. Les paramètres suivants ont été utilisés:
 
 \begin{itemize}
 	\item \textit{trial} 7: $\varObs = 10^{-10}$ et $\varQ = 5\times 10^{-2}$,
@@ -735,11 +745,10 @@ La comparaison a aussi été faite avec les résultats d'estimation du profil de
 
 L'étude de cas sur l'expérience FFT07 présentée dans ce chapitre a permis une première validation de la méthodologie axée sur l'algorithme AMIS. Celle-ci a en effet permis une bonne estimation de la position de la source dans les cas synthétiques et expérimentaux,  en fournissant une distribution a posteriori des coordonnées de la source. Cet outil statistique permet ainsi d'effectuer une analyse autour des incertitudes associées à l'estimation et se prête bien à un cadre d'aide à la décision dans un contexte opérationnel. L'information ponctuelle demeure également accessible, par le biais du calcul de l'estimateur MMSE. \\
 
- La démarche et a également permis de reconstruire un profil d'émission complet, fournissant une information temporelle sur les quantités émises par la source ainsi que ses temps de démarrage et d'arrêt. Cet aspect temporel présente un aspect innovant par rapport aux approches conventionnelles présentées dans la littérature, où l'hypothèse d'un débit d'émission constant est formulée, se traduisant dans la pratique par la recherche d'une unique valeur scalaire $q$. \\
+ La démarche et a également permis de reconstruire un profil d'émission complet, fournissant une information temporelle sur les quantités émises par la source ainsi que ses temps de démarrage et d'arrêt. Cet aspect temporel présente un aspect innovant par rapport aux approches conventionnelles présentées dans la littérature, où l'hypothèse d'un débit d'émission constant est formulée, se traduisant dans la pratique par la recherche d'une unique valeur scalaire $q$. 
  
 Cette étude a démontré que la quasi-totalité de la charge de calcul est concentrée sur la construction des matrices source-récepteur, plus précisément sur les appels au modèle de dispersion. Dans le cas d'un modèle gaussien les temps de calcul demeurent raisonnables, mais ils dépendent directement du nombre de particules échantillonnées par itération de l'AMIS. Nous avons pu vérifier que le fait de tirer plus de 100 particules par itération dans cette étude de cas n'améliorait pas significativement les résultats d'estimation, mais dans le cadre général un nombre trop faible de particules pourrait dégrader la qualité de l'estimation, car l'exploration de l'espace des paramètres s'en trouverait restreinte. De plus, à nombre égal de particules, si le contexte exige l'utilisation d'un modèle de dispersion plus élaboré (par exemple dans un milieu urbain), la charge et le temps de calcul seront bien plus importants. \\
 
-Une optimisation du mode de construction des matrices source-récepteur permettant une montée en charge sans augmentation excessive du temps de calcul est abordée dans le Chapitre 4.
-
+\NdFS{Il devient ainsi nécessaire d'optimiser à la fois le mode d'usage du modèle de dispersion ainsi que l'exploration des différentes valeurs possibles pour les particules. Ces deux points sont abordés dans le Chapitre 4, qui présente une nouvelle façon d'obtenir les résultats des calculs de dispersion, ainsi qu'une initialisation améliorée de la loi de proposition.}
 
 

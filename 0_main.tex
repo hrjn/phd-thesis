@@ -1,4 +1,4 @@
-\documentclass{book}
+\documentclass[draft]{book}
 
 %%%
 % Fichier principal du manuscrit de thèse, à utiliser pour compilation.
@@ -17,6 +17,9 @@
 \usepackage[T1]{fontenc}
 \usepackage[utf8]{inputenc}
 \usepackage[frenchb]{babel}
+
+% Pour de jolies figures en natif:
+\usepackage{tikz}
 
 % Pour les symboles mathématiques:
 \usepackage{amsmath}
@@ -161,8 +164,8 @@
 \newcommand{\MatCovQ}{{\bm{\Sigma}_q}}
 \newcommand{\MatG}{{\bm{[G]}}}
 \newcommand{\MatK}{{\bm{K}}}
-\newcommand{\PostMeanQ}{{\widetilde{\VecMeanQ}}}
-\newcommand{\PostCovQ}{{\widetilde{\MatCovQ}}}
+\newcommand{\PostMeanQ}{{\widetilde{\bm{\mu}_q}}}
+\newcommand{\PostCovQ}{{\widetilde{\bm{\Sigma}_q}}}
 \newcommand{\varQ}{\sigma_q^2}
 \newcommand{\VecThetaMaj}{{\bm{\Theta}}}
 \newcommand{\Vecx}{{\bm{x}}}
@@ -188,7 +191,7 @@
 
 	\input{chapitre_2}
 	
-	%\input{chapitre_3}
+	\input{chapitre_3}
 	
 	%\input{chapitre_4}
 	
