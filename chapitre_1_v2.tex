@@ -1,11 +1,11 @@
 \chapter{Introduction}
 
 \section{Pourquoi chercher à reconstruire des sources de pollution?}
-	La menace de rejets de substances \textit{Nucléaires}, \textit{Radiologiques}, \textit{Bactériologiques} ou \textit{Chimiques} (NRBC) dans l'atmosphère suscite un fort intérêt, du fait des enjeux humains et environnementaux qu'ils affectent. De tels incidents peuvent être d'origine accidentelle, causés par des rejets ayant eu lieu dans des sites industriels stockant ou exploitant des matières dangereuses. Plusieurs événements historiques témoignent de l'impact de tels accidents :\\
+	La menace de rejets de substances \textit{Nucléaires}, \textit{Radiologiques}, \textit{\NdPA{Biologiques}} ou \textit{Chimiques} (NRBC) dans l'atmosphère suscite un fort intérêt, du fait des enjeux humains et environnementaux qu'ils affectent. De tels incidents peuvent être d'origine accidentelle, causés par des rejets ayant eu lieu dans des sites industriels stockant ou exploitant des matières dangereuses. Plusieurs événements historiques témoignent de l'impact de tels accidents :\\
 	\begin{itemize}
 		\item Seveso (Italie) en 1976: un rejet accidentel de dioxine provenant d'une usine chimique engendre un nuage toxique contaminant une surface de près de 2.8 km$^2$, touchant plus de 400 personnes victimes de lésions cutanées, et nécessitant l'abattage de près de 80 000 bêtes contaminées dans les domaines agricoles atteints \cite{Seveso1976}. 
 		
-		\item Bhopal (Inde) en 1984: une explosion dans une usine de pesticides entraîne un important rejet de substances chimiques toxiques (isocyanathe de méthyle, cyanure hydrogéné) touchant directement la population vivant aux alentours. Le bilan a long terme est d'au moins 16 000 morts et d'environ 500 000 intoxiqués \cite{Bhopal1984}.
+		\item Bhopal (Inde) en 1984: une explosion dans une usine de pesticides entraîne un important rejet de substances chimiques toxiques (isocyanathe de méthyle, cyanure hydrogéné) touchant directement la population vivant aux alentours. Le bilan \NdPA{à} long terme est d'au moins 16 000 morts et d'environ 500 000 intoxiqués \cite{Bhopal1984}.
 		
 		\item Tchernobyl (Ukraine) en 1986: suite à des erreurs humaines lors d'opérations sur un réacteur de la centrale nucléaire locale, le c\oe{}ur est entré en fusion: il s'en est suivi une explosion et la libération d'importantes quantités d'éléments radioactifs dans l'atmosphère. Le nuage formé par ces polluants s'est répandu à l'échelle continentale sur une grande partie de l'Europe \cite{Repussard2006}.
 		
@@ -17,7 +17,7 @@
 		\item Los Angeles (Etats-Unis) en 2015: une fuite localisée dans un puits de stockage de gaz de ville entraîne d'importants rejets de méthane dans l'atmosphère. L'incident a été déclaré le 23 octobre 2015, et annoncé être "sous contrôle" le 11 février 2016 par l'entreprise gestionnaire du puits. Durant la période de rejet, entre 30 et 50 tonnes par heure de méthane furent rejetés dans l'air. Le méthane étant un gaz à effet de serre, les conséquences environnementales à moyen et long terme sont déjà considérées comme graves.\\
 	\end{itemize}
 	
-	Les incidents NRBC peuvent aussi être issus d'actes malveillants relevant du terrorisme. Ce fut le cas à Tokyo (Japon) en 1995, où des membres d'une secte ont percé des poches contenant du gaz sarin (un puissant neurotoxique) dans des rames de métro. Le bilan final fût  de 12 morts et plus de 5500 blessés. Plus récemment, le risque d'attentats NRBC a également été mis en évidence  en France suite aux attentats de l'année 2015, et amplifié en raison du contexte géopolitique actuel.\\
+	Les incidents NRBC peuvent aussi être issus d'actes malveillants relevant du terrorisme. Ce fut le cas à Tokyo (Japon) en 1995, où des membres d'une secte ont percé des poches contenant du gaz sarin (un puissant neurotoxique) dans des rames de métro. Le bilan final \NdPA{fut}  de 12 morts et plus de 5500 blessés. Plus récemment, le risque d'attentats NRBC a également été mis en évidence  en France suite aux attentats de l'année 2015, et amplifié en raison du contexte géopolitique actuel.\\
 	
 	Dans tous les cas, il est vital de disposer de techniques rapides pour détecter et évaluer le risque, afin d'assurer au mieux la sécurité des personnes et de coordonner les manoeuvres des équipes de premier secours. De telles techniques reposent sur des méthodes de modélisation des phénomènes physiques régissant l'atmosphère, ainsi que sur un système d'instrumentation permettant, entre autres, de caractériser et quantifier la présence de substances toxiques dans l'air.\\
 	
@@ -49,7 +49,7 @@
 	\label{eqn_somme_flux}
 	\vec{J} = \vec{J}_A + \vec{J}_D
 	\end{equation}
-	Le terme $\vec{J}_D$ est associé au phénomène de diffusion. celui-ci est généralement considéré comme suivant la première loi de Fick, stipulant que le flux de diffusion $\vec{J}_D$ est proportionnel au gradient de concentration : 
+	Le terme $\vec{J}_D$ est associé au phénomène de diffusion. Celui-ci est généralement considéré comme suivant la première loi de Fick, stipulant que le flux de diffusion $\vec{J}_D$ est proportionnel au gradient de concentration : 
 	
 	\begin{equation}
 	\label{eqn_fick_diffusion}
@@ -75,7 +75,7 @@
 	\begin{itemize}
 		\item l'\textit{échelle locale}, aussi appelée \textit{micro-échelle} (jusqu'à 1 km): à ce niveau, des phénomènes spécifiques tels que la présence de bâtiments doivent être pris en compte dans le calcul des champs de vent. C'est à cette échelle qu'il convient de se placer pour traiter les études d'impact en milieu urbain (par exemple à l'échelle d'un quartier), ou sur un site industriel. 
 		\item la \textit{méso-échelle}, ou \textit{échelle régionale} (jusqu'à 1000 km): elle est utilisée pour travailler sur des phénomènes plus larges, par exemple pour étudier l'impact de la pollution à l'ozone ou aux particules fines sur le territoire d'un pays tel que la France. 
-		\item l'\textit{échelle planétaire}, ou \textit{échelle synoptique} ($>$ 1000 km): on s'intéresse ici à l'impact d'événements de très grande ampleur, tels que les incidents de Tchernobyl ou Fukushima. \\
+		\item l'\textit{échelle planétaire}, ou \textit{échelle synoptique} ($>$ 1000 km): on s'intéresse ici à l'impact d'événements de très grande ampleur, tels que les \NdPA{accidents} de Tchernobyl ou Fukushima. \\
 		
 	\end{itemize}
 	
@@ -95,7 +95,7 @@
 	Dans le cadre lagrangien, le rejet est modélisé comme un ensemble de particules numériques porteuses d'une masse élémentaire. Le modèle suit la trajectoire de chaque particule, dont le mouvement moyen est constitué d'une composante régie par le champ de vent, et d'une composante stochastique traduisant la variabilité causée par la turbulence. La concentration mesurée sur un volume élémentaire du domaine à un temps donné est ainsi égale à la somme des masses élémentaires portées par chaque particule contenue dans ce volume à cet instant. Ce type de modèle est présenté plus en détails au Chapitre 4.\\
 	
 	\item \textbf{Les modèles de mécanique des fluides}:
-	Aussi appelés \textit{Computational Fluid Dynamics} (CFD), ces modèles sont utilisés à petite échelle, et impliquent une résolution des équations de Navier-Stokes sur un maillage relativement fin. Il en résulte une bonne précision des calculs, en particulier en cas de présence d'obstacles menant à des écoulements complexes.\\
+	Aussi appelés \textit{Computational Fluid Dynamics} (CFD), ces modèles sont utilisés à petite échelle, et impliquent une résolution des équations de Navier-Stokes sur un maillage relativement fin. Il en résulte une \NdPA{très} bonne précision des calculs, en particulier en cas de présence d'obstacles menant à des écoulements complexes.\\
 	
 	\end{itemize}
 	
@@ -105,7 +105,7 @@
 	Les modèles de dispersion présentés dans le paragraphe précédent nécessitent plusieurs types de données d'entrée: 
 	\begin{itemize}
 		\item un certain nombre de \textbf{paramètres météorologiques}: dans le cas le plus simple, on considère la direction et la vitesse du vent mesurés par une station au sol dans le domaine d'étude ou à sa proximité, ainsi que la stratification atmosphérique. Ces données sont alors supposées homogènes. Dans des cas plus complexes, plusieurs instruments météorologiques peuvent être pris en compte, au sol comme en altitude. Enfin, il est également possible d'exploiter les résultats d'un système de prévision météorologique: les grandeurs considérées sont alors des champs de vitesse et direction de vent, température, humidité, nébulosité et flux de rayonnement.
-		\item les \textbf{paramètres de la source} à l'origine des émissions à modéliser.
+		\item les \textbf{paramètres de la source} à l'origine des émissions à modéliser\NdPA{;}
 	\end{itemize}
 	
 	C'est sur ce second point que nous allons plus particulièrement nous pencher dans la suite de ce paragraphe. En effet, la terminologie employée pour décrire la source d'un rejet polluant peut parfois prêter à confusion, car il existe plusieurs façons d'en décrire les caractéristiques. Nous fixons ici les termes utilisés pour distinguer les différents types de source rencontrés.\\
@@ -144,12 +144,12 @@ Un autre aspect important est celui de la nature de la source à retrouver. Pour
 
 \begin{itemize}
 	\item \textit{de développer et valider une méthode basée sur l'inférence bayésienne, capable de caractériser un point source par sa localisation et son profil de rejet à partir de mesures issues d'un réseau de capteurs, }
-	\item \textit{de coupler cette méthode avec un modèle de dispersion atmosphérique développé par ARIA Technologies et le CEA au sein d'une chaîne de calcul pouvant, à terme, être utilisée en situation opérationnelle.} \\
+	\item \textit{de coupler cette méthode avec un modèle de dispersion atmosphérique au sein d'une chaîne de calcul pouvant, à terme, être utilisée en situation opérationnelle.} \\
 \end{itemize}
 
 
-Pour cela, nous avons recours à une approche bayésienne stochastique différente des algorithmes MCMC de par sa philosophie, et basée sur un principe d'échantillonnage d'importance adaptatif. De telles méthodes permettent en effet une convergence suffisamment rapide, et pallient certaines difficultés rencontrées par les MCMC. Nous associons cette méthode adaptative, utilisée pour localiser la source, à un calcul analytique du profil d'émission, permis par le choix d'une hypothèse de gaussianité sur le vecteur $\VecSigma$, et accompagné par l'implémentation d'une étape de contrainte visant à assurer la positivité de $\VecSigma$. Le schéma d'implémentation que nous avons conçu permet ainsi de produire une estimation des paramètres de position et d'émission d'une source unique via un schéma itératif de couplage avec un modèle de dispersion, la procédure d'estimation à proprement parler demeurant indépendante du modèle choisi. \\
+Pour cela, nous \NdPA{aurons} recours à une approche bayésienne stochastique différente des algorithmes MCMC de par sa philosophie, et basée sur un principe d'échantillonnage d'importance adaptatif. De telles méthodes permettent en effet une convergence suffisamment rapide, et pallient certaines difficultés rencontrées par les MCMC. Nous associons cette méthode adaptative, utilisée pour localiser la source, à un calcul analytique du profil d'émission, permis par le choix d'une hypothèse de gaussianité sur le vecteur $\VecSigma$, et accompagné par l'implémentation d'une étape de contrainte visant à assurer la positivité de $\VecSigma$. Le schéma d'implémentation que nous avons conçu permet ainsi de produire une estimation des paramètres de position et d'émission d'une source unique via un schéma itératif de couplage avec un modèle de dispersion, la procédure d'estimation à proprement parler demeurant indépendante du modèle choisi. \\
 
 Pour développer cette thèse, le présent manuscrit est organisé de la façon suivante. Après avoir présenté la problématique posée par le sujet et effectué un premier tour d'horizon de la thématique dans ce chapitre introductif, nous développons au Chapitre 2 les principes régissant l'inférence bayésienne, en nous concentrant plus particulièrement sur les applications des méthodes de Monte-Carlo en statistique bayésienne. Nous y détaillons notamment le cheminement théorique permettant la construction de l'algorithme AMIS, qui constitue un élément central des travaux de cette thèse. 
-Dans le Chapitre 3, nous présentons l'application de cet algorithme adaptatif à la question de la reconstruction du terme source en dispersion atmosphérique. Pour cela, nous exploitons un cas d'application pratique issu d'une campagne de mesures expérimentales dont nous expliquons les conditions de réalisation. Le Chapitre 4 détaille une variante de la méthodologie présentée au Chapitre 3, avec l'utilisation d'une approche orientée récepteur, et l'emploi d'un code de dispersion de type lagrangien dans des configurations simulées de rase campagne et de milieu urbain.
-Enfin, le Chapitre 5 conclut ce manuscrit et discute de plusieurs perspectives pour de futurs axes de prolongement de ces travaux.\\
+Dans le Chapitre 3, nous présentons l'application de cet algorithme adaptatif à la question de la reconstruction du terme source en dispersion atmosphérique. Pour cela, nous exploitons un cas d'application pratique issu d'une campagne de mesures expérimentales dont nous expliquons les conditions de réalisation. Le Chapitre 4 détaille une variante de la méthodologie présentée au Chapitre 3, avec l'utilisation d'une approche orientée récepteur, et l'emploi d'un code de dispersion de type lagrangien dans des configurations simulées de \NdPA{milieu naturel} et de milieu urbain.
+\NdHR{Enfin, la dernière partie de ce manuscrit présentera une conclusion générale sur les résultats présentés, et introduira les différentes perspectives que ceux-ci ont permis d'ouvrir.}\\

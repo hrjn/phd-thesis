@@ -33,7 +33,7 @@
 	En dispersion atmosphérique, le problème direct peut ainsi se traduire par la donnée des paramètres de la source au modèle de dispersion, qui va produire le champ de concentration résultant. Cela revient bien à définir le problème inverse comme étant la reconstruction des paramètres de la source à partir des mesures de concentrations aux capteurs. Nous décrivons dans les paragraphes suivants les différentes approches existant dans la littérature qui permettent de résoudre ce problème. Des éléments complémentaires sur la question sont également disponibles dans \cite{Rao2007}. Dans un souci de brièveté, par la suite nous qualifierons de "problèmes STE" (\textit{source term estimation}) toutes les études de cas visant à estimer les paramètres d'une ou de plusieurs sources inconnues.\\
 	
 	
- \subsection{Backtracking et modèles adjoints}
+ \subsection{\NdPA{Rétro-transport et modèles rétrogrades}}
  
  Une première possibilité consiste à étudier le problème dual associé à l'équation d'advection-diffusion  \eqref{eqn_advection_diffusion}, en inversant la flèche du temps, et par conséquent la direction du vent.  Par le principe de symétrie présenté dans \cite{Hourdin2006a}, on peut alors introduire la notion de \textit{rétro-transport} ou \textit{backtracking} en  réécrivant l'équation d'advection-diffusion sous la forme : 
  
@@ -42,7 +42,7 @@
  \dfrac{-\partial C^*}{\partial t} - \nabla \cdot(C^*\bm{\vec{u}}) = \nabla \cdot (\bm{K}\nabla C^*) + \VecObs
  \end{equation}
  
- où $C^*$ est un champ de concentrations conjuguées, ou \textit{rétro-concentrations}, dont les valeurs sont obtenues par des rétro-rejets virtuels depuis les capteurs vers la source. Le modèle de dispersion associé à cette démarche duale est alors appelé \textit{modèle adjoint}, ou \textit{modèle backward}. Cette démarche revient ainsi à transformer le champ d'émission \NdFS{obtenu par l'équation \eqref{eqn_advection_diffusion}} en un champ de rétro-émissions issues des capteurs, comme illustré sur les figures \ref{schema_probleme_direct} et \ref{schema_probleme_inverse}, et ainsi fournir une estimation du terme source.\\
+ où $C^*$ est un champ de concentrations conjuguées, ou \textit{rétro-concentrations}, dont les valeurs sont obtenues par des rétro-rejets virtuels depuis les capteurs vers la source. Le modèle de dispersion associé à cette démarche duale est alors appelé \NdPA{\textit{modèle de rétro-dispersion}, ou \textit{modèle rétrograde}}. Cette démarche revient ainsi à transformer le champ d'émission \NdFS{obtenu par l'équation \eqref{eqn_advection_diffusion}} en un champ de rétro-émissions issues des capteurs, comme illustré sur les figures \ref{schema_probleme_direct} et \ref{schema_probleme_inverse}, et ainsi fournir une estimation du terme source.\\
  
  \begin{figure}[h]
  	\begin{subfigure}{0.5\textwidth}
@@ -58,12 +58,12 @@
  	\caption{Exemple illustrant la relation entre une source unique $S$ et trois capteurs $R_1,R_2,R_3$ sur un problème en deux dimensions pour les approches en "direct" (\ref{schema_probleme_direct}) et en "adjoint" (\ref{schema_probleme_inverse}). }
  \end{figure}
  
- Dans \cite{Flesch1995}, un modèle \textit{backward} lagrangien est construit pour estimer le profil de rejet d'une source surfacique.  Cette méthode est également appliquée dans \cite{Pudykiewicz1998}, où la position et l'intensité du terme source de Tchernobyl sont reconstruits. De même, dans \cite{Hourdin2006b} le principe du \textit{backtracking} est appliqué à un modèle eulérien pour retrouver la source de la campagne ETEX\footnote{L’expérience \textit{European Tracer EXperiment 1} (ETEX-1), menée en 1994,  a consisté à mesurer et étudier l'impact à l'échelle européenne de rejets de gaz traceurs passifs émis depuis une source située dans la ville de Monterfil, en Bretagne.}.\\
+ Dans \cite{Flesch1995}, un modèle \NdPA{rétrograde} lagrangien est construit pour estimer le profil de rejet d'une source surfacique.  Cette méthode est également appliquée dans \cite{Pudykiewicz1998}, où la position et l'intensité du terme source de Tchernobyl sont reconstruits. De même, dans \cite{Hourdin2006b} le principe du \textit{backtracking} est appliqué à un modèle eulérien pour retrouver la source de la campagne ETEX\footnote{L’expérience \textit{European Tracer EXperiment 1} (ETEX-1), menée en 1994,  a consisté à mesurer et étudier l'impact à l'échelle européenne de rejets de gaz traceurs passifs émis depuis une source située dans la ville de Monterfil, en Bretagne.}.\\
  
  \subsection{Formulation linéaire du problème et optimisation}
  \label{subsection_MCO}
  
-Le modèle direct de simulation des concentrations résultant d'un rejet de polluant peut être décrit de façon linéaire. Pour cela, on définit de façon arbitraire un maillage dans le temps et l'espace qui couvre respectivement la période d'observation et le domaine spatial considérés. En pratique, cela revient à discrétiser l'espace en $N_xN_yN_z$ points, chaque point étant associé à un profil d'émission de longueur $T_s$. Dans un tel contexte, le terme source est défini comme un vecteur $\VecSigma \in \mathbb{R}^{N_\VecSigma}$ (où $N_\VecSigma = N_xN_yN_zT_s$).Il est ainsi possible de lier les observations générées par le modèle et le vecteur source $\VecSigma$ par la formule suivante, appelée \textit{relation source-récepteur}:
+Le modèle direct de simulation des concentrations résultant d'un rejet de polluant peut être décrit de façon linéaire. Pour cela, on définit de façon arbitraire un maillage dans le temps et l'espace qui couvre respectivement la période d'observation et le domaine spatial considérés. En pratique, cela revient à discrétiser l'espace en $N_xN_yN_z$ points, chaque point étant associé à un profil d'émission de longueur $T_s$. Dans un tel contexte, le terme source est défini comme un vecteur $\VecSigma \in \mathbb{R}^{N_\VecSigma}$ (où $N_\VecSigma = N_xN_yN_zT_s$). Il est ainsi possible de lier les observations générées par le modèle et le vecteur source $\VecSigma$ par la formule suivante, appelée \textit{relation source-récepteur}:
 
 \begin{equation}
 	\label{eq_relation_SR_non_parametrique}
@@ -141,7 +141,7 @@ Dans le cadre de statistiques gaussiennes, la fonction-coût peut alors s'écrir
 		\item  on exploite ensuite les observations disponibles à l'instant $t$ pour corriger les paramètres du modèle en les comparant avec l'ébauche. \\
 	\end{enumerate}
 	
-	 \item \cite{Issartel2005} mentionne le principe d'\textit{illumination}, qui est une mesure quantitative de la représentativité des mesures dans le temps et l'espace. Dans le cadre d'un modèle adjoint, l'illumination permet ainsi de caractériser des zones qui ne sont pas forcément couvertes par les rétro-émissions issues des capteurs, par exemple si la zone considérée est relativement éloignée du point de mesure le plus proche. Cependant, si l'information d'illumination est utilisée pour inverser un terme source, alors elle aura tendance à fortement favoriser les solutions proches des capteurs. Pour compenser ce problème, une phase de \textit{renormalisation} est introduite (\cite{Issartel2007} et \cite{Sharan2009}) pour équilibrer l'information apportée par chacun des capteurs. D'abord utilisée à grande échelle, cette méthodologie a récemment été validée à l'échelle locale dans \cite{Singh2014}, et dans un contexte urbain par \cite{Kumar2015}. \\
+	 \item \cite{Issartel2005} mentionne le principe d'\textit{illumination}, qui est une mesure quantitative de la représentativité des mesures dans le temps et l'espace. Dans le cadre d'un modèle adjoint, l'illumination permet ainsi de caractériser des zones qui ne sont pas forcément couvertes par les rétro-émissions issues des capteurs, par exemple si la zone considérée est relativement éloignée \NdPA{de tout point de mesure}. Cependant, si l'information d'illumination est utilisée pour inverser un terme source, alors elle aura tendance à fortement favoriser les solutions proches des capteurs. Pour compenser ce problème, une phase de \textit{renormalisation} est introduite (\cite{Issartel2007} et \cite{Sharan2009}) pour équilibrer l'information apportée par chacun des capteurs. D'abord utilisée à grande échelle, cette méthodologie a récemment été validée à l'échelle locale dans \cite{Singh2014}, et dans un contexte urbain par \cite{Kumar2015}. \\
 
 \end{itemize}
 
@@ -168,7 +168,7 @@ De nombreux problèmes physiques sont intrinsèquement mal-posés, et des soluti
   L'équation \eqref{eq_cost_forme2} devient alors \cite{Winiarek2011}: 
  
 \begin{equation}
-\mathcal{J}_{2_B}(\VecSigma) = \dfrac{1}{2}(\VecObs - \MatH \VecSigma)^T \MatR^{-1}(\VecObs - \MatH\VecSigma) + \dfrac{1}{2}(\VecSigma - \VecSigmaB)^T\MatB^{-1}(\VecSigma - \VecSigma)
+\mathcal{J}_{2_B}(\VecSigma) = \dfrac{1}{2}(\VecObs - \MatH \VecSigma)^T \MatR^{-1}(\VecObs - \MatH\VecSigma) + \dfrac{1}{2}(\VecSigma - \VecSigmaB)^T\MatB^{-1}(\VecSigma - \NdPA{\VecSigma_b})
 \label{eq_cost_reg_forme2}
 \end{equation}
 
@@ -231,7 +231,7 @@ où :
 	\item $\MatC(\PosSource^{(i)})$ est la concentration résultant d'un rejet unitaire de la $i$-ème source.\\
 \end{itemize}
 
-\NdFS{Ici, la relation source-récepteur ne suppose désormais qu'une discrétisation temporelle sur les $T_s$ dimensions du vecteur $\VecQSource$, contrairement à un cas maillé où  la dimension du problème est de $N_xN_yN_zT_s$.} Toutefois, contrairement à l'équation \eqref{eq_relation_SR_nonparam_simple} où $\VecObs$ dépend linéairement du terme source $\VecSigma$ via l'opérateur $\MatH$, la dépendance de $\VecObs$ par rapport \NdFS{au paramètres $\PosSource$} devient fortement non-linéaire. En effet, le premier terme de l'équation \eqref{eq_SR_nonlineaire} fait directement intervenir un modèle de dispersion  qui traduit les non-linéarités des phénomènes de la physique atmosphérique. Il devient alors nécessaire d'employer des méthodes adaptées afin de pouvoir estimer les paramètres de la source à retrouver.
+\NdFS{Ici, la relation source-récepteur ne suppose désormais qu'une discrétisation temporelle sur les $T_s$ dimensions du vecteur $\VecQSource$, contrairement à un cas maillé où  la dimension du problème est de $N_xN_yN_zT_s$.} Toutefois, \NdPA{il devient impossible d'obtenir directement les paramètres $\PosSource$ et $\VecQSource$ de la source, contrairement à l'équation \eqref{eq_relation_SR_non_parametrique} où $\VecSigma$ peut se calculer analytiquement grâce à la nature linéaire du système à résoudre. En conséquence, d'autres méthodes plus appropriées sont nécessaires pour résoudre le problème inverse.} 
 
 \subsubsection{Algorithmes évolutionnaires}
 
