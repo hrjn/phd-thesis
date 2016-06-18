@@ -1,6 +1,6 @@
 \chapter{Inférence bayésienne et méthodes de Monte-Carlo}
 
-Ce chapitre présente la philosophie et les objectifs de l'inférence bayésienne, puis présente les principes de base régissant les méthodes de Monte Carlo. Un exposé plus détaillé est développé autour des deux grandes familles des techniques Monte Carlo, à savoir les \textit{Markov Chain Monte Carlo} et les algorithmes d'échantillonnage d'importance. Concernant ces derniers, l'aspect adaptatif sur la loi de proposition est introduit au travers des méthodes Population Monte Carlo, puis complété par la notion d'adaptativité multiple qui caractérise l'algorithme AMIS. 
+Ce chapitre introduit \NdPA{la méthodologie} et les objectifs de l'inférence bayésienne, puis présente les principes de base régissant les méthodes de Monte Carlo. Un exposé plus détaillé est développé autour des deux grandes familles des techniques Monte Carlo, à savoir les \textit{Markov Chain Monte Carlo} et les algorithmes d'échantillonnage d'importance. Concernant ces derniers, l'aspect adaptatif sur la loi de proposition est introduit au travers des méthodes Population Monte Carlo, puis complété par la notion d'adaptativité multiple qui caractérise l'algorithme AMIS. 
 
 	
 	\section{Eléments de statistique bayésienne}
@@ -10,7 +10,7 @@ Ce chapitre présente la philosophie et les objectifs de l'inférence bayésienn
 	
 	Le cadre des problèmes STE offre plusieurs arguments en faveur d'une approche de type statistique.\\
 	
-	La physique de l'atmosphère ainsi que les systèmes instrumentaux permettant d'en mesurer les variables sont soumis à des phénomènes de fluctuations aléatoires dont il est par définition impossible  de quantifier la nature exacte. Le fait d'utiliser un cadre de travail probabiliste et de considérer la nature statistique des grandeurs d'intérêt prend donc tout son sens dans un tel contexte. Une approche statistique permet en effet de s'appuyer sur le socle théorique rigoureux des probabilités afin de chercher à estimer non plus des valeurs ponctuelles par des méthodes déterministes, mais plutôt des distributions de probabilité liées à ces valeurs. Il devient alors possible : 
+	La physique de l'atmosphère ainsi que les systèmes instrumentaux permettant d'en mesurer les variables sont soumis à des phénomènes de fluctuations aléatoires dont il est, par définition, impossible  de quantifier la nature exacte. Le fait d'utiliser un cadre de travail probabiliste et de considérer la nature statistique des grandeurs d'intérêt prend donc tout son sens dans un tel contexte. Une approche statistique permet en effet de s'appuyer sur le socle théorique rigoureux des probabilités afin de chercher à estimer non plus des valeurs ponctuelles par des méthodes déterministes, mais plutôt des distributions de probabilité liées à ces valeurs. Il devient alors possible : 
 	\begin{itemize}
 		\item de modéliser \textit{l'incertitude relative aux données observées} en considérant qu'elles sont affectées par un certain type de \textit{bruit}, qui est alors défini comme suivant une loi de probabilité spécifique,
 		\item de quantifier \textit{l'incertitude autour des valeurs estimées} pour la grandeur d'intérêt, en l'occurrence les paramètres d'un terme source dans notre cas. Comme on travaille désormais sur des distributions statistiques, on peut s'appuyer sur un \textit{estimateur} afin de caractériser le résultat recherché, ainsi que, \NdFS{par exemple}, sur la \textit{variance} qui lui est associée pour évaluer le degré de plausibilité du résultat d'estimation.
@@ -19,11 +19,11 @@ Ce chapitre présente la philosophie et les objectifs de l'inférence bayésienn
 
 	
 	\subsubsection{Erreurs d'observation}
-	Toute l'\textit{information disponible} pour traiter un problème STE est encapsulée dans les observations issues du réseau de capteurs. Or ces mesures ne représentent pas parfaitement la "vérité physique" illustrant le rejet caractérisé, celle-ci étant altérée par plusieurs facteurs : \\
+	Toute l'\textit{information disponible} pour traiter un problème STE est \NdPA{contenue} dans les observations issues du réseau de capteurs. Or ces mesures ne représentent pas parfaitement la "vérité physique" illustrant le rejet caractérisé, celle-ci étant altérée par plusieurs facteurs : \\
 	
 	\begin{itemize}
-		\item \textbf{la représentativité spatiale du réseau}: plus le nombre de capteurs est important, mieux le phénomène sera mesuré. Cependant, en pratique, le cas parfait où chaque point du domaine est instrumenté n'existe pas.
-		\item \textbf{la représentativité temporelle du capteur}: les observations sont obtenues suivant une certaine fréquence d'acquisition. Celle-ci peut être définie par les procédés physiques inhérents à la mesure, ceux-ci pouvant impliquer une chaîne de traitement plus ou moins complexe avant obtention d'une valeur de concentration. Dans d'autres cas l'acquisition de ces valeurs peut être quasi instantanée, mais les contraintes de stockage et de transfert des données font qu'une opération de moyennage devient nécessaire afin de réduire la quantité des observations à un nombre compatible avec les capacités du dispositif instrumental considéré. Dans tous les cas, cela génère un biais sur les observations.
+		\item \textbf{la représentativité spatiale du réseau}: plus le nombre de capteurs est important, mieux le phénomène sera mesuré. Cependant, en pratique, le cas parfait où chaque point du domaine est instrumenté n'existe pas;
+		\item \textbf{la représentativité temporelle du capteur}: les observations sont obtenues suivant une certaine fréquence d'acquisition. Celle-ci peut être définie par les procédés physiques inhérents à la mesure, ceux-ci pouvant impliquer une chaîne de traitement plus ou moins complexe avant obtention d'une valeur de concentration. Dans d'autres cas l'acquisition de ces valeurs peut être quasi- instantanée, mais les contraintes de stockage et de transfert des données font qu'une opération de moyennage devient nécessaire afin de réduire la quantité des observations à un nombre compatible avec les capacités du dispositif instrumental considéré. Dans tous les cas, cela génère un biais sur les observations.
 		\item les différences sources de bruit imputables à \textbf{l'électronique du capteur}.\\
 	\end{itemize}
 	
@@ -77,7 +77,7 @@ Ce chapitre présente la philosophie et les objectifs de l'inférence bayésienn
 	\label{eq_bayes_simple}
 	\end{equation}
 	
-	Le terme $p(\VecObs|\VecTheta)$ contient l'information fournie par l'observation: cette densité est ainsi qualifiée de \textit{vraisemblance}, et souvent notée $\ell(\VecTheta |\VecObs)$ pour illustrer le fait qu'il s'agit d'une fonction de $\VecTheta$ qui est inconnu, et qui dépend de la valeur observée. 
+	Le terme $p(\VecObs|\VecTheta)$ contient l'information fournie par l'observation, \NdPA{et définit la \textit{fonction de vraisemblance} de $\VecTheta$.} 
 	L'incertitude sur $\VecTheta$ peut désormais être traduite par une loi de probabilité $p(\VecTheta)$, ce qui signifie que $\VecTheta$ suit cette loi en l'absence d'information d'observation. Cette loi est également appelée loi  \textit{a priori}. 
 	Enfin, la loi de probabilité de $\VecTheta$ après acquisition des observations $\VecObs$ et définie par  	$p(\VecTheta | \VecObs)$ est appelée loi \textit{a posteriori}.\\
 	
@@ -188,9 +188,6 @@ peut ainsi être approximée par:
 }
 \end{equation}
 
-La loi forte des grands nombres permet alors d'affirmer que $I_N(\psi)$ converge presque sûrement vers $I(\psi)$.\\
-
-
 Une autre fonctionnalité des méthodes Monte Carlo, directement liée à l'inférence bayésienne appliquée aux problèmes inverses, concerne la simulation de distribution de probabilités complexes. Généralement, la valeur liant les observations au modèle de données et représentée par la vraisemblance $p(\VecObs |\VecTheta)$, présente un aspect fortement non-linéaire induit par la nature des phénomènes physiques mis en jeu. Par conséquent, il devient difficile d'échantillonner facilement depuis la loi a posteriori $\PosteriorTheta$, qui devient ici la loi cible.\\
 
 La solution consiste alors à tirer depuis une loi alternative plus accessible appelée \textit{loi de proposition}, et de choisir les paramètres de cette loi de façon à ce que les éléments qui en sont issus reflètent au mieux les propriétés statistiques de la loi cible. C'est dans cette optique que nous allons développer les différentes familles de méthodes Monte Carlo présentées dans la suite de ce chapitre.\\
@@ -237,7 +234,7 @@ La stratégie des méthodes MCMC consiste ainsi à définir une chaîne de Marko
 
 \subsubsection{Algorithme de Metropolis-Hastings}
 
-C'est une méthode qui fût originalement présentée dans \cite{Metropolis1953}, puis plus largement développée dans \cite{Hastings1970}. L'idée de base de l'algorithme Metropolis-Hastings (MH) est de proposer une transition de l'état courant $\VecThetaCourant$ vers un nouvel état $\VecTheta^{(i)}$ en tirant un candidat $\VecThetaCandidat$ suivant la loi $\kernel(\VecThetaCourant, \VecThetaCandidat)$ qui est ensuite soumis à une épreuve d'acceptation-rejet. \\
+C'est une méthode qui \NdPA{fut} originalement présentée dans \cite{Metropolis1953}, puis plus largement développée dans \cite{Hastings1970}. L'idée de base de l'algorithme Metropolis-Hastings (MH) est de proposer une transition de l'état courant $\VecThetaCourant$ vers un nouvel état $\VecTheta^{(i)}$ en tirant un candidat $\VecThetaCandidat$ suivant la loi $\kernel(\VecThetaCourant, \VecThetaCandidat)$ qui est ensuite soumis à une épreuve d'acceptation-rejet. \\
 
 On choisit souvent $\kernel$ comme étant une distribution gaussienne symétrique et centrée sur l'état courant, i.e. $\kernel(\VecThetaCourant, \VecThetaCandidat) = \mathcal{N}(\VecThetaCandidat | \VecThetaCourant, \MatSigma)$\footnote{La notation $\mathcal{N}(x|\mu,\sigma^2)$ désigne l'évaluation au point $x$ de la densité de probabilité d'une loi normale de moyenne $\mu$ et de variance $\sigma^2$.}: on parle alors de \textit{Random Walk Metropolis}. Une autre possibilité consiste à utiliser un noyau de transition où le nouvel état ne dépend pas de l'état courant, autrement dit $\kernel(\VecThetaCourant, \VecThetaCandidat) = \kernel(\VecThetaCandidat)$ : cette approche est alors logiquement appelée \textit{Independent Metropolis-Hastings}. \\
 
@@ -350,7 +347,7 @@ La vitesse de convergence et la qualité de l'estimation sont conditionnés par 
 \end{itemize}
 
 \subsubsection{Echantillonneur de Gibbs}
-L'échantillonneur de Gibbs a initialement été proposé dans \cite{Geman1984} puis repris et développé par \cite{Gelfand1990}. Il permet de passer du problème de l'échantillonnage d'un état $\VecTheta = (\theta_1, \dots, \theta_p)$ sur un espace pouvant être potentiellement de grande dimension, à une succession de sous-problèmes plus simples, en générant successivement chacun des éléments composant $\VecTheta$ à l'aide de leurs dépendances par rapport aux autres. C'est ainsi la loi conditionnelle de chaque élément de $\VecTheta$ sous la loi cible qui fait office de loi de proposition.
+L'échantillonneur de Gibbs a initialement été proposé dans \cite{Geman1984} puis repris et développé par \cite{Gelfand1990}. Il permet de passer du problème de l'échantillonnage d'un état $\VecTheta = (\theta_1, \dots, \theta_p)$ sur un espace pouvant être potentiellement de grande dimension, à une succession de sous-problèmes \NdPA{de dimension réduite}, en générant successivement chacun des éléments composant $\VecTheta$ à l'aide de leurs dépendances par rapport aux autres. C'est ainsi la loi conditionnelle de chaque élément de $\VecTheta$ sous la loi cible qui fait office de loi de proposition.
 
 Le parcours des composantes de $\VecTheta$ peut se faire de façon déterministe, par exemple en les traitant dans leur ordre naturel les unes après les autres: on parle alors de \textit{balayage systématique}, ou \textit{systematic scan}, comme illustré dans l'algorithme \ref{algo_gibbs_sampler}. Une autre possibilité consiste à choisir aléatoirement cet ordre d'exploration: il s'agit du \textit{balayage aléatoire}, ou \textit{random scan}. \\
 
@@ -485,7 +482,7 @@ En reprenant l'exemple de la mixture de deux gaussiennes \NdFS{dont la loi cible
 	\label{courbe_IS_bad_proposal}
 \end{figure}
 
-On observe également que les valeurs des poids des particules tirés autour du mode à -20 sont trop élevées par rapport à ce qui est attendu. On remarque aussi qu'un petit nombre de particules agrège les valeurs les plus importantes des poids, alors que la majorité restante détient des poids de faible valeur. Ce déséquilibre de répartition est plus généralement connu sous le nom de \textit{dégénérescence des poids}. La métrique permettant de quantifier ce phénomène et de facto d'évaluer les performances de la loi de proposition, est appelée \textit{Effective Sample Size} ($\ESS$), et se calcule selon la formule suivante:
+ On remarque également qu'un petit nombre de particules agrège les valeurs les plus importantes des poids, alors que la majorité restante détient des poids de faibles valeurs. Ce déséquilibre de répartition est plus généralement connu sous le nom de \textit{dégénérescence des poids}. La métrique permettant de quantifier ce phénomène et de facto d'évaluer les performances de la loi de proposition, est appelée \textit{Effective Sample Size} ($\ESS$), et se calcule selon la formule suivante:
 
 \begin{equation}
 \mathbb{ESS} = \dfrac{\left(\sum\limits_{i=1}^N w^{(i)}\right)^2}{\sum\limits_{i=1}^N \left(w^{(i)}\right)^2}
@@ -686,7 +683,7 @@ Comme il est impossible d'obtenir une forme analytique de la loi a posteriori \e
 \varphi(\VecTheta) = \mathcal{N}(\VecTheta | \Vecmup, \MatSigmap)
 \end{equation}
 
-On initialise cette loi de proposition avec $\Vecmup^{(0)} = (1,1)$ et $\MatSigmap^{(0)} = \begin{pmatrix} 20&0\\ 0&20 \end{pmatrix}$ pour bien couvrir l'espace des paramètres à explorer. \\
+On initialise cette loi de proposition avec $\Vecmup^{(0)} = (1,1)$ et $\MatSigmap^{(0)} = \begin{pmatrix} 20&0\\ 0&20 \end{pmatrix}$ pour bien couvrir l'espace des paramètres à explorer. \NdFS{On choisit par ailleurs cette version de la loi de proposition pour l'implémentation de l'IS standard.}\\
 
 En reprenant l'algorithme \ref{algo_AMIS} et en l'appliquant à notre exemple, on peut décomposer l'exécution de l'AMIS en plusieurs étapes caractéristiques. Ainsi, à l'itération $k$:
 
