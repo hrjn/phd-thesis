@@ -4,7 +4,7 @@ Après avoir utilisé le cas-test Beaune pour tester plusieurs aspects de l'algo
 
 \subsection{Présentation du cas-test}
 
-Nous considérons désormais un cas-test en milieu urbain caractérisé par la présence d'obstacles multiples et de géométries variées sur le domaine (bâtiments). Pour cela, on utilise une reconstitution du quartier parisien de l'Opéra (figure \ref{fig_opera_config}), qui comme pour le cas-test Beaune, a initialement été utilisé pour la validation de RetroSPRAY.\\
+Nous considérons désormais un cas-test en milieu urbain caractérisé par la présence d'obstacles multiples et de géométries variées sur le domaine (bâtiments). Pour cela, on utilise une reconstitution du quartier parisien de l'Opéra (figure \ref{fig_opera_config}).\\
 
 
 
@@ -72,7 +72,7 @@ La combinaison de ces variations temporelles ainsi que de la présence d'obstacl
 
 
 \subsubsection{Capteurs, source et simulation des observations}
-Le domaine contient un réseau de 10 capteurs, qui sont placés aux centres de diverses intersections de rues, ainsi que sur des places publiques. Ils sont situés à lune hauteur de 2m, et délivrent des valeurs de concentrations moyennées sur des plages de 5 minutes entre 11h35 et 13h.
+Le domaine contient un réseau de 10 capteurs, qui sont placés aux centres de diverses intersections de rues, ainsi que sur des places publiques. Ils sont situés à une hauteur de 2m, et délivrent des valeurs de concentrations moyennées sur des plages de 5 minutes entre 11h35 et 13h.
 
 La source est également située à 2m du sol, positionnée au niveau d'une grande intersection, et émet un rejet bref d'une durée de 10 minutes entre 12h10 et 12h20, avec un débit constant de $10^4$ unités/s. Ces caractéristiques se rapprochent de celles d'un rejet d'origine malveillante, par exemple suite à l'explosion d'une "bombe sale". 
 
@@ -85,17 +85,17 @@ On suit le même raisonnement que pour le cas-test Beaune et on simule le vecteu
 	\label{fig_opera_obs}
 \end{figure}
 
-Etant donné la taille réduite du domaine ainsi que les conditions météorologiques instationnaires auquel le cas-test est confronté, on observe que malgré un nombre total de capteurs inférieur à celui du cas-test Beaune, la proportion de récepteurs mesurant une concentration non-nulle est ici plus élevée.
+Etant donné la taille réduite du domaine ainsi que les conditions météorologiques instationnaires auquel le cas-test est confronté, on observe que malgré un nombre total de capteurs inférieur à celui du cas-test Beaune, la proportion de récepteurs mesurant une concentration non-nulle est ici plus élevée (figure \ref{fig_opera_obs}).
 
 
 \subsection{Initialisation optimisée de la loi de proposition}
 
-Avec le cas-test Opéra, il est vite apparu que sans apport préalable d'information, l'algorithme aurait des difficultés à converger vers une solution correcte étant donné la complexité du domaine. Une procédure préliminaire a donc été mise en place sur l'aspect spatial de la source, afin d'initialiser les paramètres de la loi de proposition de l'AMIS autrement que par une simple répartition uniforme des particules sur le domaine: un ajustement optimisé de ces paramètres en amont de l'exécution de l'AMIS permettrait alors d'explorer des zones potentiellement intéressantes plus rapidement, augmentant ainsi l'efficacité de l'algorithme d'estimation. \\
+Avec le cas-test Opéra, il est vite apparu que sans apport préalable d'information, l'algorithme aurait des difficultés à converger vers une solution correcte étant donné la complexité \NdPA{de la configuration à traiter (milieu obstrué et météorologie variable)}. Une procédure préliminaire a donc été mise en place \NdPA{visant à prédéterminer une zone à favoriser pour la localisation de la source. Pour cela, le but est } d'initialiser les paramètres de la loi de proposition de l'AMIS autrement que par une simple répartition uniforme des particules sur le domaine. \NdPA{Un ajustement de ces paramètres} en amont de l'exécution de l'AMIS permettrait alors d'explorer des zones potentiellement intéressantes plus rapidement, augmentant ainsi l'efficacité de l'algorithme d'estimation. \\
 
-Pour cela, nous proposons d'utiliser le résultat des calculs de rétro-propagation en modélisant par une mixture de $K$ gaussiennes la densité de probabilité sur la localisation obtenue par rétro-propagation à $D/K$ instants choisis uniformément répartis sur un intervalle $[t_0, t_{RP}]$, où $t_0$ est l'instant durant lequel est observé le maximum de concentration et $t_{RP}$ est l'instant final de la rétro-propagation, défini par l'utilisateur. Plus précisément, pour un instant $t_l \in [t_0,t_{RP}]$, en notant $\VecTheta = (x,y)$ un point du domaine maillé suivant une grille de dimensions $(N_x,N_y)$, on considère la distribution suivante:
+Pour cela, nous proposons d'utiliser le résultat des calculs de rétro-propagation en modélisant par une mixture de $K$ gaussiennes la densité de probabilité sur la localisation obtenue par rétro-propagation à $D/K$ instants choisis uniformément répartis sur un intervalle $[t_0, t_{T_s}]$, où $t_0$ est l'instant durant lequel est observé le maximum de concentration et \NdFS{$t_{T_s}$ }est l'instant final de la rétro-propagation, défini par l'utilisateur. Plus précisément, pour un instant \NdFS{$t_l \in [t_0,t_{T_s}]$}, en notant $\VecTheta = (x,y)$ un point du domaine maillé suivant une grille de dimensions $(N_x,N_y)$, on considère la distribution suivante:
 
 \begin{equation}
-p(\VecTheta | t_l,\VecObs) = \sum\limits_{i=1}^{N_x} \sum\limits_{j=1}^{N_y} \widetilde{\omega}_{\VecTheta}^l ~  \mathcal{U}_{[x_{i-1},x_i]\times [y_{j-1},y_j]}(\VecTheta)
+p(\VecTheta | t_l,\VecObs) = \sum\limits_{i=1}^{N_x} \sum\limits_{j=1}^{N_y} \widetilde{\omega}_{x_i,y_j}^l ~  \mathcal{U}_{[x_{i-1},x_i]\times [y_{j-1},y_j]}(\VecTheta)
 \label{eq_carte2d}
 \end{equation}
 
@@ -104,13 +104,13 @@ où :
 	\item pour tout point $(x_i,y_j)$ avec $1\leq x_i \leq N_x$ et $1 \leq y_j \leq N_y$, la pondération $\widetilde{\omega}_{x_i,y_j}^l$ est définie par:
 	\begin{equation}
 		\begin{split}
-			\omega_{x_i,y_j}^l &= \max\left(0, \sum\limits_{k=1}^{N_c} \mathbbm{1}(C^*([x_i,y_j] | R_k,t_l) \geq \varepsilon_{RP}) \times \text{sign}(\mathbb{E}(\VecObs_l) - \varepsilon_{RP})\right) \\
+			\omega_{x_i,y_j}^l &= \max\left(0, \sum\limits_{k=1}^{N_c} \mathbbm{1}(C^*([x_i,y_j] | R_k,t_l) \geq \varepsilon_{RP}) \times \text{sign}(\mathbb{E}(\NdFS{\VecObs_k}) - \varepsilon_{RP})\right) \\
 			\widetilde{\omega}_{x_i,y_j}^l &= \dfrac{\omega_{x_i,y_j}^l}{\sum\limits_{i=1}^{N_x}\sum\limits_{j=1}^{N_y}\omega_{x_i,y_j}^l}
 		\end{split}
 		\label{eq_ponderation}
 	\end{equation}
-	$\omega_{x_i,y_j}^l$ représente en quelque sorte la probabilité que la source soit dans la zone définie par les segments $[x_{i-1},x_i]$ et $[y_{j-1},y_j]$ si l'instant d'émission se situait dans l'intervalle $[t_{l-1},t_l]$. Cette grandeur est obtenue via un calcul de rétro-propagation des concentrations conjuguées $C^*([x_i,y_j] | R_k,t_l) $ pour chaque capteur mesurant les plus grandes valeurs de concentrations. L'équation \eqref{eq_ponderation} revient à comptabiliser le nombre de rétro-propagations en un point de l'espace et du temps si la valeur moyenne mesurée par les capteurs est supérieure à un seuil $\varepsilon_{RP}$ prédéfini. 
-	\item $\mathcal{U}_{[x_{i-1},x_i]\times [y_{j-1},y_j]}(\VecTheta)$ est la loi de probabilité uniforme en 2 dimensions sur la surface définie par les segments $[x_{i-1},x_i]$ et $[y_{j-1},y_j]$ . \\
+	$\widetilde{\omega}_{x_i,y_j}^l$ \NdPA{peut être vu comme} la probabilité que la source soit dans la zone définie par les segments $[x_{i-1},x_i]$ et $[y_{j-1},y_j]$ si l'instant d'émission se situait dans l'intervalle $[t_{l-1},t_l]$. Cette grandeur est obtenue via un calcul de rétro-propagation des concentrations conjuguées $C^*([x_i,y_j] | R_k,t_l) $ pour chaque capteur \NdFS{$R_k$} mesurant les plus grandes valeurs de concentrations. L'équation \eqref{eq_ponderation} revient à comptabiliser le nombre de rétro-propagations en un point de l'espace et du temps si la valeur moyenne mesurée par les capteurs est supérieure à un seuil $\varepsilon_{RP}$ prédéfini. \NdFS{$\VecObs_k$ désigne l'ensemble des observations fournies par le capteur $R_k$.}
+	\item $\mathcal{U}_{[x_{i-1},x_i]\times [y_{j-1},y_j]}(\VecTheta)$ est la loi de probabilité uniforme en deux dimensions sur la surface définie par les segments $[x_{i-1},x_i]$ et $[y_{j-1},y_j]$ . \\
 \end{itemize}
 
 L'objectif de la procédure d'initialisation consiste à adapter une mixture de $K$ gaussiennes sur la distribution \eqref{eq_carte2d}, cette mixture pouvant alors s'écrire : 
@@ -143,9 +143,9 @@ on peut écrire les règles de mise à jour des paramètres de la $k$-ième mixt
 
 \begin{equation}
 \begin{split}
-\alpha_k^{m+1} &= \sum\limits_{i=1}^{N_x} \sum\limits_{i=1}^{N^y} \widetilde{\omega}_\VecTheta^l \rho_k (\VecTheta | \alpha_k^m,\nu_k^m) \\
-\VecMu_k^{m+1} &= \dfrac{\sum\limits_{i=1}^{N_x} \sum\limits_{i=1}^{N^y} \widetilde{\omega}_\VecTheta^l \rho_k (\VecTheta | \alpha_k^m,\nu_k^m) \VecTheta^T}{\alpha_k^{m+1}} \\
-\MatSigma_k^{m+1} &= \dfrac{\sum\limits_{i=1}^{N_x} \sum\limits_{i=1}^{N^y} \widetilde{\omega}_\VecTheta^l \rho_k (\VecTheta | \alpha_k^m,\nu_k^m) (\VecTheta - \VecMu_k^{m+1} )(\VecTheta - \VecMu_k^{m+1} )^T}{\alpha_k^{m+1}}
+\alpha_k^{m+1} &= \sum\limits_{i=1}^{N_x} \sum\limits_{i=1}^{N^y} \NdFS{\widetilde{\omega}_{x_i, y_j}^l} \rho_k (\VecTheta | \alpha_k^m,\nu_k^m) \\
+\VecMu_k^{m+1} &= \dfrac{\sum\limits_{i=1}^{N_x} \sum\limits_{i=1}^{N^y} \NdFS{\widetilde{\omega}_{x_i,y_j}^l} \rho_k (\VecTheta | \alpha_k^m,\nu_k^m) \VecTheta^T}{\alpha_k^{m+1}} \\
+\MatSigma_k^{m+1} &= \dfrac{\sum\limits_{i=1}^{N_x} \sum\limits_{i=1}^{N^y} \NdFS{\widetilde{\omega}_{x_i,y_j}^l} \rho_k (\VecTheta | \alpha_k^m,\nu_k^m) (\VecTheta - \VecMu_k^{m+1} )(\VecTheta - \VecMu_k^{m+1} )^T}{\alpha_k^{m+1}}
 \end{split}
 \end{equation}
 
@@ -172,7 +172,7 @@ La figure (\ref{fig_opera_fitting}) présente le résultat de l'initialisation a
 
 \subsection{Résultats}
 
-La figure \ref{fig_opera_amis} présente le résultat d'un \textit{run} de 10 itérations de l'AMIS avec 100 particules tirées par itération, avec une initialisation optimisée et en utilisant les paramètres $\varObs = 7 \times 10^{-2}$ et $\varQ = 5\times 10^7$. Comme on pouvait s'y attendre après l'ajustement initial de la loi de proposition, la localisation de la source est correcte, de même, le profil de rejet est bien estimé. Les scores d'erreur sont de $r_d = 0.048$ pour l'estimation ponctuelle et $Err(\widetilde{\VecMu}_q) = 628.974$ pour le débit.
+La figure \ref{fig_opera_amis} présente le résultat d'un \textit{run} de 10 itérations de l'AMIS avec 100 particules tirées par itération, avec une initialisation optimisée et en utilisant les paramètres $\varObs = 7 \times 10^{-2}$ et $\varQ = 5\times 10^7$. Comme \NdPA{prévu}, après l'ajustement initial de la loi de proposition, la localisation de la source est \NdPA{satisfaisante}, de même, le profil de rejet est bien estimé. Les scores d'erreur sont de $r_d = 0.048$ pour l'estimation ponctuelle et $Err(\widetilde{\VecMu}_q) = 628.974$ pour le débit.
 
 
 \begin{figure}[h!]
@@ -199,21 +199,12 @@ La figure \ref{fig_opera_amis} présente le résultat d'un \textit{run} de 10 it
 	\label{fig_opera_amis}
 \end{figure}
 
-Bien que l'initialisation optimisée ait permis une bonne reconstruction du terme source, il est à noter que la procédure d'échantillonnage depuis la loi de proposition elle-même n'est pas complètement efficace dans le cas urbain. En effet, durant cette procédure, un certain nombre de particules est tiré à l'intérieur des bâtiments, or une des hypothèses de départ stipule que la source se situe en extérieur. Pour toute particule tirée dans un bâtiment, la rétro-concentration qui lui est attribuée est automatiquement nulle, ce qui par conséquent réduit considérablement le nombre de particules pouvant avoir un poids d'importance représentatif, et réduit ainsi l'efficacité du processus d'échantillonnage d'importance. 
+Bien que l'initialisation optimisée ait permis une \NdPA{ reconstruction correcte} du terme source, il est à noter que la procédure d'échantillonnage depuis la loi de proposition elle-même n'est pas complètement efficace dans le cas urbain. En effet, durant cette procédure, un certain nombre de particules est tiré à l'intérieur des bâtiments, or une des hypothèses de départ stipule que la source se situe en extérieur. Pour toute particule tirée dans un bâtiment, la rétro-concentration qui lui est attribuée est automatiquement nulle, ce qui par conséquent réduit considérablement le nombre de particules pouvant avoir un poids d'importance représentatif, et réduit ainsi l'efficacité du processus d'échantillonnage d'importance. 
 
-Une solution envisagée a été d'implémenter le ré-échantillonnage systématique de toute particule tirée dans un bâtiment, tant que celle-ci n'est pas en extérieur. Cependant, une telle démarche peut grandement allonger le temps de calcul, car la surface couverte par les bâtiments est supérieure à celle en extérieur sur le domaine. De plus, l'échantillon obtenu après ces ré-échantillonnages ne représente plus mathématiquement la loi de proposition, et fausse donc le déroulement de l'algorithme d'estimation. 
+Une solution envisagée a été d'implémenter le ré-échantillonnage systématique de toute particule tirée dans un bâtiment, tant que celle-ci n'est pas en extérieur. Cependant, une telle démarche peut grandement allonger le temps de calcul, car la surface couverte par les bâtiments est supérieure à celle \NdPA{de la partie extérieure du domaine de simulation}. De plus, l'échantillon obtenu après ces ré-échantillonnages ne représente plus mathématiquement la loi de proposition, et fausse donc le déroulement de l'algorithme d'estimation. 
 
-Une autre alternative plus simple consisterait à augmenter le nombre de particules par itération, afin d'accroître la proportion d'échantillons tirés en extérieur, ce qui n'impacte pas directement le temps de calcul du fait de l'implémentation optimale de l'opération de lecture des fichiers binaires. 
+Une autre alternative plus simple consisterait à augmenter le nombre de particules par itération, afin d'accroître la proportion d'échantillons tirés en extérieur. \NdFS{Grâce au pré-calcul des rétro-concentrations, la charge supplémentaire de calcul générée par une quantité plus importante de particules reste raisonnable, bien moins élevée que si l'on avait voulu faire la même chose avec une approche utilisant un modèle direct.}\\
 
-\NdFS{Test test 1 2}
-
-%Il a donc fallu chercher un moyen d'initialiser la loi de proposition pour l'AMIS de façon plus judicieuse qu'une simple hypothèse de répartition uniforme des particules sur le domaine. Une initialisation optimisée permet en effet d'explorer des zones potentiellement intéressantes plus rapidement, augmentant l'efficacité de l'algorithme d'estimation. \\
-
-%Comme dans notre cas on a choisi une loi de proposition de type mixture de $D$ gaussiennes $\varphi_1, \dots, \varphi_D$, on va chercher à estimer les moyennes $\left(\VecMu_d\right)_{1:d}$ et les matrices de covariance $\left(\MatSigma_d\right)_{1:d}$ de chacune de ces composantes, ainsi que leurs facteurs d'influence $\left(\alpha_d\right)_{1:d}$. 
-
-%Pour cela, in utilise les résultats issus d'un \textit{run} de rétro-propagation: suivant un modèle de dispersion dual tel que RetroSPRAY, on construit une série de cartes des concentrations conjuguées sur tout le domaine, en transformant les capteurs en rétro-sources et en utilisant les concentrations mesurées comme valeurs de rétro-émission. Une fois ces cartes créées, elles sont vues comme des ébauches des densités de probabilité sur la position de la source pour différents temps d'émission. L'objectif est alors de caler les paramètres $\left(\alpha_d, \VecMu_d,\MatSigma_d \right)_{1:D}$ sur ces densités.\\
-
-%On part de l'instant d'observation $t_0$ qui est celui où la concentration la plus élevée a été observée. On définit ensuite un instant $t_{RP}$ qui correspond à l'instant final de la rétro-propagation, avec $t_{RP} < t_0$.  
-
-
+\NdFS{
+Ce chapitre a permis d'illustrer les apports de l'utilisation en mode rétrograde du modèle de dispersion. La génération des matrices source-récepteur à partir de données de rétro-concentration pré-calculées a permis une utilisation optimale du système PMSS, ne nécessitant pas de multiples calculs de dispersion. Les exemples d'application sur lesquels cette approche a été utilisée ont montré des résultats corrects de l'estimation des paramètres de la source, à la fois sur sa localisation et sur la reconstruction de son débit d'émission. Le cas-test Beaune a permis d'illustrer l'influence des paramètres $\varObs$ et $\varQ$, ainsi que de souligner l'importance prise par un capteur suffisamment proche de la source pour obtenir une bonne estimation. Le cas-test Opéra a confronté l'algorithme à une situation plus complexe, mais qui a pu être bien traitée grâce à l'initialisation améliorée de l'AMIS, en réutilisant les résultats de rétro-propagation afin d'isoler une zone d'intérêt sur laquelle sont ajustés les paramètres de départ de la loi de proposition.}
 
