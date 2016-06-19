@@ -1,4 +1,4 @@
-\documentclass{book}
+\documentclass[draft]{book}
 
 %%%
 % Fichier principal du manuscrit de thèse, à utiliser pour compilation.
@@ -17,6 +17,12 @@
 \usepackage[T1]{fontenc}
 \usepackage[utf8]{inputenc}
 \usepackage[frenchb]{babel}
+
+% Pour les acronymes
+\usepackage[acronym]{glossaries}
+% Generate the glossary
+\makeglossaries
+	
 
 % Pour de jolies figures en natif:
 \usepackage{tikz}
@@ -54,6 +60,7 @@
 \usepackage{epstopdf}
 
 
+\usepackage{enumitem}
 
 
 
@@ -188,7 +195,14 @@
 
 
 \begin{document}
+	
+
 	\maketitle
+
+%Print the glossary
+\newpage
+
+\input{acronyms}
 	
 	\tableofcontents
 	
@@ -205,6 +219,8 @@
 	\input{chapitre_4}
 	
 	\input{chapitre_4_opera}
+	
+	\input{chapitre_5_conclusion}
 	
 	%\appendix
 	%\chapter{Ensemble des résultats pour les analyses paramétriques du cas-test Beaune}
