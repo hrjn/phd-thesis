@@ -1,4 +1,4 @@
-\documentclass[draft]{book}
+\documentclass{book}
 
 %%%
 % Fichier principal du manuscrit de thèse, à utiliser pour compilation.
@@ -18,11 +18,6 @@
 \usepackage[utf8]{inputenc}
 \usepackage[frenchb]{babel}
 
-% Pour les acronymes
-\usepackage[acronym]{glossaries}
-% Generate the glossary
-\makeglossaries
-	
 
 % Pour de jolies figures en natif:
 \usepackage{tikz}
@@ -100,10 +95,7 @@
 \newcommand\todoin[2][]{\todo[inline, backgroundcolor=red!20!white, caption={2do}, #1]{
 		\begin{minipage}{\textwidth-4pt}#2\end{minipage}}}
 
-% Pour créer une liste des symboles:
-\usepackage{nomencl}
-	\makenomenclature
-	\renewcommand{\nomname}{Liste des symboles}
+
 	
 % Pour créer des sous-figures dans un environnement figure commun:
 \usepackage{subcaption}
@@ -203,6 +195,12 @@
 \newpage
 
 \input{acronyms}
+
+\newpage
+
+\listoffigures
+
+
 	
 	\tableofcontents
 	

@@ -22,7 +22,7 @@ Le fait de modéliser le panache par un ensemble de PL permet de tenir compte de
 
 \begin{equation}
 	\begin{split}
-		du_i &= a_i(\Vecx, \Vecu, t)dt + b_{i,j}(\Vecx, \Vecu, t)d\xi_j  \\
+		du_i &= a_i(\Vecx, \vec{\Vecu}, t)dt + b_{i,j}(\Vecx, \vec{\Vecu}, t)d\xi_j  \\
 		dx_i &= u_i dt = (\bar{u}_i + U_i)dt
 	\end{split}
 	\label{eq_langevin}
@@ -30,7 +30,7 @@ Le fait de modéliser le panache par un ensemble de PL permet de tenir compte de
 où:
  \begin{itemize}
 	\item $\Vecx = (x, y, z)$ est la position de la PL  définie par un repère spécifique: $x$ suit l'axe du vent, $y$ suit l'axe perpendiculaire au vent, et $z$ désigne l'élévation verticale classique. 
-	\item $\Vecu$ est la vitesse d'écoulement à laquelle est soumise la PL: $\Vecu = (u, v, w)$ où les composantes respectives de ce vecteur suivent les mêmes axes que $\Vecx$.
+	\item $\vec{\Vecu}$ est le champ d'écoulement auquel est soumise la PL,
 	\item $a_i$ et $b_{i,j}$ sont des fonctions spécifiques de $(\Vecx, \Vecu, t)$ respectivement appelées \textit{drift term} et \textit{random forcing}.
 	\item $d\xi_j$ est un incrément aléatoire suivant une distribution gaussienne de moyenne nulle et de variance $dt$.
 	\item $\bar{u}_i$ représente le vent moyen et $U_i$ sa composante stochastique.
