@@ -169,7 +169,7 @@ La relation de dualité direct-rétrograde peut alors être écrite sous la form
 \langle C,h \rangle = \langle Q, C^* \rangle
 \end{equation}
 
-En pratique, $C^*$ est simulé par un modèle de dispersion rétrograde. De plus : 
+En pratique, $C^*$ est simulé par un modèle de dispersion rétrograde. Cette relation de dualité permet de traiter le cas particulier où:
 \begin{itemize}
 	\item sous l'hypothèse d'un "capteur idéal", la fonction de réponse $h$ devient une distribution de Dirac centrée sur le point $(\Vecx, t)$ : 
 	\begin{equation}
@@ -187,7 +187,7 @@ En pratique, $C^*$ est simulé par un modèle de dispersion rétrograde. De plus
 	\end{equation}
 \end{itemize}
 
-On a donc finalement : 
+Sous ces hypothèse, on obtient:
 \begin{equation}
 C(\Vecx_{R_i}, t_{R_i}) = C^* (\PosSource, t_s)
 \end{equation}
@@ -393,6 +393,10 @@ Concernant la source, celle-ci est placée dans la partie nord (voir figure \ref
 	\caption{Cas-test Beaune: concentrations mesurées aux capteurs}
 	\label{fig_observations_25CAPTEURS}
 \end{figure}
+
+\NdFS{
+Il est à noter que pour générer les observations de la figure \ref{fig_observations_25CAPTEURS}, un \textit{run} spécifique du modèle de dispersion a été exécuté, sans réutiliser les valeurs pré-calculées présentes dans les fichiers binaires. Cela entraîne une marge d'incertitude sur les mesures, qu'il est possible d'associer à l'introduction d'une erreur de modèle non-nulle.
+}
 
 \subsubsection{Premiers résultats}
 

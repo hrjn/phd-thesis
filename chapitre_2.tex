@@ -601,7 +601,8 @@ Le fait de coupler au sein d'un même algorithme : \\
 \end{itemize}
 constitue ainsi le coeur des travaux présentés dans \cite{Cornuet2012}, qui ont mené à la création de l'algorithme d'\textit{Adaptive Multiple Importance Sampling} (AMIS). \\
 
-\NdFS{La caractéristique principale de l'AMIS est la combinaison d'une loi de proposition adaptive et d'une "mise en mémoire" progressive des populations de particules générées au fil des itérations. Cela permet à l'algorithme de ne pas se limiter aux particules de l'itération courante, mais de travailler sur l'ensemble des populations de particules générées depuis la première itération. L'AMIS ré-exploite ainsi toute l'information disponible sur les poids d'importance et les particules de façon optimale, et son fonctionnement est détaillé dans l'algorithme \ref{algo_AMIS}.}
+\NdFS{La caractéristique principale de l'AMIS est la combinaison d'une loi de proposition adaptive et d'une "mise en mémoire" progressive des populations de particules générées au fil des itérations. Cela permet à l'algorithme de ne pas se limiter aux particules de l'itération courante, mais de travailler sur l'ensemble des populations de particules générées depuis la première itération. L'AMIS ré-exploite ainsi toute l'information disponible sur les poids d'importance et les particules de façon optimale, et son fonctionnement est détaillé dans l'algorithme \ref{algo_AMIS}.} \\
+
 
 \IncMargin{1em}
 \begin{algorithm}
@@ -655,126 +656,160 @@ constitue ainsi le coeur des travaux présentés dans \cite{Cornuet2012}, qui on
 \end{algorithm}
 
 \NdFS{
-\subsubsection{Exemple comparatif sur les méthodes à base d'IS}
-
-Nous illustrons ici les résultats de trois approches basées sur l'échantillonnage d'importance: l'algorithme classique, le M-PMC et l'AMIS. Pour cela, }nous reprenons le cas du mélange de gaussiennes présenté à l'équation \eqref{eq_mixture_2_gaussiennes_1D}. Supposons qu'on dispose d'un vecteur d'observations $\Vecy$ suivant cette distribution, avec $\sigma_1 = \sigma_2 = 1$ et $\gamma = 0.3$. Le vecteur $\VecTheta = (\mu_1, \mu_2)$ des moyennes de chaque composante du mélange constitue l'inconnue à estimer.\\
-
-Si on formule le problème sous sa forme bayésienne, celui-ci peut s'écrire sous la forme suivante:
-\begin{equation}
-	\pi(\VecTheta) = p(\VecTheta | \Vecy) \propto p(\Vecy | \VecTheta) p(\VecTheta)
-	\label{eq_bayes_ex_amis}
-\end{equation}
-
-On choisit un a priori gaussien sur chacune des composantes, de moyenne 1 et de variance 10. Comme $\mu_1$ et $\mu_2$ sont indépendants, on a :
-
-\begin{equation}
-	p(\VecTheta) = p(\mu_1)p(\mu_2)
-\end{equation}
-
-La loi de vraisemblance est obtenue grâce au modèle de mélange de l'équation \eqref{eq_mixture_2_gaussiennes_1D}: 
-
-\begin{equation}
-	p(\Vecy | \VecTheta) = \gamma \mathcal{N}(\Vecy | \mu_1,\sigma_1^2) + (1-\gamma)\mathcal{N}(\Vecy | \mu_2, \sigma_2^2)
-\end{equation}
-
-Comme il est impossible d'obtenir une forme analytique de la loi a posteriori \eqref{eq_bayes_ex_amis}, nous passons par l'algorithme AMIS pour en obtenir une approximation. Pour cela, on choisit une loi de proposition gaussienne bi-variée, suffisamment flexible et dont il est facile d'obtenir des échantillons:
-
-\begin{equation}
-\varphi(\VecTheta) = \mathcal{N}(\VecTheta | \Vecmup, \MatSigmap)
-\end{equation}
-
-On initialise cette loi de proposition avec $\Vecmup^{(0)} = (1,1)$ et $\MatSigmap^{(0)} = \begin{pmatrix} 20&0\\ 0&20 \end{pmatrix}$ pour bien couvrir l'espace des paramètres à explorer. \NdFS{On choisit par ailleurs cette version de la loi de proposition pour l'implémentation de l'IS standard.}\\
-
-En reprenant l'algorithme \ref{algo_AMIS} et en l'appliquant à notre exemple, on peut décomposer l'exécution de l'AMIS en plusieurs étapes caractéristiques. Ainsi, à l'itération $k$:
-
-\begin{enumerate}
-	\item on échantillonne depuis la loi de proposition courante afin d'obtenir un ensemble de $N$ particules : 
-	$$ \VecTheta_k^{(1)}, \dots, \VecTheta_k^{(N)} \sim \varphi (\Vecmup^k, \MatSigmap^k) $$
+	L'aspect adaptatif de l'AMIS est ainsi renforcé par le recyclage de tous les poids générés depuis le début de la simulation. Cela lui permet, en pratique, de mieux exploiter l'information disponible, ce qui est illustré par la figure \ref{fig_ais_comp_ess} , où l'exemple du modèle \ref{eq_mixture_2_gaussiennes_1D} est appliqué aux algorithmes basés sur l'IS.
 	
-	\item on calcule $\vartheta_k$ et le vecteur des poids d'importance pour l'itération courante $w_k$
-	
-	\item on recycle les poids générés aux itérations précédentes
-	
-	\item  on met les paramètres de la loi de proposition à jour: comme on est dans un cadre gaussien, on peut reprendre les équations \ref{eq_maj_gaussien}, on a alors : 
-	\begin{equation*}
-	\NdFS{
-	\begin{split}
-		\Vecmup^{k+1} &= \sum\limits_{l=1}^k\sum\limits_{i=1}^N \tilde{w}_l^{(i)}\VecTheta_l^{(i)} \\
-		\MatSigmap^{k+1} &= \sum\limits_{l=1}^k\sum\limits_{i=1}^N \tilde{w}_l^{(i)}(\VecTheta_l^{(i)} - \Vecmup^{l+1} )
-(\VecTheta_l^{(i)} - \Vecmup^{l+1} )^T	\end{split}
-}
-	\end{equation*}
-\end{enumerate}
+\begin{figure}[h!]
+	\centering
+	\includegraphics[width=0.8\textwidth]{ais_comp_ess}
+	\caption{Mixture de gaussiennes: évolution moyenne (sur 100 réplicats) de l'ESS pour différents algorithmes basés sur l'IS}
+	\label{fig_ais_comp_ess}
+\end{figure}
 
-Au bout de $K$ itérations, l'approximation de la loi a posteriori est ainsi donnée par : 
+Les différentes méthodes sont comparées à nombre total équivalent de particules, c'est-à-dire 2000 pour l'IS et 100 par itération pour le M-PMC et l'AMIS. On peut dans un premier temps observer que les deux algorithmes adaptatifs surclassent rapidement l'IS classique, ce dernier étant pénalisé par la nature statique de sa loi de proposition. On note également que l'ESS pour l'AMIS augmente plus vite, ce qui distingue la caractéristique de recyclage des poids dans l'AMIS qu'on ne retrouve pas dans le M-PMC, celui-ci n'exploitant systématiquement que les particules et les poids de la dernière itération pour ajuster les paramètres de l'itération courante. \\
 
-\begin{equation}
-\pi(\VecTheta) \simeq \sum\limits_{k=1}^K \sum\limits_{i=1}^N \tilde{w}_k^{(i)} \VecTheta_k^{(i)}
-\end{equation}
+L'AMIS permet également de fournir un estimateur dont la variance est moins élevée que celle du M-PMC, comme présenté en figure \ref{fig_ais_comp_err}, ce qui lui confère une meilleure robustesse statistique. 
 
 \begin{figure}[h!]
 	\centering
-	\begin{subfigure}[t]{0.33\textwidth}
+	\begin{subfigure}[t]{0.5\textwidth}
 		\centering
-		\includegraphics[width=0.9\textwidth]{mu1_is}
+		\includegraphics[width=1\textwidth]{ais_comp_err_mu1}
 		\caption{}
-		\label{mu1_is}
+		\label{ais_comp_mu1}
 	\end{subfigure}%
-	~ 
-		\begin{subfigure}[t]{0.33\textwidth}
-			\centering
-			\includegraphics[width=0.9\textwidth]{mu1_pmc}
-			\caption{}
-			\label{mu1_pmc}
-		\end{subfigure}%
-		~ 
-		\begin{subfigure}[t]{0.33\textwidth}
-			\centering
-			\includegraphics[width=0.9\textwidth]{mu1_amis}
-			\caption{}
-			\label{mu1_amis}
-		\end{subfigure}
-
-	\begin{subfigure}[t]{0.33\textwidth}
+	\begin{subfigure}[t]{0.5\textwidth}
 		\centering
-		\includegraphics[width=0.9\textwidth]{mu2_is}
+		\includegraphics[width=1\textwidth]{ais_comp_err_mu2}
 		\caption{}
-		\label{mu2_is}
-	\end{subfigure}%
-	~ 
-	\begin{subfigure}[t]{0.33\textwidth}
-		\centering
-		\includegraphics[width=0.9\textwidth]{mu2_pmc}
-		\caption{}
-		\label{mu2_pmc}
-	\end{subfigure}%
-	~ 
-	\begin{subfigure}[t]{0.33\textwidth}
-		\centering
-		\includegraphics[width=0.9\textwidth]{mu2_amis}
-		\caption{}
-		\label{mu2_amis}
+		\label{ais_comp_mu2}
 	\end{subfigure}
-	\caption{\NdFS{Estimation des densités a posteriori marginales $p(\mu_1 | \Vecy)$ (en bleu) et $p(\mu_2 | \Vecy)$ (en magenta) avec l'IS (gauche), le M-PMC (milieu) et l'AMIS (droite)}}
-	\label{fig_mus}
+	\caption{Mixtures de gaussiennes: erreurs absolues (sur 100 réplicats) des estimateurs MMSE pour les algorithmes IS adaptatifs} 
+	\label{fig_ais_comp_err}
 \end{figure}
-
-Les éléments de la figure \ref{fig_mus} permettent de représenter explicitement les résultats de l'estimation de $\mu_1$ et $\mu_2$ grâce au procédé d'\textit{estimation par noyau} ou \textit{kernel density estimation} (KDE): si $\theta^{(1)}, \theta^{(2)}, \dots, \theta^{(n)}$ est un échantillon issu d'une variable aléatoire $\VecTheta$, alors l'estimateur de $\VecTheta$ par la méthode KDE est donné par :
-
- \begin{equation}
-	\widehat{f}_h(\theta) = \dfrac{1}{nh}\sum\limits_{i=1}^n K\left(\dfrac{\theta - \theta^{(i)}}{h}\right)
-	\label{eq_KDE} 
- \end{equation} 
- où $K$ est un noyau arbitrairement choisi et $h$ est la fenêtre du noyau, qui règle le degré de lissage de l'estimation. $K$ est ici choisi comme étant gaussien centré réduit, un choix fréquent dans ce genre de démarche. \\
- 
- \NdFS{
- Comme on peut le voir sur les figures \ref{mu1_is} et \ref{mu2_is}, l'utilisation de l'IS ne permet pas une estimation suffisamment précise des paramètres $\mu_1$ et $\mu_2$: cela est dû à la nature "statique" de la loi de proposition. En effet celle-ci n'est visiblement pas assez proche de la loi cible recherchée pour produire un résultat significatif.
- 
- Le M-PMC (figures \ref{mu1_pmc} et \ref{mu2_pmc}) parvient à restreindre les probabilités a posteriori de $\mu_1$ et $\mu_2$ à des intervalles réduits, permettant une meilleure inférence sur les valeurs des paramètres recherchés. Toutefois, en termes de précision relative, il y a un certain décalage entre les valeurs à retrouver et le mode des densités de probabilité, $\mu_1$ étant même presque en dehors de la zone de probabilité non-nulle fournie par le M-PMC. 
- 
- C'est finalement l'AMIS (figures \ref{mu1_amis} et \ref{mu2_amis})  qui obtient les meilleurs résultats, avec une estimation précise des densités $p(\mu_1 | \Vecy)$ et $p(\mu_2 | \Vecy)$ autour des vraies valeurs. Cela atteste à la fois du gain en qualité par rapport à une approche IS standard, ainsi que d'une plus grande souplesse sur l'exploitation des particules échantillonnées. En effet, le gain par rapport au M-PMC peut s'expliquer par le fait que l'AMIS ne s'est pas limité à l'exploitation de la dernière itération de l'algorithme (comme c'est le cas avec le M-PMC), mais a su tirer parti de l'information présente dans les poids d'importance et les particules générés dès la première itération. Il a ainsi pu définir des densités de probabilité plus en accord avec les valeurs réelles de $\mu_1$ et $\mu_2$. \\
- 
- Les avantages que présentent l'AMIS en font un choix privilégié pour la suite des travaux présentés dans ce manuscrit: les deux prochains chapitres introduisent son application à la problématique d'estimation du terme source dans différents cas pratiques.
- 
 }
+
+Les avantages que présentent l'AMIS en font ainsi un choix privilégié pour la suite des travaux présentés dans ce manuscrit: les deux prochains chapitres introduisent son application à la problématique d'estimation du terme source dans différents cas pratiques.
+%\NdFS{
+%\subsubsection{Exemple comparatif sur les méthodes à base d'IS}
+%
+%Nous illustrons ici les résultats de trois approches basées sur l'échantillonnage d'importance: l'algorithme classique, le M-PMC et l'AMIS. Pour cela, }nous reprenons le cas du mélange de gaussiennes présenté à l'équation \eqref{eq_mixture_2_gaussiennes_1D}. Supposons qu'on dispose d'un vecteur d'observations $\Vecy$ suivant cette distribution, avec $\sigma_1 = \sigma_2 = 1$ et $\gamma = 0.3$. Le vecteur $\VecTheta = (\mu_1, \mu_2)$ des moyennes de chaque composante du mélange constitue l'inconnue à estimer.\\
+%
+%Si on formule le problème sous sa forme bayésienne, celui-ci peut s'écrire sous la forme suivante:
+%\begin{equation}
+%	\pi(\VecTheta) = p(\VecTheta | \Vecy) \propto p(\Vecy | \VecTheta) p(\VecTheta)
+%	\label{eq_bayes_ex_amis}
+%\end{equation}
+%
+%On choisit un a priori gaussien sur chacune des composantes, de moyenne 1 et de variance 10. Comme $\mu_1$ et $\mu_2$ sont indépendants, on a :
+%
+%\begin{equation}
+%	p(\VecTheta) = p(\mu_1)p(\mu_2)
+%\end{equation}
+%
+%La loi de vraisemblance est obtenue grâce au modèle de mélange de l'équation \eqref{eq_mixture_2_gaussiennes_1D}: 
+%
+%\begin{equation}
+%	p(\Vecy | \VecTheta) = \gamma \mathcal{N}(\Vecy | \mu_1,\sigma_1^2) + (1-\gamma)\mathcal{N}(\Vecy | \mu_2, \sigma_2^2)
+%\end{equation}
+%
+%Comme il est impossible d'obtenir une forme analytique de la loi a posteriori \eqref{eq_bayes_ex_amis}, nous passons par l'algorithme AMIS pour en obtenir une approximation. Pour cela, on choisit une loi de proposition gaussienne bi-variée, suffisamment flexible et dont il est facile d'obtenir des échantillons:
+%
+%\begin{equation}
+%\varphi(\VecTheta) = \mathcal{N}(\VecTheta | \Vecmup, \MatSigmap)
+%\end{equation}
+%
+%On initialise cette loi de proposition avec $\Vecmup^{(0)} = (1,1)$ et $\MatSigmap^{(0)} = \begin{pmatrix} 20&0\\ 0&20 \end{pmatrix}$ pour bien couvrir l'espace des paramètres à explorer. \NdFS{On choisit par ailleurs cette version de la loi de proposition pour l'implémentation de l'IS standard.}\\
+%
+%En reprenant l'algorithme \ref{algo_AMIS} et en l'appliquant à notre exemple, on peut décomposer l'exécution de l'AMIS en plusieurs étapes caractéristiques. Ainsi, à l'itération $k$:
+%
+%\begin{enumerate}
+%	\item on échantillonne depuis la loi de proposition courante afin d'obtenir un ensemble de $N$ particules : 
+%	$$ \VecTheta_k^{(1)}, \dots, \VecTheta_k^{(N)} \sim \varphi (\Vecmup^k, \MatSigmap^k) $$
+%	
+%	\item on calcule $\vartheta_k$ et le vecteur des poids d'importance pour l'itération courante $w_k$
+%	
+%	\item on recycle les poids générés aux itérations précédentes
+%	
+%	\item  on met les paramètres de la loi de proposition à jour: comme on est dans un cadre gaussien, on peut reprendre les équations \ref{eq_maj_gaussien}, on a alors : 
+%	\begin{equation*}
+%	\NdFS{
+%	\begin{split}
+%		\Vecmup^{k+1} &= \sum\limits_{l=1}^k\sum\limits_{i=1}^N \tilde{w}_l^{(i)}\VecTheta_l^{(i)} \\
+%		\MatSigmap^{k+1} &= \sum\limits_{l=1}^k\sum\limits_{i=1}^N \tilde{w}_l^{(i)}(\VecTheta_l^{(i)} - \Vecmup^{l+1} )
+%(\VecTheta_l^{(i)} - \Vecmup^{l+1} )^T	\end{split}
+%}
+%	\end{equation*}
+%\end{enumerate}
+%
+%Au bout de $K$ itérations, l'approximation de la loi a posteriori est ainsi donnée par : 
+%
+%\begin{equation}
+%\pi(\VecTheta) \simeq \sum\limits_{k=1}^K \sum\limits_{i=1}^N \tilde{w}_k^{(i)} \VecTheta_k^{(i)}
+%\end{equation}
+%
+%\begin{figure}[h!]
+%	\centering
+%	\begin{subfigure}[t]{0.33\textwidth}
+%		\centering
+%		\includegraphics[width=0.9\textwidth]{mu1_is}
+%		\caption{}
+%		\label{mu1_is}
+%	\end{subfigure}%
+%	~ 
+%		\begin{subfigure}[t]{0.33\textwidth}
+%			\centering
+%			\includegraphics[width=0.9\textwidth]{mu1_pmc}
+%			\caption{}
+%			\label{mu1_pmc}
+%		\end{subfigure}%
+%		~ 
+%		\begin{subfigure}[t]{0.33\textwidth}
+%			\centering
+%			\includegraphics[width=0.9\textwidth]{mu1_amis}
+%			\caption{}
+%			\label{mu1_amis}
+%		\end{subfigure}
+%
+%	\begin{subfigure}[t]{0.33\textwidth}
+%		\centering
+%		\includegraphics[width=0.9\textwidth]{mu2_is}
+%		\caption{}
+%		\label{mu2_is}
+%	\end{subfigure}%
+%	~ 
+%	\begin{subfigure}[t]{0.33\textwidth}
+%		\centering
+%		\includegraphics[width=0.9\textwidth]{mu2_pmc}
+%		\caption{}
+%		\label{mu2_pmc}
+%	\end{subfigure}%
+%	~ 
+%	\begin{subfigure}[t]{0.33\textwidth}
+%		\centering
+%		\includegraphics[width=0.9\textwidth]{mu2_amis}
+%		\caption{}
+%		\label{mu2_amis}
+%	\end{subfigure}
+%	\caption{\NdFS{Estimation des densités a posteriori marginales $p(\mu_1 | \Vecy)$ (en bleu) et $p(\mu_2 | \Vecy)$ (en magenta) avec l'IS (gauche), le M-PMC (milieu) et l'AMIS (droite)}}
+%	\label{fig_mus}
+%\end{figure}
+%
+%Les éléments de la figure \ref{fig_mus} permettent de représenter explicitement les résultats de l'estimation de $\mu_1$ et $\mu_2$ grâce au procédé d'\textit{estimation par noyau} ou \textit{kernel density estimation} (KDE): si $\theta^{(1)}, \theta^{(2)}, \dots, \theta^{(n)}$ est un échantillon issu d'une variable aléatoire $\VecTheta$, alors l'estimateur de $\VecTheta$ par la méthode KDE est donné par :
+%
+% \begin{equation}
+%	\widehat{f}_h(\theta) = \dfrac{1}{nh}\sum\limits_{i=1}^n K\left(\dfrac{\theta - \theta^{(i)}}{h}\right)
+%	\label{eq_KDE} 
+% \end{equation} 
+% où $K$ est un noyau arbitrairement choisi et $h$ est la fenêtre du noyau, qui règle le degré de lissage de l'estimation. $K$ est ici choisi comme étant gaussien centré réduit, un choix fréquent dans ce genre de démarche. \\
+% 
+% \NdFS{
+% Comme on peut le voir sur les figures \ref{mu1_is} et \ref{mu2_is}, l'utilisation de l'IS ne permet pas une estimation suffisamment précise des paramètres $\mu_1$ et $\mu_2$: cela est dû à la nature "statique" de la loi de proposition. En effet celle-ci n'est visiblement pas assez proche de la loi cible recherchée pour produire un résultat significatif.
+% 
+% Le M-PMC (figures \ref{mu1_pmc} et \ref{mu2_pmc}) parvient à restreindre les probabilités a posteriori de $\mu_1$ et $\mu_2$ à des intervalles réduits, permettant une meilleure inférence sur les valeurs des paramètres recherchés. Toutefois, en termes de précision relative, il y a un certain décalage entre les valeurs à retrouver et le mode des densités de probabilité, $\mu_1$ étant même presque en dehors de la zone de probabilité non-nulle fournie par le M-PMC. 
+% 
+% C'est finalement l'AMIS (figures \ref{mu1_amis} et \ref{mu2_amis})  qui obtient les meilleurs résultats, avec une estimation précise des densités $p(\mu_1 | \Vecy)$ et $p(\mu_2 | \Vecy)$ autour des vraies valeurs. Cela atteste à la fois du gain en qualité par rapport à une approche IS standard, ainsi que d'une plus grande souplesse sur l'exploitation des particules échantillonnées. En effet, le gain par rapport au M-PMC peut s'expliquer par le fait que l'AMIS ne s'est pas limité à l'exploitation de la dernière itération de l'algorithme (comme c'est le cas avec le M-PMC), mais a su tirer parti de l'information présente dans les poids d'importance et les particules générés dès la première itération. Il a ainsi pu définir des densités de probabilité plus en accord avec les valeurs réelles de $\mu_1$ et $\mu_2$. \\
+% 
+ 
+ 
+%}
 
