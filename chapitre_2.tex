@@ -263,18 +263,22 @@ Si $\kernel$ est symétrique, alors cette grandeur est donnée par :
 On voit facilement que si $\VecThetaCandidat$ est plus proche de la loi cible que $\VecThetaCourant$, alors il devient avec certitude le nouvel état, car $\dfrac{\pi(\VecThetaCandidat)}{\pi(\VecThetaCourant)} > 1$. Toutefois, si ce n'est pas le cas, on tire une valeur $u$ suivant une loi uniforme sur $[0,1]$, et le passage de $\VecThetaCandidat$ au statut de nouvel état est alors conditionné par la valeur de $r$ par rapport à celle de $u$. Une telle démarche permet ainsi de ne pas complètement discriminer les états candidats dont la probabilité est moins élevée. \\
 
 La génération des différents états de la chaîne de Markov s'effectue ainsi suivant un schéma itératif décrit dans l'algorithme (\ref{algo_metropolis_hastings}). \\
-\IncMargin{1em}
+
 \begin{algorithm}
-	\SetAlgoLined
-	Initialiser $\VecTheta^{(0)}$\;
-	\For{$i = 1, \dots, N$ }{
-		Tirer $\VecThetaCandidat$ depuis $\kernel(\VecThetaCourant, \VecThetaCandidat)$\;
-		Calculer le ratio 
-		$\beta  =\dfrac{\pi(\VecThetaCandidat)\kernel(\VecThetaCandidat, \VecThetaCourant)}{\pi(\VecThetaCourant)\kernel(\VecThetaCourant, \VecThetaCandidat)}$\;
-		Calculer la probabilité d'acceptation 
-		$r  =\min\{1,\beta\} $\;
-		Tirer $\zeta$ depuis $\mathcal{U}_{[0,1]}$\;
-		\eIf{$\zeta < r$}{$\VecThetaNouveau = \VecThetaCandidat$}{$\VecThetaNouveau = \VecThetaCourant$}}
+	\begin{algorithmic}
+		\State Initialiser $\VecTheta^{(0)}$
+		\For{$i = 1, \dots, N$ }
+			\State Tirer $\VecThetaCandidat$ depuis $\kernel(\VecThetaCourant, \VecThetaCandidat)$
+			\State Calculer le ratio $\beta  =\dfrac{\pi(\VecThetaCandidat)\kernel(\VecThetaCandidat, \VecThetaCourant)}{\pi(\VecThetaCourant)\kernel(\VecThetaCourant, \VecThetaCandidat)}$
+			\State Calculer la probabilité d'acceptation $r  =\min\{1,\beta\} $
+			\State Tirer $\zeta$ depuis $\mathcal{U}_{[0,1]}$
+			\If{$\zeta < r$}
+				\State $\VecThetaNouveau = \VecThetaCandidat$
+				\Else
+				\State $\VecThetaNouveau = \VecThetaCourant$
+			\EndIf
+		\EndFor
+	\end{algorithmic}
 \caption{Metropolis-Hastings}
 \label{algo_metropolis_hastings}
 \end{algorithm}
@@ -351,15 +355,16 @@ L'échantillonneur de Gibbs a initialement été proposé dans \cite{Geman1984} 
 
 Le parcours des composantes de $\VecTheta$ peut se faire de façon déterministe, par exemple en les traitant dans leur ordre naturel les unes après les autres: on parle alors de \textit{balayage systématique}, ou \textit{systematic scan}, comme illustré dans l'algorithme \ref{algo_gibbs_sampler}. Une autre possibilité consiste à choisir aléatoirement cet ordre d'exploration: il s'agit du \textit{balayage aléatoire}, ou \textit{random scan}. \\
 
-\IncMargin{1em}
+
 \begin{algorithm}
-	\SetAlgoLined
-	Initialiser $\VecTheta^{(0)} = \left(\theta_1^{(0)}, \dots, \theta_p^{(0)}\right)$\;
-	\For{$i = 1, \dots, N$ }{
-		\For{$k = 1, \dots, p$}{
-			Tirer $\theta_k^{(i)}$ depuis $p(\theta_k^{(i)} | \theta_1^{(i)}, \dots, \theta_{k-1}^{(i)}, \theta_{k+1}^{(i-1)}, \dots, \theta_p^{(i-1)})$
-			}
-		}
+	\begin{algorithmic}
+	\State Initialiser $\VecTheta^{(0)} = \left(\theta_1^{(0)}, \dots, \theta_p^{(0)}\right)$
+	\For{$i = 1, \dots, N$ }
+		\For{$k = 1, \dots, p$}
+			\State Tirer $\theta_k^{(i)}$ depuis $p(\theta_k^{(i)} | \theta_1^{(i)}, \dots, \theta_{k-1}^{(i)}, \theta_{k+1}^{(i-1)}, \dots, \theta_p^{(i-1)})$
+			\EndFor
+		\EndFor
+	\end{algorithmic}
 	\caption{Echantillonneur de Gibbs (balayage systématique)}
 	\label{algo_gibbs_sampler}
 \end{algorithm}
@@ -577,9 +582,7 @@ A chaque itération $k \in {1, \dots, K}$, l'approche M-PMC permet ainsi, à par
 
 \subsubsection{Adaptive Multiple Importance Sampling (AMIS)}
 
-Dans le cas du M-PMC, un problème qui peut se poser est celui de la persistance d'un ou plusieurs poids à forte valeur. En effet, si lors d'une itération on observe un phénomène de dégénérescence, celui-ci va subsister tout au long du schéma itératif, et risque de fausser les calculs du fait de la nature adaptative de la démarche, qui réutilise tous les poids existants, et ni la mise à jour des paramètres de la loi de proposition, ni la normalisation du vecteur des poids d'importance ne règle le problème. Cela se traduit alors concrètement par une variance systématiquement élevée de la distribution des poids d'importance, et peut alors conduire  à de mauvais résultats d'estimation. \\
-
-Une façon d'y remédier est proposée dans \cite{Veach1995} et \cite{Owen2000} avec l'utilisation d'une méthode appelée \textit{deterministic multiple mixture}. En pratique,cela consiste à modifier la formule de calcul du poids d'importance $w_k^{(i)}$ associé à la particule $\theta_k^{(i)}$ à l'itération $k$. Le but est de prendre en compte la suite $(\propFonc_0, \dots, \propFonc_k)$ des distributions de proposition, et non plus uniquement la loi  courante $\propFonc_k$. Pour cela, on définit la grandeur suivante:
+\NdFS{Il faut noter que malgré son aspect adaptatif, la méthode M-PMC n'exploite que les particules de l'itération courante pour l'ajustement des paramètres de la loi de proposition, ainsi que pour l'approximation empirique de la loi a posteriori. Une amélioration supplémentaire consiste à reprendre les idées développées dans } \cite{Veach1995} et \cite{Owen2000}, avec l'utilisation d'une méthode appelée \textit{deterministic multiple mixture}. En pratique,cela consiste à modifier la formule de calcul du poids d'importance $w_k^{(i)}$ associé à la particule $\theta_k^{(i)}$ à l'itération $k$. Le but est de prendre en compte la suite $(\propFonc_0, \dots, \propFonc_k)$ des distributions de proposition, et non plus uniquement la loi  courante $\propFonc_k$. Pour cela, on définit la grandeur suivante:
 \begin{equation}
 \vartheta_k^{(i)} = N_p \propFonc_{\alpha^0,\nu^0}(\theta_k^{(i)}) + \sum\limits_{l=1}^k N_p \propFonc_{\alpha^l,\nu^l}(\theta_k^{(i)})
 \label{eq_DMW_1}
@@ -601,56 +604,57 @@ Le fait de coupler au sein d'un même algorithme : \\
 \end{itemize}
 constitue ainsi le coeur des travaux présentés dans \cite{Cornuet2012}, qui ont mené à la création de l'algorithme d'\textit{Adaptive Multiple Importance Sampling} (AMIS). \\
 
-\NdFS{La caractéristique principale de l'AMIS est la combinaison d'une loi de proposition adaptive et d'une "mise en mémoire" progressive des populations de particules générées au fil des itérations. Cela permet à l'algorithme de ne pas se limiter aux particules de l'itération courante, mais de travailler sur l'ensemble des populations de particules générées depuis la première itération. L'AMIS ré-exploite ainsi toute l'information disponible sur les poids d'importance et les particules de façon optimale, et son fonctionnement est détaillé dans l'algorithme \ref{algo_AMIS}.} \\
+\NdFS{La caractéristique principale de l'AMIS est la combinaison d'une loi de proposition adaptive et d'une "mise en mémoire" progressive des populations de particules générées au fil des itérations. Cela permet à l'algorithme de ne pas se limiter aux particules de l'itération courante, mais de travailler sur l'ensemble des populations de particules générées depuis la première itération. L'AMIS ré-exploite ainsi toute l'information disponible sur les poids d'importance et les particules de façon optimale. Son fonctionnement est détaillé dans l'algorithme \ref{algo_AMIS}: les valeurs à fournir en entrée sont  les paramètres $\alpha^0$, $\nu^0$ de la loi de proposition initiale $\propFonc_{\alpha^0, \nu^0}$, et les résultats obtenus en sortie sont:
+	\begin{itemize}
+	 \item la collection de toutes les particules $\theta_0^{(1)}, \dots, \theta_0^{(N_p)}, \theta_1^{(1)}, \dots, \theta_K^{(1)}, \dots, \theta_K^{(N_p)}$,
+	 \item les poids recyclés associés $\tilde{w}_0^{(1)}, \dots, \tilde{w}_0^{(N_p)}, \tilde{w}_1^{(1)}, \dots, \tilde{w}_K^{(1)}, \dots, \tilde{w}_K^{(N_p)}$.\\
+	 \end{itemize}
+} 
 
 
-\IncMargin{1em}
-\begin{algorithm}
-	\SetAlgoLined
-	\SetKwInOut{Input}{Entrées}
-	\SetKwInOut{Output}{Sorties}
+\begin{algorithm}[p!]
+	\begin{algorithmic}
 	
-	\Input{Les paramètres $\alpha^0$, $\nu^0$ de la loi de proposition initiale $\propFonc_{\alpha^0, \nu^0}$}
 	
-	Générer $N_p$ particules $\valTheta_0^{(1)}, \dots, \valTheta_0^{(N_p)}$ depuis  $\propFonc_{\alpha^0, \nu^0}$\\
-	\For{$i=1, \dots, N_p$}{
-		Calculer les poids d'importance initiaux:\\
-		$\vartheta_0^{(i)} = N_p \propFonc_{\alpha^0, \nu^0}(\valTheta_0^{(i)})$\\
-		$w_0^{(i)} = \dfrac{\pi(\theta_0^{(i)})}{\propFonc_{\alpha^0, \nu^0}(\theta_0^{(i)})}$\\
-		}
-	Normaliser les poids initiaux:\\
-	\For{$i=1, \dots, N_p$}{
-		$\tilde{w}_0^{(i)} = \dfrac{w_0^{(i)}}{\sum\limits_{j=1}^{N_p}w_0^{(j)}}$
-		}
-	Mettre à jour la loi de proposition en calculant $\alpha^1$ et $\nu^1$ à partir de $\alpha^0$, $\nu^0$, $\tilde{w}_0$ \NdFS{et $\theta_0$}\\
-	\For{$k=1, \dots, K$}{
-		Générer $N_p$ particules $\theta_k^{(1)}, \dots, \theta_k^{(N_p)}$ depuis la loi de proposition courante $\propFonc_{\alpha^k, \nu^k}$:\\
-		\For{$i=1, \dots, N_p$}{
-			Calculer les poids d'importance de l'échantillon courant:\\
-			$\vartheta_k^{(i)} = N_p \propFonc_{\alpha^0, \nu^0}(\theta_k^{(i)}) + \sum\limits_{l=1}^k N_p \propFonc_{\alpha^l, \nu^l}(\theta_k^{(i)})$\\
-			$w_k^{(i)} = (k+1)N_p \dfrac{\pi(\theta_k^{(i)})}{\vartheta_k^{(i)}} = (k+1)N_p \dfrac{p(\VecObs | \theta_k^{(i)})p(\theta_k^{(i)})}{\vartheta_k^{(i)}}$
-			}
-		Recycler les poids des particules obtenues par les précédentes lois de proposition :\\
-		\For{$l=0, \dots, k-1$}{
-			\For{$i=1, \dots, N_p$}{
-				$\vartheta_l^{(i)} = \vartheta_l^{(i)} + N_p \propFonc_{\alpha^k, \nu^k}(\theta_l^{(i)})$\\
-				$w_l^{(i)} = (k+1) N_p \dfrac{\pi(\theta_l^{(i)})}{\vartheta_l^{(i)}}$
-				}
-			}
-		Normaliser les poids recyclés et courants:
-		\For{$l=0, \dots, k$}{
-			\For{$i=1, \dots, N_p$}{
-				$\tilde{w}_l^{(i)} = \dfrac{w_l^{(i)}}{\sum\limits_{l'=1}^k\sum\limits_{j=1}^{N_p} w_{l'}^{(j)}}$
-				}
-			}
-		Mettre à jour la loi de proposition en calculant $\alpha^{k+1}$ et $\nu^{k+1}$ à partir de $\alpha^k$, $\nu^k$ , de la concaténation des poids recyclés normalisés $\tilde{w}_0, \dots, \tilde{w}_k$ \NdFS{et des particules correspondantes $\theta_0, \cdots, theta_K$}\\\
-		}
-		\Output{ La collection de toutes les particules: $\theta_0^{(1)}, \dots, \theta_0^{(N_p)}, \theta_1^{(1)}, \dots, \theta_K^{(1)}, \dots, \theta_K^{(N_p)}$
-			
-		ainsi que les poids recyclés associés:\\
-		  $\tilde{w}_0^{(1)}, \dots, \tilde{w}_0^{(N_p)}, \tilde{w}_1^{(1)}, \dots, \tilde{w}_K^{(1)}, \dots, \tilde{w}_K^{(N_p)}$}
+	%\State \textbf{Entrées}: les paramètres $\alpha^0$, $\nu^0$ de la loi de proposition initiale $\propFonc_{\alpha^0, \nu^0}$
 	
-
+	\State Générer $N_p$ particules $\valTheta_0^{(1)}, \dots, \valTheta_0^{(N_p)}$ depuis  $\propFonc_{\alpha^0, \nu^0}$
+	\For{$i=1, \dots, N_p$}
+		\State Calculer les poids d'importance initiaux:
+		\State $\vartheta_0^{(i)} = N_p \propFonc_{\alpha^0, \nu^0}(\valTheta_0^{(i)})$
+		\State $w_0^{(i)} = \dfrac{\pi(\theta_0^{(i)})}{\propFonc_{\alpha^0, \nu^0}(\theta_0^{(i)})}$
+	\EndFor
+	\State Normaliser les poids initiaux:
+	\For{$i=1, \dots, N_p$}
+		\State $\tilde{w}_0^{(i)} = \dfrac{w_0^{(i)}}{\sum\limits_{j=1}^{N_p}w_0^{(j)}}$
+	\EndFor
+	\State Mettre à jour la loi de proposition en calculant $\alpha^1$ et $\nu^1$ à partir de $\alpha^0$, $\nu^0$, $\tilde{w}_0$ \NdFS{et $\theta_0$}
+	\For{$k=1, \dots, K$}
+		\State Générer $N_p$ particules $\theta_k^{(1)}, \dots, \theta_k^{(N_p)}$ depuis la loi de proposition courante $\propFonc_{\alpha^k, \nu^k}$:
+		\For{$i=1, \dots, N_p$}
+			\State Calculer les poids d'importance de l'échantillon courant:
+			\State $\vartheta_k^{(i)} = N_p \propFonc_{\alpha^0, \nu^0}(\theta_k^{(i)}) + \sum\limits_{l=1}^k N_p \propFonc_{\alpha^l, \nu^l}(\theta_k^{(i)})$
+			\State $w_k^{(i)} = (k+1)N_p \dfrac{\pi(\theta_k^{(i)})}{\vartheta_k^{(i)}} = (k+1)N_p \dfrac{p(\VecObs | \theta_k^{(i)})p(\theta_k^{(i)})}{\vartheta_k^{(i)}}$
+			\EndFor
+		\State Recycler les poids des particules obtenues par les précédentes lois de proposition :
+		\For{$l=0, \dots, k-1$}
+			\For{$i=1, \dots, N_p$}
+				\State $\vartheta_l^{(i)} = \vartheta_l^{(i)} + N_p \propFonc_{\alpha^k, \nu^k}(\theta_l^{(i)})$
+				\State $w_l^{(i)} = (k+1) N_p \dfrac{\pi(\theta_l^{(i)})}{\vartheta_l^{(i)}}$
+				\EndFor
+			\EndFor
+		\State Normaliser les poids recyclés et courants:
+		\For{$l=0, \dots, k$}
+			\For{$i=1, \dots, N_p$}
+				\State $\tilde{w}_l^{(i)} = \dfrac{w_l^{(i)}}{\sum\limits_{l'=1}^k\sum\limits_{j=1}^{N_p} w_{l'}^{(j)}}$
+				\EndFor
+			\EndFor
+		\State Mettre à jour la loi de proposition en calculant $\alpha^{k+1}$ et $\nu^{k+1}$ à partir de $\alpha^k$, $\nu^k$ , de la concaténation des poids recyclés normalisés $\tilde{w}_0, \dots, \tilde{w}_k$ \NdFS{et des particules correspondantes $\theta_0, \cdots, \theta_K$}
+		\EndFor
+		%\State \textbf{Sortie}:La collection de toutes les particules: $\theta_0^{(1)}, \dots, \theta_0^{(N_p)}, \theta_1^{(1)}, \dots, \theta_K^{(1)}, \dots, \theta_K^{(N_p)}$ ainsi que les poids recyclés associés:\\
+		  %$\tilde{w}_0^{(1)}, \dots, \tilde{w}_0^{(N_p)}, \tilde{w}_1^{(1)}, \dots, \tilde{w}_K^{(1)}, \dots, \tilde{w}_K^{(N_p)}$
+	
+	\end{algorithmic}
 	\caption{Adaptive Multiple Importance Sampling (AMIS)}
 	\label{algo_AMIS}
 \end{algorithm}
@@ -661,11 +665,11 @@ constitue ainsi le coeur des travaux présentés dans \cite{Cornuet2012}, qui on
 \begin{figure}[h!]
 	\centering
 	\includegraphics[width=0.8\textwidth]{ais_comp_ess}
-	\caption{Mixture de gaussiennes: évolution moyenne (sur 100 réplicats) de l'ESS pour différents algorithmes basés sur l'IS}
+	\caption{Mixture de gaussiennes: évolution moyenne (sur 100 réplicats) de l'ESS sur l'itération courante pour différents algorithmes basés sur l'IS}
 	\label{fig_ais_comp_ess}
 \end{figure}
 
-Les différentes méthodes sont comparées à nombre total équivalent de particules, c'est-à-dire 2000 pour l'IS et 100 par itération pour le M-PMC et l'AMIS. On peut dans un premier temps observer que les deux algorithmes adaptatifs surclassent rapidement l'IS classique, ce dernier étant pénalisé par la nature statique de sa loi de proposition. On note également que l'ESS pour l'AMIS augmente plus vite, ce qui distingue la caractéristique de recyclage des poids dans l'AMIS qu'on ne retrouve pas dans le M-PMC, celui-ci n'exploitant systématiquement que les particules et les poids de la dernière itération pour ajuster les paramètres de l'itération courante. \\
+Les différentes méthodes sont comparées à nombre total équivalent de particules, c'est-à-dire 4000 pour l'IS et 200 par itération (pour un total de 20 itérations) pour le M-PMC et l'AMIS. On peut dans un premier temps observer que les deux algorithmes adaptatifs surclassent rapidement l'IS classique, ce dernier étant pénalisé par la nature statique de sa loi de proposition. On note également que l'ESS pour l'AMIS augmente plus vite, ce qui distingue la caractéristique de recyclage des poids dans l'AMIS qu'on ne retrouve pas dans le M-PMC, celui-ci n'exploitant systématiquement que les particules et les poids de la dernière itération pour ajuster les paramètres de l'itération courante. L'effet de seuil à 200 (qui est également le nombre de particules générées par itération) illustre le fait que les deux algorithmes atteignent une bonne qualité d'estimation de la loi cible.\\
 
 L'AMIS permet également de fournir un estimateur dont la variance est moins élevée que celle du M-PMC, comme présenté en figure \ref{fig_ais_comp_err}, ce qui lui confère une meilleure robustesse statistique. 
 

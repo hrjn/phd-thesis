@@ -216,32 +216,30 @@ p^c(\VecQSource | \PosSource, \VecObs) = \mathcal{N}(\VecQSource | \PostMeanQ^c,
 \end{equation}
 
 \begin{algorithm}
-	\DontPrintSemicolon
-	\SetAlgoLined
-	\SetKwInOut{Input}{Entrées}
-	\SetKwInOut{Output}{Sorties}
-	\Input{$\PostMeanQ$ et $\PostCovQ$}
-	Initialisation: $\PostMeanQ^c=\PostMeanQ$ et $\PostCovQ^c=\PostCovQ$\;
-	\For{$i=1:T_s$}{
-		${\bm \gamma}_i=\begin{bmatrix}{\bf 0}_{1\times (i-1)} & 1  & {\bf 0}_{1\times (T_s-i)}\end{bmatrix}^T$\;
-		Calculer ${\bm W}_i$ et ${\bm T}_i$ par la réduction de Jordan de $\PostCovQ^c$, i.e. ${\bm T}_i {\bm W}_i {\bm T}_i^T=\PostCovQ^c$\;
-		Calculer ${\bm S}_i$ par l'orthogonalisation de Gram-Schmidt pour obtenir la matrice orthogonale ${\bm S}_i$ telle que $${\bm S}_i {\bm W}_i^{1/2} {\bm T}_i^T {\bm \gamma}_i=\begin{bmatrix}
+\begin{algorithmic}
+	\State \textbf{Entrées}: $\PostMeanQ$ et $\PostCovQ$
+	\State Initialisation: $\PostMeanQ^c=\PostMeanQ$ et $\PostCovQ^c=\PostCovQ$
+	\For{$i=1:T_s$}
+		\State ${\bm \gamma}_i=\begin{bmatrix}{\bf 0}_{1\times (i-1)} & 1  & {\bf 0}_{1\times (T_s-i)}\end{bmatrix}^T$
+		\State Calculer ${\bm W}_i$ et ${\bm T}_i$ par la réduction de Jordan de $\PostCovQ^c$, i.e. ${\bm T}_i {\bm W}_i {\bm T}_i^T=\PostCovQ^c$
+		\State Calculer ${\bm S}_i$ par l'orthogonalisation de Gram-Schmidt pour obtenir la matrice orthogonale ${\bm S}_i$ telle que $${\bm S}_i {\bm W}_i^{1/2} {\bm T}_i^T {\bm \gamma}_i=\begin{bmatrix}
 		({\bm \gamma}_i^T \PostCovQ^c {\bm \gamma}_i)^{1/2} & 0 & \cdots & 0 
 		\end{bmatrix} $$
-		 $c_i=-\dfrac{{\bm \gamma}_i^T \PostMeanQ^c}{({\bm \gamma}_i^T \PostCovQ^c {\bm \gamma}_i)^{1/2}}$\;
-		 $\mu_i=\dfrac{\phi(c_i)}{1-\Phi(c_i)}$ avec $\phi(\cdot)$ la densité de la loi normale centrée réduite, et $\Phi(\cdot)$ la fonction de répartition de la loi normale centreé réduite.\;
-		 $\sigma^2_i=1-\mu_i(\mu_i-c_i)$\;
-		 ${\bm z}_i=\begin{bmatrix}\mu_i & 0 & \cdots & 0 \end{bmatrix}^T$\;
-		 ${\bm D}_i=\text{diag}(\sigma^2_i,1,\ldots,1)$\;
-		Calculer les paramètres de la densité tronquée:
-		\begin{align*}
+		 $c_i=-\dfrac{{\bm \gamma}_i^T \PostMeanQ^c}{({\bm \gamma}_i^T \PostCovQ^c {\bm \gamma}_i)^{1/2}}$
+		 \State $\mu_i=\dfrac{\phi(c_i)}{1-\Phi(c_i)}$ avec $\phi(\cdot)$ la densité de la loi normale centrée réduite, et $\Phi(\cdot)$ la fonction de répartition de la loi normale centreé réduite.
+		 \State $\sigma^2_i=1-\mu_i(\mu_i-c_i)$
+		 \State ${\bm z}_i=\begin{bmatrix}\mu_i & 0 & \cdots & 0 \end{bmatrix}^T$
+		 \State ${\bm D}_i=\text{diag}(\sigma^2_i,1,\ldots,1)$
+		\State Calculer les paramètres de la densité tronquée:
+		\State \begin{align*}
 		\begin{split}
 		\PostMeanQ^c&={\bm T}_i {\bm W}_i^{1/2} {\bm S}_i ^T{\bm z}_i + \PostMeanQ^c\\
 		\PostCovQ^c&={\bm T}_i {\bm W}_i^{1/2} {\bm S}_i^T {\bm D}_i  {\bm S}_i {\bm W}_i^{1/2} {\bm T}_i ^T \\
 		\end{split}
 		\end{align*}
-	}
-	\Output{$\PostMeanQ^c$ et $\PostCovQ^c$}
+	\EndFor
+	\State \textbf{Sorties}: $\PostMeanQ^c$ et $\PostCovQ^c$
+	\end{algorithmic}
 	\caption{Contrainte de positivité sur $\VecQSource$ par troncature de la densité de $p(\VecQSource | \PosSource, \VecObs)$}
 	\label{algo_PCO}
 \end{algorithm}

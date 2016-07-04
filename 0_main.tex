@@ -111,7 +111,12 @@
 %<<<<<<< HEAD
 
 % Pour écrire des algorithmes en pseudo-code:
-\usepackage[ruled, lined, linesnumbered, algochapter]{algorithm2e}
+%\usepackage[ruled, lined, linesnumbered, algochapter]{algorithm2e}
+\usepackage{algorithm, algpseudocode}
+\usepackage{caption}
+\captionsetup[ruled]{labelsep=period}
+\makeatletter
+
 
 
 
@@ -186,8 +191,8 @@
 
 % Titre
 \title{Inférence bayésienne adaptative pour la reconstruction de source en dispersion atmosphérique}
-\date{2016}
-\author{Harizo Rajaona \\ v0.1}
+\date{version 2016-06-23}
+\author{Harizo Rajaona}
 
 
 \begin{document}
@@ -195,18 +200,11 @@
 
 	\maketitle
 
-%Print the glossary
-\newpage
-
-\input{acronyms}
-
-\newpage
-
-\listoffigures
-
-
 	
 	\tableofcontents
+	
+	\newpage
+	\listoffigures
 	
 	%\input{liste_symboles}
 	
