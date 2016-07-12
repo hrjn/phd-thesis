@@ -33,7 +33,7 @@
 	En dispersion atmosphérique, le problème direct peut ainsi se traduire par la donnée des paramètres de la source au modèle de dispersion, qui va produire le champ de concentration résultant. Cela revient bien à définir le problème inverse comme étant la reconstruction des paramètres de la source à partir des mesures de concentrations aux capteurs. Nous décrivons dans les paragraphes suivants les différentes approches existant dans la littérature qui permettent de résoudre ce problème. Des éléments complémentaires sur la question sont également disponibles dans \cite{Rao2007}. Dans un souci de brièveté, par la suite nous qualifierons de "problèmes STE" (\textit{source term estimation}) toutes les études de cas visant à estimer les paramètres d'une ou de plusieurs sources inconnues.\\
 	
 	
- \subsection{\NdPA{Rétro-transport et modèles rétrogrades}}
+ \subsection{{Rétro-transport et modèles rétrogrades}}
  
  Une première possibilité consiste à étudier le problème dual associé à l'équation d'advection-diffusion  \eqref{eqn_advection_diffusion}, en inversant la flèche du temps, et par conséquent la direction du vent.  Par le principe de symétrie présenté dans \cite{Hourdin2006a}, on peut alors introduire la notion de \textit{rétro-transport} ou \textit{backtracking} en  réécrivant l'équation d'advection-diffusion sous la forme : 
  
@@ -42,7 +42,7 @@
  \dfrac{-\partial C^*}{\partial t} - \nabla \cdot(C^*\bm{\vec{u}}) = \nabla \cdot (\bm{K}\nabla C^*) + \VecObs
  \end{equation}
  
- où $C^*$ est un champ de concentrations conjuguées, ou \textit{rétro-concentrations}, dont les valeurs sont obtenues par des rétro-rejets virtuels depuis les capteurs vers la source. Le modèle de dispersion associé à cette démarche duale est alors appelé \NdPA{\textit{modèle de rétro-dispersion}, ou \textit{modèle rétrograde}}. Cette démarche revient ainsi à transformer le champ d'émission \NdFS{obtenu par l'équation \eqref{eqn_advection_diffusion}} en un champ de rétro-émissions issues des capteurs, comme illustré sur les figures \ref{schema_probleme_direct} et \ref{schema_probleme_inverse}, et ainsi fournir une estimation du terme source.\\
+ où $C^*$ est un champ de concentrations conjuguées, ou \textit{rétro-concentrations}, dont les valeurs sont obtenues par des rétro-rejets virtuels depuis les capteurs vers la source. Le modèle de dispersion associé à cette démarche duale est alors appelé {\textit{modèle de rétro-dispersion}, ou \textit{modèle rétrograde}}. Cette démarche revient ainsi à transformer le champ d'émission {obtenu par l'équation \eqref{eqn_advection_diffusion}} en un champ de rétro-émissions issues des capteurs, comme illustré sur les figures \ref{schema_probleme_direct} et \ref{schema_probleme_inverse}, et ainsi fournir une estimation du terme source.\\
  
  \begin{figure}[h]
  	\begin{subfigure}{0.5\textwidth}
@@ -58,7 +58,7 @@
  	\caption{Exemple illustrant la relation entre une source unique $S$ et trois capteurs $R_1,R_2,R_3$ sur un problème en deux dimensions pour les approches en "direct" (\ref{schema_probleme_direct}) et en "adjoint" (\ref{schema_probleme_inverse}). }
  \end{figure}
  
- Dans \cite{Flesch1995}, un modèle \NdPA{rétrograde} lagrangien est construit pour estimer le profil de rejet d'une source surfacique.  Cette méthode est également appliquée dans \cite{Pudykiewicz1998}, où la position et l'intensité du terme source de Tchernobyl sont reconstruits. De même, dans \cite{Hourdin2006b} le principe du \textit{backtracking} est appliqué à un modèle eulérien pour retrouver la source de la campagne ETEX\footnote{L’expérience \textit{European Tracer EXperiment 1} (ETEX-1), menée en 1994,  a consisté à mesurer et étudier l'impact à l'échelle européenne de rejets de gaz traceurs passifs émis depuis une source située dans la ville de Monterfil, en Bretagne.}.\\
+ Dans \cite{Flesch1995}, un modèle {rétrograde} lagrangien est construit pour estimer le profil de rejet d'une source surfacique.  Cette méthode est également appliquée dans \cite{Pudykiewicz1998}, où la position et l'intensité du terme source de Tchernobyl sont reconstruits. De même, dans \cite{Hourdin2006b} le principe du \textit{backtracking} est appliqué à un modèle eulérien pour retrouver la source de la campagne ETEX\footnote{L’expérience \textit{European Tracer EXperiment 1} (ETEX-1), menée en 1994,  a consisté à mesurer et étudier l'impact à l'échelle européenne de rejets de gaz traceurs passifs émis depuis une source située dans la ville de Monterfil, en Bretagne.}.\\
  
  \subsection{Formulation linéaire du problème et optimisation}
  \label{subsection_MCO}
@@ -120,14 +120,14 @@ Dans le cadre de statistiques gaussiennes, la fonction-coût peut alors s'écrir
 \label{eq_cost_forme2}
 \end{equation}
 
-\NdFS{Dans l'hypothèse où les éléments du vecteur de bruit sont indépendants et identiquement distribués, alors la matrice $\MatB$ est diagonale:}
+{Dans l'hypothèse où les éléments du vecteur de bruit sont indépendants et identiquement distribués, alors la matrice $\MatB$ est diagonale:}
 	
 	\begin{equation}
-	\NdFS{
+	{
 		\MatB = \sigma_R^2 \MatId
 	}
 	\end{equation}
-\NdFS{où $\sigma_R^2$ est la variance d'erreur.} Plusieurs travaux dans la littérature ont recours a cette formulation: \\
+{où $\sigma_R^2$ est la variance d'erreur.} Plusieurs travaux dans la littérature ont recours a cette formulation: \\
 \begin{itemize}
 	\item Dans \cite{Kathirgamanathan2002}, un point source instantané est estimé à l'aide d'une méthode des moindres carrés, cette source étant caractérisée par sa masse totale émise, sa position et son instant d'émission. L'étude qui y est menée met notamment l'accent sur l'influence du dimensionnement du réseau de capteurs sur la performance de la reconstruction : au moins trois points de mesure sont nécessaires, et la distance entre les différents capteurs influe sur la qualité de l'estimation.\\
 	
@@ -141,7 +141,7 @@ Dans le cadre de statistiques gaussiennes, la fonction-coût peut alors s'écrir
 		\item  on exploite ensuite les observations disponibles à l'instant $t$ pour corriger les paramètres du modèle en les comparant avec l'ébauche. \\
 	\end{enumerate}
 	
-	 \item \cite{Issartel2005} mentionne le principe d'\textit{illumination}, qui est une mesure quantitative de la représentativité des mesures dans le temps et l'espace. Dans le cadre d'un modèle adjoint, l'illumination permet ainsi de caractériser des zones qui ne sont pas forcément couvertes par les rétro-émissions issues des capteurs, par exemple si la zone considérée est relativement éloignée \NdPA{de tout point de mesure}. Cependant, si l'information d'illumination est utilisée pour inverser un terme source, alors elle aura tendance à fortement favoriser les solutions proches des capteurs. Pour compenser ce problème, une phase de \textit{renormalisation} est introduite (\cite{Issartel2007} et \cite{Sharan2009}) pour équilibrer l'information apportée par chacun des capteurs. D'abord utilisée à grande échelle, cette méthodologie a récemment été validée à l'échelle locale dans \cite{Singh2014}, et dans un contexte urbain par \cite{Kumar2015}. \\
+	 \item \cite{Issartel2005} mentionne le principe d'\textit{illumination}, qui est une mesure quantitative de la représentativité des mesures dans le temps et l'espace. Dans le cadre d'un modèle adjoint, l'illumination permet ainsi de caractériser des zones qui ne sont pas forcément couvertes par les rétro-émissions issues des capteurs, par exemple si la zone considérée est relativement éloignée {de tout point de mesure}. Cependant, si l'information d'illumination est utilisée pour inverser un terme source, alors elle aura tendance à fortement favoriser les solutions proches des capteurs. Pour compenser ce problème, une phase de \textit{renormalisation} est introduite (\cite{Issartel2007} et \cite{Sharan2009}) pour équilibrer l'information apportée par chacun des capteurs. D'abord utilisée à grande échelle, cette méthodologie a récemment été validée à l'échelle locale dans \cite{Singh2014}, et dans un contexte urbain par \cite{Kumar2015}. \\
 
 \end{itemize}
 
@@ -152,7 +152,7 @@ Bien souvent, le nombre d'observations à notre disposition est limité, à caus
 De nombreux problèmes physiques sont intrinsèquement mal-posés, et des solutions existent pour les \textit{régulariser}, c'est-à-dire leur appliquer une transformation qui permet de revenir à un problème bien posé. Parmi ces méthodes, la \textit{régularisation de Tikhonov} \cite{Tikhonov1963} est la plus fréquemment employée: elle consiste à ajouter un terme $\lambda_B ||\VecSigmaB||_2$ dit \textit{régularisant} à l'expression de la fonction-coût $\CostF_2$, qui devient alors:
 
  \begin{equation}
- \NdFS{
+ {
  \mathcal{J}_{2_B}(\VecSigma) = ||\VecObs - \MatH \VecSigma||_2^2 + \lambda_B ||\VecSigma||_2
  \label{eq_cost_MCO_reg}
 }
@@ -168,7 +168,7 @@ De nombreux problèmes physiques sont intrinsèquement mal-posés, et des soluti
   L'équation \eqref{eq_cost_forme2} devient alors \cite{Winiarek2011}: 
  
 \begin{equation}
-\mathcal{J}_{2_B}(\VecSigma) = \dfrac{1}{2}(\VecObs - \MatH \VecSigma)^T \MatR^{-1}(\VecObs - \MatH\VecSigma) + \dfrac{1}{2}(\VecSigma - \VecSigmaB)^T\MatB^{-1}(\VecSigma - \NdPA{\VecSigma_b})
+\mathcal{J}_{2_B}(\VecSigma) = \dfrac{1}{2}(\VecObs - \MatH \VecSigma)^T \MatR^{-1}(\VecObs - \MatH\VecSigma) + \dfrac{1}{2}(\VecSigma - \VecSigmaB)^T\MatB^{-1}(\VecSigma - {\VecSigma_b})
 \label{eq_cost_reg_forme2}
 \end{equation}
 
@@ -189,10 +189,10 @@ Une application de cette approche à la reconstruction de sources multiples est 
 
 Il est possible d'établir une analogie entre les méthodes d'optimisation précédemment mentionnées et les approches se basant sur des calculs de lois de probabilité.
 
-En effet, dans un cadre probabiliste, \NdFS{l'optimisation sans terme régularisant est équivalente à la résolution d'un} problème de \textit{maximum de vraisemblance}. En pratique, le fait de minimiser la fonction-coût $\CostF_2$ revient ainsi à déterminer la grandeur suivante:
+En effet, dans un cadre probabiliste, {l'optimisation sans terme régularisant est équivalente à la résolution d'un} problème de \textit{maximum de vraisemblance}. En pratique, le fait de minimiser la fonction-coût $\CostF_2$ revient ainsi à déterminer la grandeur suivante:
 
 \begin{equation}
-\NdFS{
+{
 \widehat{\VecSigma_2} = \argmax_\VecSigma~ \log p(\VecObs | \VecSigma)
 \label{eq_ML_MCO}
 }
@@ -202,7 +202,7 @@ où $p(\VecObs | \VecSigma)$ est la vraisemblance des observations pour un terme
 De même, le fait de régulariser la fonction-coût par l'ajout d'un terme d'ébauche revient à adopter une démarche \textit{bayésienne}\footnote{Nous décrirons plus en détail les principes fondamentaux de la statistique bayésienne dans le prochain chapitre.}, où le terme régularisant représente une information a priori $p(\VecSigma)$, et l'estimateur recherché devient alors le maximum de la loi a posteriori de $\VecSigma$: 
 
 \begin{equation}
-\NdFS{
+{
 \begin{split}
 \widehat{\VecSigma_{2_B}} &= \argmax_\VecSigma~ \log p(\VecSigma | \VecObs) \\
  &= \argmax_ \VecSigma \left(\log p(\VecObs | \VecSigma) + \log p(\VecSigma)\right)
@@ -211,7 +211,7 @@ De même, le fait de régulariser la fonction-coût par l'ajout d'un terme d'éb
 }
 \end{equation}
 
-\NdFS{
+{
 Dans le cas de la régularisation $L_1$ présenté à l'équation \eqref{eq_MCO_L1}, la démarche est équivalente à l'introduction d'une information a priori de parcimonie sous la forme d'une loi laplacienne pour $p(\VecSigma)$. Cette démarche de maximum a posteriori est alors équivalente à l'estimateur \textit{Least Absolute Shrinkage and Selection Operator} (LASSO) \cite{Tibshirani1996}.\\
 }
 \subsection{Formulation générale et méthodes de résolution}
@@ -231,11 +231,11 @@ où :
 	\item $\MatC(\PosSource^{(i)})$ est la concentration résultant d'un rejet unitaire de la $i$-ème source.\\
 \end{itemize}
 
-\NdFS{Ici, la relation source-récepteur ne suppose désormais qu'une discrétisation temporelle sur les $T_s$ dimensions du vecteur $\VecQSource$, contrairement à un cas maillé où  la dimension du problème est de $N_xN_yN_zT_s$.} Toutefois, \NdPA{il devient impossible d'obtenir directement les paramètres $\PosSource$ et $\VecQSource$ de la source, contrairement à l'équation \eqref{eq_relation_SR_non_parametrique} où $\VecSigma$ peut se calculer analytiquement grâce à la nature linéaire du système à résoudre. En conséquence, d'autres méthodes plus appropriées sont nécessaires pour résoudre le problème inverse.} 
+{Ici, la relation source-récepteur ne suppose désormais qu'une discrétisation temporelle sur les $T_s$ dimensions du vecteur $\VecQSource$, contrairement à un cas maillé où  la dimension du problème est de $N_xN_yN_zT_s$.} Toutefois, {il devient impossible d'obtenir directement les paramètres $\PosSource$ et $\VecQSource$ de la source, contrairement à l'équation \eqref{eq_relation_SR_non_parametrique} où $\VecSigma$ peut se calculer analytiquement grâce à la nature linéaire du système à résoudre. En conséquence, d'autres méthodes plus appropriées sont nécessaires pour résoudre le problème inverse.} 
 
 \subsubsection{Algorithmes évolutionnaires}
 
-Le gain en complexité du problème d'optimisation à résoudre \NdFS{avec} la formulation non-linéaire nécessite une approche suffisamment robuste afin de réussir à traiter les fonctions-coût résultantes. Cela est possible par le biais de \textit{métaheuristiques} (méthodes d'optimisation généralement appliquées des problèmes à forte complexité combinatoire). Parmi celles-ci, les \textit{approches évolutionnaires}, et en particulier les \textit{algorithmes génétiques} ont été utilisés à plusieurs reprises pour résoudre des problèmes STE.\\
+Le gain en complexité du problème d'optimisation à résoudre {avec} la formulation non-linéaire nécessite une approche suffisamment robuste afin de réussir à traiter les fonctions-coût résultantes. Cela est possible par le biais de \textit{métaheuristiques} (méthodes d'optimisation généralement appliquées des problèmes à forte complexité combinatoire). Parmi celles-ci, les \textit{approches évolutionnaires}, et en particulier les \textit{algorithmes génétiques} ont été utilisés à plusieurs reprises pour résoudre des problèmes STE.\\
 Les algorithmes évolutionnaires s'inspirent du principe de l'évolution darwinienne des populations biologiques, et leur construction s'appuie sur le fait que l'apparition d'espèces adaptées au milieu est la conséquence de la conjonction de deux phénomènes distincts : 
 
  \begin{itemize}
@@ -264,7 +264,7 @@ Les algorithmes évolutionnaires s'inspirent du principe de l'évolution darwini
  
  \subsubsection{Méthodes bayésiennes par simulation stochastique}
  
- On a vu qu'il est possible de voir l'estimation du terme source sous un angle bayésien  comme étant la recherche du maximum  de la loi a posteriori de ses paramètres. Au lieu de se limiter à une estimation ponctuelle, une meilleure alternative consiste à calculer l'ensemble de cette distribution a posteriori, afin de pouvoir bénéficier \NdFS{de l'ensemble de l'information statistique} disponible sur les paramètres à estimer. 
+ On a vu qu'il est possible de voir l'estimation du terme source sous un angle bayésien  comme étant la recherche du maximum  de la loi a posteriori de ses paramètres. Au lieu de se limiter à une estimation ponctuelle, une meilleure alternative consiste à calculer l'ensemble de cette distribution a posteriori, afin de pouvoir bénéficier {de l'ensemble de l'information statistique} disponible sur les paramètres à estimer. 
  
  L'étude menée par \cite{Sohn2002} se penche sur le cas particulier de l'estimation d'une source à l'intérieur d'un bâtiment. Pour cela, un calcul initial simule un nombre $N$ fixé de scénarios $S_1,\dots,S_N$ possibles à partir d'un échantillon de paramètres $\VecTheta_1, \dots, \VecTheta_N$ potentiels de la source. Chaque scénario $S_k$ représente un jeu de mesures simulées issues d'une source de paramètres $\VecTheta_k$. Une fois cette collection constituée, la loi a posteriori suivante est calculée via la règle de Bayes, pour chaque scénario $S_k$:
  
@@ -273,7 +273,7 @@ Les algorithmes évolutionnaires s'inspirent du principe de l'évolution darwini
  p(S_k|\VecObs) = \dfrac{p(S_k)p(\VecObs | S_k)}{p(\VecObs)}
  \end{equation}
  
- Cette première approche permet de caractériser un rejet, \NdFS{et nuance les performances de l'algorithme d'estimation en fonction du mode d'acquisition des mesures de concentrations. La comparaison est faite entre des observations acquises simultanément depuis tous les capteurs, et des observations recueillies de façon séquentielle, capteur par capteur.}
+ Cette première approche permet de caractériser un rejet, {et nuance les performances de l'algorithme d'estimation en fonction du mode d'acquisition des mesures de concentrations. La comparaison est faite entre des observations acquises simultanément depuis tous les capteurs, et des observations recueillies de façon séquentielle, capteur par capteur.}
  
  Toutefois, l'expression analytique de la  loi a posteriori des paramètres de la source n'est  pas accessible de façon directe: du fait de la formulation présentée à l'équation \eqref{eq_SR_nonlineaire}, elle nécessite un calcul du modèle de dispersion à chaque fois qu'un jeu de paramètres doit être évalué. L'exploration systématique de l'espace des paramètres peut alors se révéler très coûteuse en temps de calcul. Il devient alors nécessaire d'introduire des méthodes numériques afin d'explorer de façon optimale cet espace: c'est l'objet des techniques de \textit{simulation stochastique}, aussi appelées \textit{méthodes de Monte-Carlo}.
 

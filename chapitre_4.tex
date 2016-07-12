@@ -1,6 +1,6 @@
-\chapter{\NdFS{AMIS et modèle lagrangien rétrograde}}
+\chapter{{AMIS et modèle lagrangien rétrograde}}
 
-\NdFS{La méthodologie utilisée dans le Chapitre 3 introduit une dépendance directe (linéaire) du nombre d'appels au modèle de dispersion avec la quantité de particules échantillonnées. Pour les cas les plus simples, il est possible de se limiter à des modèles de dispersion suffisamment rapides, mais la situation change dès qu'il s'agit de considérer un contexte plus élaboré (par exemple en présence d'obstacles). Il devient en effet nécessaire d'utiliser des outils de simulation permettant une meilleure représentation des phénomènes de dispersion. Cependant, le nombre et la complexité des calculs supplémentaires effectués au sein de ces outils rallongent le temps d'exécution du modèle de dispersion, et par conséquent réduisent la vitesse à laquelle l'opération de reconstruction de la source est accomplie.\\
+{La méthodologie utilisée dans le Chapitre 3 introduit une dépendance directe (linéaire) du nombre d'appels au modèle de dispersion avec la quantité de particules échantillonnées. Pour les cas les plus simples, il est possible de se limiter à des modèles de dispersion suffisamment rapides, mais la situation change dès qu'il s'agit de considérer un contexte plus élaboré (par exemple en présence d'obstacles). Il devient en effet nécessaire d'utiliser des outils de simulation permettant une meilleure représentation des phénomènes de dispersion. Cependant, le nombre et la complexité des calculs supplémentaires effectués au sein de ces outils rallongent le temps d'exécution du modèle de dispersion, et par conséquent réduisent la vitesse à laquelle l'opération de reconstruction de la source est accomplie.\\
 	
 	Dans ce chapitre, nous proposons une modification de l'approche initiale, en remplaçant l'utilisation d'un modèle de dispersion direct par celle d'un modèle rétrograde. Cette substitution permet à la fois:\\
 	\begin{itemize}
@@ -8,7 +8,7 @@
 		\item d'exploiter des résultats de rétro-propagation pour construire une procédure d'initialisation améliorée de la loi de proposition de l'AMIS. \\
 	\end{itemize}
 }
-\NdPA{
+{
 \section{Le système de modélisation PMSS}
 }
 \subsection{L'approche lagrangienne de la dispersion atmosphérique}
@@ -51,20 +51,20 @@ où $\Omega$ est le volume défini par le domaine d'étude, $S(\Vecx',t')$ est l
 	\label{fig_schema_lagrangien}
 \end{figure}
 
-Afin de calculer le champ d'écoulement \NdFS{$\Vecu$} auquel sont soumises les PL, plusieurs méthodes sont disponibles. Il est par exemple possible de résoudre les équations de la mécanique des fluides via un outil de simulation de type CFD, ce qui permet une modélisation fine des phénomènes physiques mis en jeu. Une autre possibilité consiste à avoir recours à une simulation dite \textit{CFD simplifiée}, où le champ de vent est interpolé à partir des mesures d'une ou plusieurs stations météorologiques tout en prenant en compte la topographie du terrain. C'est \NdFS{ce type d'approche qui est présenté dans le paragraphe suivant.}
+Afin de calculer le champ d'écoulement {$\Vecu$} auquel sont soumises les PL, plusieurs méthodes sont disponibles. Il est par exemple possible de résoudre les équations de la mécanique des fluides via un outil de simulation de type CFD, ce qui permet une modélisation fine des phénomènes physiques mis en jeu. Une autre possibilité consiste à avoir recours à une simulation dite \textit{CFD simplifiée}, où le champ de vent est interpolé à partir des mesures d'une ou plusieurs stations météorologiques tout en prenant en compte la topographie du terrain. C'est {ce type d'approche qui est présenté dans le paragraphe suivant.}
 
 \subsection{La chaîne de calcul SWIFT-SPRAY}
 
-\textit{Parallel Micro-SWIFT-SPRAY} (PMSS) est une chaîne de calcul constituée de deux éléments distincts: un outil de CFD simplifiée (SWIFT) et un modèle de dispersion lagrangien stochastique (SPRAY). \NdPA{PMSS est conçu pour être appliqué} dans des études \NdPA{micro-météorologiques en milieu bâti (site industriel, milieu urbain). La parallélisation rend possible son utilisation sur des domaines plus grands, à l'exemple du cas AIRCITY}\cite{Moussafir2014} où le modèle a été exécuté sur l'ensemble de la ville de Paris.\\
+\textit{Parallel Micro-SWIFT-SPRAY} (PMSS) est une chaîne de calcul constituée de deux éléments distincts: un outil de CFD simplifiée (SWIFT) et un modèle de dispersion lagrangien stochastique (SPRAY). {PMSS est conçu pour être appliqué} dans des études {micro-météorologiques en milieu bâti (site industriel, milieu urbain). La parallélisation rend possible son utilisation sur des domaines plus grands, à l'exemple du cas AIRCITY}\cite{Moussafir2014} où le modèle a été exécuté sur l'ensemble de la ville de Paris.\\
 
-\NdPA{
+{
 \subsubsection{PSWIFT}
 }
-Le modèle \NdPA{PSWIFT} permet de produire des champs de vent 3D en exploitant différents types de données météorologiques sur un même site (profils de vent et de température, stations de mesures, sorties de modèles météorologiques de prévision). Il permet notamment de prendre en compte la topographie du milieu, la présence d'obstacles tels que des bâtiments, l'occupation des sols ou encore l'influence de la stabilité atmosphérique. Son fonctionnement \NdFS{est illustré par la figure \ref{fig_swift_exemple}, et } peut être résumé en quatre étapes :  \\
+Le modèle {PSWIFT} permet de produire des champs de vent 3D en exploitant différents types de données météorologiques sur un même site (profils de vent et de température, stations de mesures, sorties de modèles météorologiques de prévision). Il permet notamment de prendre en compte la topographie du milieu, la présence d'obstacles tels que des bâtiments, l'occupation des sols ou encore l'influence de la stabilité atmosphérique. Son fonctionnement {est illustré par la figure \ref{fig_swift_exemple}, et } peut être résumé en quatre étapes :  \\
 
 \begin{enumerate}
 	\item Dans un premier temps, les mesures météorologiques reçues en entrée sont interpolées sur les différents points constituant une version discrétisée du domaine.
-	\item Dans un deuxième temps, l'effet des obstacles présents dans le domaine sur l'écoulement \NdPA{est modélisé} via la création de zones spécifiques dans le voisinage de ces obstacles où le champ de vitesse est calculé \NdPA{par des relations analytiques.}
+	\item Dans un deuxième temps, l'effet des obstacles présents dans le domaine sur l'écoulement {est modélisé} via la création de zones spécifiques dans le voisinage de ces obstacles où le champ de vitesse est calculé {par des relations analytiques.}
 	\item La troisième étape consiste à ajuster le champ de vent en appliquant un principe de conservation de la masse.
 	\item Enfin, la dernière étape consiste à calculer la turbulence intrinsèque à l'écoulement modélisé.\\
 \end{enumerate}
@@ -75,16 +75,16 @@ Le modèle \NdPA{PSWIFT} permet de produire des champs de vent 3D en exploitant 
 	\caption{Exemple de calcul d'un champ de vent autour d'un obstacle avec SWIFT, avant (à gauche) et après (à droite) l'ajustement du champ}
 	\label{fig_swift_exemple}
 \end{figure}
-En sortie de cet enchaînement de calculs, on obtient un champ de vent 3D qui peut alors directement être exploité par le modèle de dispersion \NdPA{PSPRAY}.
+En sortie de cet enchaînement de calculs, on obtient un champ de vent 3D qui peut alors directement être exploité par le modèle de dispersion {PSPRAY}.
 
 
-\NdPA{
+{
 \subsubsection{PSPRAY}
 }
 
-\NdPA{PSPRAY} est un modèle de dispersion lagrangien stochastique dont les principes de base suivent les mécanismes présentés à la section \ref{part_lagrangian}. L'implémentation de \NdPA{PSPRAY} repose sur le critère dit de \textit{well-mixed condition} permettant de donner une formulation explicite aux termes $a_i$ et $b_{i,j}$ de l'équation \eqref{eq_langevin} , et présenté en détail dans les travaux de \cite{Thomson1987}.
+{PSPRAY} est un modèle de dispersion lagrangien stochastique dont les principes de base suivent les mécanismes présentés à la section \ref{part_lagrangian}. L'implémentation de {PSPRAY} repose sur le critère dit de \textit{well-mixed condition} permettant de donner une formulation explicite aux termes $a_i$ et $b_{i,j}$ de l'équation \eqref{eq_langevin} , et présenté en détail dans les travaux de \cite{Thomson1987}.
 
-En pratique, plusieurs fonctionnalités supplémentaires sont implémentées dans \NdPA{PSPRAY}, telles que: \\
+En pratique, plusieurs fonctionnalités supplémentaires sont implémentées dans {PSPRAY}, telles que: \\
 
 \begin{itemize}
 	\item le "rebond" des particules sur les obstacles,
@@ -92,7 +92,7 @@ En pratique, plusieurs fonctionnalités supplémentaires sont implémentées dan
 	\item la prise en compte des différents types de dépôts (secs ou humides).\\
 \end{itemize}
 
-\NdFS{Ces fonctionnalités permettent de représenter de façon réaliste le panache d'un rejet en présence d'obstacles, comme présenté sur la figure \ref{fig_spray_exemple}.}
+{Ces fonctionnalités permettent de représenter de façon réaliste le panache d'un rejet en présence d'obstacles, comme présenté sur la figure \ref{fig_spray_exemple}.}
 
 \begin{figure}[h!]
 	\centering
@@ -101,20 +101,20 @@ En pratique, plusieurs fonctionnalités supplémentaires sont implémentées dan
 	\label{fig_spray_exemple}
 \end{figure}
 
-La combinaison de \NdPA{PSWIFT} et \NdPA{PSPRAY} permet ainsi de calculer un champ de concentration sur le domaine étudié, connaissant les paramètres du terme source qui sont soumis en entrée du modèle \NdPA{PSPRAY}. Dans le contexte de ce chapitre, la chaîne de calcul PMSS permet de:
+La combinaison de {PSWIFT} et {PSPRAY} permet ainsi de calculer un champ de concentration sur le domaine étudié, connaissant les paramètres du terme source qui sont soumis en entrée du modèle {PSPRAY}. Dans le contexte de ce chapitre, la chaîne de calcul PMSS permet de:
 
 \begin{itemize}
 	\item générer un jeu d'observations synthétiques en simulant un rejet induit par une source que l'on va chercher à retrouver: pour cela, on calcule les valeurs du champ de concentrations en un nombre fini de points du domaine que nous définirons comme étant les observations fournies par les capteurs,
 	\item construire les matrices source-récepteur lors de l'exécution de l'algorithme AMIS, nécessaires au processus d'estimation du terme source.\\
 \end{itemize}
 
-\subsection{Dualité \NdPA{direct-rétrograde}}
+\subsection{Dualité {direct-rétrograde}}
 
-L'optimisation du calcul des matrices source-récepteur suivant le modèle de l'équation \eqref{eq_AE_4} est un point important: en effet dans une approche directe telle que présentée dans le chapitre précédent, \NdFS{chaque construction de matrice source-récepteur nécessite une exécution complète du calcul de dispersion}, ce qui rend l'opération d'estimation du terme source très coûteuse en temps de calcul.\\
+L'optimisation du calcul des matrices source-récepteur suivant le modèle de l'équation \eqref{eq_AE_4} est un point important: en effet dans une approche directe telle que présentée dans le chapitre précédent, {chaque construction de matrice source-récepteur nécessite une exécution complète du calcul de dispersion}, ce qui rend l'opération d'estimation du terme source très coûteuse en temps de calcul.\\
 
-Nous proposons dans la suite de ce chapitre une amélioration du processus d'estimation privilégiant le calcul des matrices source-récepteur par une approche de type \NdPA{rétrograde}. Cette méthodologie a initialement été introduite dans \cite{Keats2007} pour ensuite être appliquée sur un algorithme d'estimation de type MCMC, \NdHR{nous en reprenons les notations pour en rappeler les bases ci-après.}\\
+Nous proposons dans la suite de ce chapitre une amélioration du processus d'estimation privilégiant le calcul des matrices source-récepteur par une approche de type {rétrograde}. Cette méthodologie a initialement été introduite dans \cite{Keats2007} pour ensuite être appliquée sur un algorithme d'estimation de type MCMC, {nous en reprenons les notations pour en rappeler les bases ci-après.}\\
 
-\NdHR{
+{
 	On se place dans le domaine spatio-temporel $\Omega \times [0,T]$, et on considère une source $Q$ située au point $\PosSource$ de l'espace, de débit massique constant $q_s$, et de temps d'activation et d'arrêt respectifs $t_{on}$ et $t_{off}$ : 
 
 		\begin{equation}
@@ -237,11 +237,11 @@ C(\Vecx_{R_i}, t_{R_i}) = C^* (\PosSource, t_s)
 %\end{equation}
 %
 
-\subsection{Intégration d'un modèle \NdPA{rétrograde} au processus d'estimation}
+\subsection{Intégration d'un modèle {rétrograde} au processus d'estimation}
 
 \subsubsection{Utilisation de RetroSPRAY dans l'AMIS}
 
- \NdFS{PMSS contient une implémentation rétrograde du modèle SPRAY, appelée Retro-SPRAY, qui procède à la résolution en mode inverse des équations de Langevin (le détail des calculs est développé dans \cite{Flesch1995} et \cite{Wilson2009}).} \\
+ {PMSS contient une implémentation rétrograde du modèle SPRAY, appelée Retro-SPRAY, qui procède à la résolution en mode inverse des équations de Langevin (le détail des calculs est développé dans \cite{Flesch1995} et \cite{Wilson2009}).} \\
 %
 %\begin{equation}
 %\begin{split}
@@ -280,7 +280,7 @@ C(R_{N_c},t_{T_c} | \VecTheta, t'_1) & C(R_{N_c},t_{T_c} | \VecTheta, t'_2) & \c
 \label{eq_matrix_forward}
 \end{equation}
 
-En appliquant la relation de dualité \NdPA{direct-rétrograde}, dans l'espace dual où le modèle \NdPA{rétrograde} opère, les sources deviennent des "rétro-capteurs", et les capteurs deviennent des "rétro-sources". On définit alors $C^*(\VecTheta,t'_n | R_i, t_j)$ comme la rétro-concentration mesurée au point $\VecTheta$ à l'instant $t'_n$ provenant d'une rétro-source située à la position $R_i$ et ayant émis un rétro-rejet unitaire à l'instant $t_j$. La version \NdPA{rétrograde} de $\MatC^f$ s'écrit alors:
+En appliquant la relation de dualité {direct-rétrograde}, dans l'espace dual où le modèle {rétrograde} opère, les sources deviennent des "rétro-capteurs", et les capteurs deviennent des "rétro-sources". On définit alors $C^*(\VecTheta,t'_n | R_i, t_j)$ comme la rétro-concentration mesurée au point $\VecTheta$ à l'instant $t'_n$ provenant d'une rétro-source située à la position $R_i$ et ayant émis un rétro-rejet unitaire à l'instant $t_j$. La version {rétrograde} de $\MatC^f$ s'écrit alors:
 
 \begin{equation}
 \MatC^b (\VecTheta)= 
@@ -301,19 +301,19 @@ Dans l'algorithme AMIS, au moment de calculer la vraisemblance de chaque particu
 
 \subsubsection{Avantages}
 
-\NdPA{L'utilisation de l'approche rétrograde} permet de n'avoir à faire qu'un seul calcul de rétro-dispersion par capteur, qui donne alors l'ensemble des valeurs de rétro-concentrations sur le domaine. \NdFS{Ces opérations sont faites en amont du schéma itératif de l'AMIS: le domaine est divisé en plusieurs mailles sur lesquelles sont pré-calculées valeurs de $C^*$. A partir de ces résultats, une série de fichiers binaires est créée puis stockée sur le disque. Ainsi, au moment de l'estimation du terme source, les valeurs à insérer dans les matrices source-récepteur sont déjà disponibles: il suffit d'associer les positions des particules tirées aux centres des mailles les plus proches sur lesquelles les valeurs de $C^*$ ont été obtenues. Pour cela, il suffit alors d'effectuer une opération de lecture sur les fichiers binaires contenant les rétro-concentrations, ce qui permet ainsi de ne plus avoir à lancer le modèle de dispersion à chaque nouvelle particule tirée lors de la phase d'échantillonnage de l'AMIS.\\}
+{L'utilisation de l'approche rétrograde} permet de n'avoir à faire qu'un seul calcul de rétro-dispersion par capteur, qui donne alors l'ensemble des valeurs de rétro-concentrations sur le domaine. {Ces opérations sont faites en amont du schéma itératif de l'AMIS: le domaine est divisé en plusieurs mailles sur lesquelles sont pré-calculées valeurs de $C^*$. A partir de ces résultats, une série de fichiers binaires est créée puis stockée sur le disque. Ainsi, au moment de l'estimation du terme source, les valeurs à insérer dans les matrices source-récepteur sont déjà disponibles: il suffit d'associer les positions des particules tirées aux centres des mailles les plus proches sur lesquelles les valeurs de $C^*$ ont été obtenues. Pour cela, il suffit alors d'effectuer une opération de lecture sur les fichiers binaires contenant les rétro-concentrations, ce qui permet ainsi de ne plus avoir à lancer le modèle de dispersion à chaque nouvelle particule tirée lors de la phase d'échantillonnage de l'AMIS.\\}
 
 Même si cette opération n'est plus directement intégrée à l'algorithme d'estimation, elle demande néanmoins une certaine quantité de calculs. Cette dernière peut toutefois être réduite si on choisit de paralléliser l'opération de génération des fichiers binaires de rétro-concentration. Comme il s'agit de tâches parfaitement indépendantes les unes par rapport aux autres, la parallélisation est facilement réalisable (\textit{embarrasingly parallel jobs}). Si on doit générer $n_b$ fichiers binaires en allouant $n_p$ coeurs de calcul par opération de génération, cela requiert la disponibilité de $n_b \times n_p$ coeurs. Si une telle quantité de ressources n'est pas immédiatement disponible, il peut être plus judicieux de créer séquentiellement ces fichiers binaires. L'approche séquentielle est également à privilégier si on ne dispose pas d'une architecture de type \textit{cluster} permettant une parallélisation massive. \\
 
-\NdPA{
+{
 \section{Exemple d'application sur un terrain rural}
 }
 
-Dans cette section, nous présentons un première application sur une situation  simple dans un contexte non-urbain. Il s'agit d'un exemple synthétique dont les données et les paramètres sont issus d'une simulation ayant permis la validation du modèle \NdPA{Retro-SPRAY}.
+Dans cette section, nous présentons un première application sur une situation  simple dans un contexte non-urbain. Il s'agit d'un exemple synthétique dont les données et les paramètres sont issus d'une simulation ayant permis la validation du modèle {Retro-SPRAY}.
 
 \subsection{Présentation du cas-test}
 
-Nous considérons ici un cas-test en milieu rural reproduisant une émission accidentelle depuis un site industriel dans une zone située près de la commune de Beaune, en Bourgogne, en présence d'une topographie réelle \NdPA{vallonnée} (figure \ref{fig_beaune_relief}). 
+Nous considérons ici un cas-test en milieu rural reproduisant une émission accidentelle depuis un site industriel dans une zone située près de la commune de Beaune, en Bourgogne, en présence d'une topographie réelle {vallonnée} (figure \ref{fig_beaune_relief}). 
 
 \begin{figure}[h!]
 	\centering
@@ -341,7 +341,7 @@ Sur toute la durée de la simulation, nous considérons un vent constant en vite
 \subsubsection{Capteurs, source et simulation des observations}
 On considère un réseau de 25 capteurs disposés de façon à couvrir tout le domaine, et placés à une hauteur de \SI{10}{\meter}, égale à celle de la source. Chaque capteur fournit des observations de concentrations moyennes entre 10h05 et 12h00, avec une plage de moyennage de 5 minutes.
 
-Concernant la source, celle-ci est placée dans la partie nord (voir figure \ref{fig_beaune_relief}) afin que le panache résultant couvre une partie suffisante du domaine. Elle est située à une altitude de \SI{10}{\m}, identique à celle des capteurs: \NdFS{le processus d'estimation est limité à} la reconstruction de la position aux coordonnées $(x,y)$. La source émet un rejet unique entre 10h15 et 11h, avec un débit constant de 1850 unités/s. \NdFS{Lors de la simulation des observations, elle est modélisée par un volume de (\SI{15}{\meter}$\times$\SI{15}{\meter}$\times$\SI{10}{\meter}), les valeurs obtenues sont représentées en figure \ref{fig_observations_25CAPTEURS}.}\\
+Concernant la source, celle-ci est placée dans la partie nord (voir figure \ref{fig_beaune_relief}) afin que le panache résultant couvre une partie suffisante du domaine. Elle est située à une altitude de \SI{10}{\m}, identique à celle des capteurs: {le processus d'estimation est limité à} la reconstruction de la position aux coordonnées $(x,y)$. La source émet un rejet unique entre 10h15 et 11h, avec un débit constant de 1850 unités/s. {Lors de la simulation des observations, elle est modélisée par un volume de (\SI{15}{\meter}$\times$\SI{15}{\meter}$\times$\SI{10}{\meter}), les valeurs obtenues sont représentées en figure \ref{fig_observations_25CAPTEURS}.}\\
 
 
 
@@ -394,7 +394,7 @@ Concernant la source, celle-ci est placée dans la partie nord (voir figure \ref
 	\label{fig_observations_25CAPTEURS}
 \end{figure}
 
-\NdFS{
+{
 Il est à noter que pour générer les observations de la figure \ref{fig_observations_25CAPTEURS}, un \textit{run} spécifique du modèle de dispersion a été exécuté, sans réutiliser les valeurs pré-calculées présentes dans les fichiers binaires. Cela entraîne une marge d'incertitude sur les mesures, qu'il est possible d'associer à l'introduction d'une erreur de modèle non-nulle.
 }
 
@@ -448,7 +448,7 @@ Avec ces paramètres, l'algorithme d'estimation parvient à fournir une reconstr
  
  Pour mesurer l'erreur d'estimation du débit, on utilise l'erreur quadratique moyenne définie par:
  \begin{equation}
- \NdFS{
+ {
 	 Err(\tilde{\VecMeanQ}) = \dfrac{1}{T_s} \sum\limits_{i=1}^{T_s}(\VecQSource(i) - \tilde{\VecMeanQ}(i))^2
 	}
  \end{equation}
@@ -462,9 +462,9 @@ Avec ces paramètres, l'algorithme d'estimation parvient à fournir une reconstr
  
  La variance d'observation $\varObs$ est le paramètre qui reflète la "confiance" donnée aux observations $\VecObs$. Comme expliqué au Chapitre 3, elle caractérise l'ensemble des erreurs à l'origine de l'écart entre les valeurs issues du modèle de données et la réalité physique. Comme il a été expliqué précédemment, l'erreur d'observation est une agrégation de diverses sources individuelles d'erreur (modèle, instrumentation...). Sans chercher à mener une analyse approfondie sur la quantification des incertitudes autour des observations, nous cherchons plutôt ici à avoir une vision d'ensemble de l'influence du paramètre $\varObs$ sur la qualité de l'estimation du terme source. Pour cela, on garde les mêmes paramètres que le \textit{benchmark} de la figure \ref{fig_25C_prelim}, on choisit ensuite une plage de valeurs de $\varObs$ à tester, et pour chacune de ces valeurs, on lance 100 \textit{runs} de l'AMIS. Ce dernier faisant intervenir des tirages aléatoires, le fait de considérer les résultats issus d'un nombre suffisant de \textit{runs} permet de voir si la qualité des estimations n'est pas perturbée par ces aspects stochastiques. 
    
-         Concernant la localisation de la source, on observe sur les figures \ref{fig_25C_analyse_varobs_x} et \ref{fig_25C_analyse_varobs_y} que les résultats sont réguliers: l'estimation de la position est bonne pour les valeurs inférieures à $5\times 10^{-6}$ puis se dégrade progressivement jusqu'à \NdPA{ce qu'une zone précise de l'espace devienne difficile à définir} (\ref{varF_x} et \ref{varF_y}).
+         Concernant la localisation de la source, on observe sur les figures \ref{fig_25C_analyse_varobs_x} et \ref{fig_25C_analyse_varobs_y} que les résultats sont réguliers: l'estimation de la position est bonne pour les valeurs inférieures à $5\times 10^{-6}$ puis se dégrade progressivement jusqu'à {ce qu'une zone précise de l'espace devienne difficile à définir} (\ref{varF_x} et \ref{varF_y}).
          
-         Pour le profil d'estimation \NdPA{du débit de rejet} sur la figure \ref{fig_25C_analyse_varobs_q}, celui-ci est relativement bien estimé pour $\varObs=10^{-7}$, les variations étant de plus en plus importantes au fur et à mesure que la valeur de la variance d'observation augmente. Les courbes d'erreur de la figure \ref{fig_25C_varobs_erreurs} donnent un aperçu de l'influence générale de la variance d'observation.
+         Pour le profil d'estimation {du débit de rejet} sur la figure \ref{fig_25C_analyse_varobs_q}, celui-ci est relativement bien estimé pour $\varObs=10^{-7}$, les variations étant de plus en plus importantes au fur et à mesure que la valeur de la variance d'observation augmente. Les courbes d'erreur de la figure \ref{fig_25C_varobs_erreurs} donnent un aperçu de l'influence générale de la variance d'observation.
          
          \begin{figure}[h!]
          	\centering
@@ -474,7 +474,7 @@ Avec ces paramètres, l'algorithme d'estimation parvient à fournir une reconstr
          \end{figure}
          
          
-         Certaines des valeurs estimées pour le débit \NdFS{sont} négatives, or il a été constaté que l'application de la contrainte de positivité a tendance à \NdFS{introduire un biais sur les valeurs de $\tilde{\VecMeanQ}$, comme le montrent les figures \ref{fig_AE_2} et \ref{fig_sansavecPC}.} Il a donc été décidé de ne pas implémenter cette contrainte, car malgré la présence de quelques valeurs négatives, le sens physique des résultats d'estimation est globalement respecté.
+         Certaines des valeurs estimées pour le débit {sont} négatives, or il a été constaté que l'application de la contrainte de positivité a tendance à {introduire un biais sur les valeurs de $\tilde{\VecMeanQ}$, comme le montrent les figures \ref{fig_AE_2} et \ref{fig_sansavecPC}.} Il a donc été décidé de ne pas implémenter cette contrainte, car malgré la présence de quelques valeurs négatives, le sens physique des résultats d'estimation est globalement respecté.
        
 \begin{figure}[h!]
     	\centering
@@ -503,7 +503,7 @@ En examinant ces résultats, on pourrait considérer la valeur $\varObs = 10^{-7
 
 La variance a priori $\varQ$ peut être vue comme une hypothèse de départ sur l'amplitude possible des valeurs du profil d'émission. Son influence s'applique à la fois sur la qualité de la reconstruction de $\VecQSource$, mais également sur celle de la localisation de la source, car $\varQ$ intervient dans l'algorithme AMIS lors du calcul de la vraisemblance des particules. 
 
-Pour cette analyse, on utilise le même procédé que pour l'étude de $\varObs$, en reprenant les paramètres du \textit{benchmark} et en exécutant 100 \textit{runs} de l'AMIS \NdFS{sur différentes valeurs de $\varQ$.}
+Pour cette analyse, on utilise le même procédé que pour l'étude de $\varObs$, en reprenant les paramètres du \textit{benchmark} et en exécutant 100 \textit{runs} de l'AMIS {sur différentes valeurs de $\varQ$.}
 
 Pour l'estimation de la position, on constate que plus la valeur de $\varQ$ considérée est grande, plus la source aura tendance à être estimée en amont  par rapport à la direction du vent. En effet, pour la même position potentielle de la source, des valeurs plus élevées pour les quantités de polluant rejetées impliquent des mesures de concentration plus importantes aux capteurs: l'algorithme va donc ajuster cette position en remontant l'axe du vent pour avoir une meilleure vraisemblance par rapport aux observations. Ce phénomène de décalage spatial est bien visible sur la figure \ref{fig_25C_varQ_boxplots}, où les \textit{boxplots} des estimations ponctuelles sont tracées pour chacune des valeurs de $\varQ$ testées.
 
@@ -668,7 +668,7 @@ La meilleure estimation du profil d'émission est obtenue pour $\varQ=2\times 10
 
 \subsection{Influence de la densité du réseau de capteurs}
 
-\NdFS{Le nombre et la répartition des capteurs constituent} un facteur important: 
+{Le nombre et la répartition des capteurs constituent} un facteur important: 
 
 \begin{itemize}
 	\item du point de vue théorique, son étude permet de mieux comprendre le comportement de l'algorithme d'estimation et quantifier son importance par rapport aux autres variables,
@@ -704,13 +704,13 @@ Dans un premier temps, nous nous intéressons à l'influence du capteur R8, qui 
 	\label{fig_R8_compare}
 \end{figure}
 
-A paramètres identiques, la source est vue plus en amont sur l'axe du vent par rapport à sa position réelle (figures \ref{R8_x} et \ref{R8_y}). De plus, sans le capteur R8, le débit est relativement sous-estimé par rapport aux valeurs attendues, et le rejet reconstitué commence et s'achève plus tôt que prévu (figure \ref{R8_q}). On observe ainsi que les mesures fournies par le capteur R8 apportent une information non-négligeable permettant d'accroître la précision de l'estimation, à la fois sur les aspects spatiaux, temporels, et de quantité émise. \NdPA{De manière générale, on peut donc en déduire que la présence d'un capteur suffisamment proche de la source permet d'assurer une bonne reconstruction de celle-ci.}
+A paramètres identiques, la source est vue plus en amont sur l'axe du vent par rapport à sa position réelle (figures \ref{R8_x} et \ref{R8_y}). De plus, sans le capteur R8, le débit est relativement sous-estimé par rapport aux valeurs attendues, et le rejet reconstitué commence et s'achève plus tôt que prévu (figure \ref{R8_q}). On observe ainsi que les mesures fournies par le capteur R8 apportent une information non-négligeable permettant d'accroître la précision de l'estimation, à la fois sur les aspects spatiaux, temporels, et de quantité émise. {De manière générale, on peut donc en déduire que la présence d'un capteur suffisamment proche de la source permet d'assurer une bonne reconstruction de celle-ci.}
 
 \subsubsection{Impact d'un réseau réduit}
 
 On a vu que le rôle individuel des capteurs peut être important pour pouvoir reconstruire correctement un terme source. Nous cherchons ici à savoir comment varie la qualité de cette reconstruction si l'ensemble du réseau est modifié.
 
-On réduit ainsi la taille de notre réseau à 9 capteurs (figure \ref{fig_reseaux_25_9}), répartis de façon homogène sur le domaine. Cela permet de simuler une situation où le nombre d'instruments de mesure des concentrations est moindre (par exemple, dans le cas où les capteurs sont coûteux à acheter, à déployer \NdPA{et à maintenir en bon état de fonctionnement}), et également d'apprécier le comportement de l'algorithme d'estimation lorsque la représentativité spatiale des mesures est limitée. Les paramètres d'entrée de l'algorithme d'estimation sont toujours ceux du \textit{benchmark}.\\
+On réduit ainsi la taille de notre réseau à 9 capteurs (figure \ref{fig_reseaux_25_9}), répartis de façon homogène sur le domaine. Cela permet de simuler une situation où le nombre d'instruments de mesure des concentrations est moindre (par exemple, dans le cas où les capteurs sont coûteux à acheter, à déployer {et à maintenir en bon état de fonctionnement}), et également d'apprécier le comportement de l'algorithme d'estimation lorsque la représentativité spatiale des mesures est limitée. Les paramètres d'entrée de l'algorithme d'estimation sont toujours ceux du \textit{benchmark}.\\
 
 \begin{figure}[h!]
 	\centering
@@ -773,13 +773,13 @@ Les résultats de  localisation de la source montrent une dégradation de l'esti
 
 On peut ainsi en déduire que les capteurs n'observant aucune concentration  non-nulle et qui ont été retirés pour établir la configuration à 9 capteurs ont bien un rôle informatif utile au processus d'estimation, et leur apport qualitatif par rapport à la présence du capteur R8 dans le réseau à 25 capteurs semble de même importance.\\
 
-De façon générale, on peut ainsi voir que l'efficacité de l'estimation du terme source repose sur un certain nombre de paramètres d'entrée pour l'algorithme AMIS. Ceux-ci peuvent dépendre entièrement de la configuration du cas-test (nombre de capteurs et disposition sur le domaine), ou être définis \NdPA{arbitrairement} par l'utilisateur. Dans ce dernier cas, on a constaté qu'il est difficile d'établir des critères empiriques pour choisir des valeurs par défaut à affecter aux paramètres de variance $\varObs$ et $\varQ$. Pour la variance d'observation, un choix qualitatif a été fait par rapport à l'allure des mesures de la figure \ref{fig_observations_25CAPTEURS}, mais dans d'autres situations pratiques, l'évaluation de $\varObs$ peut se révéler plus compliquée:
+De façon générale, on peut ainsi voir que l'efficacité de l'estimation du terme source repose sur un certain nombre de paramètres d'entrée pour l'algorithme AMIS. Ceux-ci peuvent dépendre entièrement de la configuration du cas-test (nombre de capteurs et disposition sur le domaine), ou être définis {arbitrairement} par l'utilisateur. Dans ce dernier cas, on a constaté qu'il est difficile d'établir des critères empiriques pour choisir des valeurs par défaut à affecter aux paramètres de variance $\varObs$ et $\varQ$. Pour la variance d'observation, un choix qualitatif a été fait par rapport à l'allure des mesures de la figure \ref{fig_observations_25CAPTEURS}, mais dans d'autres situations pratiques, l'évaluation de $\varObs$ peut se révéler plus compliquée:
 \begin{itemize}
 	\item si on sait d'avance que certains capteurs du réseau sont plus fiables que d'autres et qu'on choisit d'accorder une plus grande confiance à ces capteurs, alors l'hypothèse d'une loi d'incertitude identiquement distribuée sur les éléments du vecteur d'observation n'est plus valable,
-	\item dans un cas expérimental où on aurait choisi une variance d'observation trop faible,\NdFS{la plage de probabilité non-nulle sur la densité a posteriori estimée peut être réduite au point de ne plus inclure la vraie valeur du paramètre recherché.}
+	\item dans un cas expérimental où on aurait choisi une variance d'observation trop faible,{la plage de probabilité non-nulle sur la densité a posteriori estimée peut être réduite au point de ne plus inclure la vraie valeur du paramètre recherché.}
 \end{itemize}
 
-Une alternative plausible à cette recherche difficile des paramètres initiaux consisterait à travailler sur un ensemble de scénarios possibles, et ainsi d'étudier plusieurs possibilités quant aux valeurs des variances à fournir. Cela demeure possible grâce au gain d'efficacité de calcul permis par l'approche \NdPA{rétrograde} de l'AMIS, et permettrait d'envisager différents niveaux de confiance accordés aux observation (pour $\varObs$), ainsi que plusieurs hypothèses sur le profil du rejet (pour $\varQ$). 
+Une alternative plausible à cette recherche difficile des paramètres initiaux consisterait à travailler sur un ensemble de scénarios possibles, et ainsi d'étudier plusieurs possibilités quant aux valeurs des variances à fournir. Cela demeure possible grâce au gain d'efficacité de calcul permis par l'approche {rétrograde} de l'AMIS, et permettrait d'envisager différents niveaux de confiance accordés aux observation (pour $\varObs$), ainsi que plusieurs hypothèses sur le profil du rejet (pour $\varQ$). 
 
 
 
