@@ -4,9 +4,9 @@
 % Fichier principal du manuscrit de thèse, à utiliser pour compilation.
 %%%
 
-%AUTHOR: Harizo Rajaona
-%VERSION: 0.1
-%DATE: 2016-01-26
+%AUTHOR: Harizo RAJAONA
+%VERSION: 1.0
+%DATE: 2016-07-20
 
 % --- IMPORTS ---
 
@@ -41,7 +41,7 @@
 \usepackage{bbm}
 
 % Pour améliorer le spacing entre mots, lettres:
-%\usepackage{microtype}
+\usepackage{microtype}
 
 % Pour les unités physiques:
 \usepackage[load-configurations = abbreviations]{siunitx}
@@ -122,16 +122,6 @@
 
 
 
-
-
-%=======
-	
-% Pour citer proprement les références:
-%\usepackage{natbib}
-%	\bibliographystyle{abbrvnat}
-%	\setcitestyle{authoryear,open={(},close={)}}
-%>>>>>>> corrections_chapitre_1
-
 % --- CUSTOM MATH SYMBOLS ---
 \DeclareMathOperator*{\argmin}{\arg\!\min}
 \DeclareMathOperator*{\argmax}{\arg\!\max}
@@ -193,9 +183,6 @@
 \newcommand{\NdPA}[1]{{\leavevmode\color{violet}#1}}
 \newcommand{\NdHR}[1]{{\leavevmode\color{orange}#1}}
 
-%\newcommand{\NdFS}[1]{{}}
-%\newcommand{\NdPA}[1]{{}}
-%\newcommand{\NdFS}[1]{{}}
 
 % Titre
 \title{Inférence bayésienne adaptative pour la reconstruction de source en dispersion atmosphérique}
@@ -204,22 +191,29 @@
 
 
 \begin{document}
-	
+		\pagestyle{empty}
 
-	\maketitle
+	%\maketitle
 	
-	%\input{acknowledgements}
+	\input{page_garde}
 
 	\renewcommand{\contentsname}{Sommaire} % Dans le corps du document,avant la commande \tableofcontents.
 	
 	\tableofcontents
+
 	
-	\newpage
+	\clearpage
+	
+			\pagestyle{empty}
 	\listoffigures
 	
 	%\input{liste_symboles}
 	
 	%\printnomenclature
+	
+	%input{acknowledgements}
+	
+	\pagestyle{fancy}
 	
 	\input{chapitre_1_v2}
 
