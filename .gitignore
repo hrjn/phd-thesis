@@ -1,3 +1,4 @@
+*.glsdefs
 ## Custom folders
 figures_psd/*
 figures_keynote/*
