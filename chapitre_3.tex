@@ -158,7 +158,7 @@ Il est toutefois possible d'atténuer les effets indésirables de l'hypothèse g
 
 \section{Démarche de résolution du problème bayésien}
 
-\NdFS{Nous développons ici en détail le processus de résolution du problème tel qu'il a été défini dans le paragraphe précédent, à savoir \textit{le calcul de la loi a posteriori $p(\VecThetaMaj | \VecObs)$ des paramètres de la source}. En pratique, il est impossible d'obtenir cette dernière de façon analytique, à cause de la complexité et de l'aspect fortement non-linéaire de la vraisemblance $p(\VecObs|\VecThetaMaj)$ présentée à l'équation \eqref{eq_AE_5}. Afin de contourner ce problème, une solution consiste à décomposer notre loi cible en plusieurs éléments distincts, en suivant une opération de \textit{marginalisation}}.\\
+\NdFS{Nous développons ici en détail le processus de résolution du problème tel qu'il a été défini dans le paragraphe précédent, à savoir \textit{le calcul de la loi a posteriori $p(\VecThetaMaj | \VecObs)$ des paramètres de la source}. En pratique, il est impossible d'obtenir cette dernière de façon analytique, à cause de la complexité et de l'aspect fortement non-linéaire de la vraisemblance $p(\VecObs|\VecThetaMaj)$ présentée à l'équation \eqref{eq_AE_5}. Afin de contourner ce problème, une solution consiste à décomposer la loi d'intérêt en plusieurs éléments distincts, suivant une opération de \textit{marginalisation}}.\\
 
 
 \NdFS{La loi $p(\VecThetaMaj|\VecObs)$ est dite \textit{jointe}, car elle regroupe tous les paramètres de la source autour d'une unique loi a posteriori. Par définition des probabilités conditionnelles, cette loi peut s'écrire de la façon suivante:}
@@ -173,12 +173,14 @@ En appliquant la règle du conditionnement en chaîne, ou \textit{chain rule}\fo
 p(\PosSource, \VecQSource | \VecObs) = p(\VecQSource | \PosSource, \VecObs)p(\PosSource | \VecObs)
 \label{eq_AE_9}
 \end{equation}
+\NdFS{
 où: 
 	
 	\begin{itemize}
 		\item $p(\VecQSource | \PosSource, \VecObs)$ est la loi a posteriori conditionnelle de $\VecQSource$,
 		\item $p(\PosSource | \VecObs)$ est la loi a posteriori marginale de $\PosSource$.
 	\end{itemize} 
+}
 
 \subsection{Loi conditionnelle du profil d'émission}
 
@@ -186,10 +188,10 @@ où:
 
 
 {
-	Etant donnés les paramètres $\VecMeanQ$ et $\MatSigma_q$ définis à l'équation \eqref{eq_AE_8} et la formulation du modèle de l'équation \eqref{eq_AE_3}  il est possible de réécrire la vraisemblance sous la forme suivante:
+	Etant donnés les paramètres $\VecMeanQ$ et $\MatSigma_q$ définis à l'équation \eqref{eq_AE_8} et la formulation du modèle de l'équation \eqref{eq_AE_3}, \NdFS{la vraisemblance marginale peut s'écrire sous la forme suivante:
 	
 	\begin{equation}
-		p(\VecObs | \VecQSource, \PosSource) = \mathcal{N}(\VecObs | \MatC(\PosSource)\VecMeanQ, \MatC(\PosSource)\MatSigma_q\MatC(\PosSource)^T + \MatR)
+		p(\VecObs | \PosSource) = \mathcal{N}(\VecObs | \MatC(\PosSource)\VecMeanQ, \MatC(\PosSource)\MatSigma_q\MatC(\PosSource)^T + \MatR)
 		\label{eq_lk_gaussian}
 	\end{equation}
 	
@@ -398,22 +400,32 @@ avec $\VecMu_d \in \mathbb{R}^2$ et $\MatSigma_d \in \mathbb{R}^{2\times2}$.
 \NdFS{En suivant la procédure décrite par l'algorithme \ref{schema_amis} sur un total de $K$ itérations, la loi a posteriori marginale de la position de la source peut être approximée grâce à \eqref{eq_IS_poids_normalises} de la façon suivante:
 	
 \begin{equation}
-	p(\VecPosSource | \VecObs) \simeq \sum\limits_{k=1}^K \sum\limits_{i=1}^{N_p} \widetilde{w}_k^{(i)} \VecPosSource_k^{(i)} \delta_{\VecPosSource_k^{(i)}} d\VecPosSource
+	p(\VecPosSource | \VecObs) \simeq \sum\limits_{k=1}^K \sum\limits_{i=1}^{N_p} \widetilde{w}_k^{(i)} \VecPosSource_k^{(i)} \delta_{\VecPosSource_k^{(i)}}(\VecPosSource)
 	\label{eq_marginal_posterior_location}
 \end{equation}
 
 En reprenant l'expression  de la loi a posteriori jointe \eqref{eq_AE_9}, on obtient finalement la solution suivante:
 
  \begin{equation}
-p(\VecPosSource, \VecQSource | \VecObs) \simeq \sum\limits_{k=1}^K \sum\limits_{i=1}^{N_p} \widetilde{w}_k^{(i)} p(\VecQSource | {\VecPosSource}_k^{(i)}, \VecObs) \delta_{{\VecPosSource}_k^{(i)}} d\VecPosSource
+p(\VecPosSource, \VecQSource | \VecObs) \simeq \sum\limits_{k=1}^K \sum\limits_{i=1}^{N_p} \widetilde{w}_k^{(i)} p(\VecQSource | {\VecPosSource}_k^{(i)}, \VecObs) \delta_{{\VecPosSource}_k^{(i)}} (\VecPosSource)
  \label{eq_joint_posterior}
  \end{equation}
 
-Afin d'interpréter les résultats de localisation de la source, on peut estimer la densité a posteriori via une approche de type KDE en utilisant les échantillons tirés via l'AMIS. Pour une estimation ponctuelle, on peut avoir recours au MMSE. \\
+Les estimations respectives (au sens du MMSE) de la position de la source et de son profil d'émission sont alors données par les relations suivantes:
+\begin{equation}
+	\begin{split}
+		  \widehat{\VecPosSource} &= \sum\limits_{k=0}^K\sum\limits_{i=1}^{N_p} \widetilde{w}_k^{(i)}\VecPosSource_{k}^{(i)} \\
+		  \widehat{\VecQSource} &= \sum\limits_{k=1}^K \sum\limits_{i=1}^{N_p} \widetilde{w}_k^{(i)} \PostMeanQ(\VecPosSource_k^{(i)})
+	\end{split}
+	\label{eq_estimateurs_mmse}
+\end{equation}
 
-Pour obtenir une estimation du profil d'émission de type MMSE, on moyenne les valeurs de $\PostMeanQ$ obtenues pour chaque particule échantillonnée par l'AMIS en respectant la pondération imposée par les poids d'importance correspondants. \\
 
-Ces différents modes d'interprétation sont utilisés dans le paragraphe relatifs aux résultats obtenus sur la campagne FFT07.\\
+
+%Afin d'interpréter les résultats de localisation de la source, on peut estimer la densité a posteriori via une approche de type KDE en utilisant les échantillons tirés via l'AMIS. Pour une estimation ponctuelle, on peut avoir recours au MMSE. \\
+
+%Pour obtenir une estimation du profil d'émission de type MMSE, on moyenne les valeurs de $\PostMeanQ$ obtenues pour chaque particule échantillonnée par l'AMIS en respectant la pondération imposée par les poids d'importance correspondants. \\
+
 
 }
 
@@ -523,26 +535,15 @@ L'algorithme a été testé avec deux positions de source différentes, correspo
  
   Le fait de visualiser une distribution de probabilité permet ainsi une vision plus explicite des aspects liés aux incertitudes autour de l'estimation,  en comparaison avec des méthodes de type optimisation où seule une estimation ponctuelle est donnée.
   
-  Pour obtenir les distributions présentées à la figure \ref{fig_5_AE}, {un lissage par noyau} a été effectué afin de construire une densité de probabilité à partir d'une population statistique, en l'occurence les particules $\left\{\VecTheta_k^{(i)}\right\}_{0\leq k \leq K}^{1\leq i \leq N_p}$ associées à leurs poids d'importance respectifs $\left\{\widetilde{w}_k^{(i)}\right\}_{0\leq k \leq K}^{1\leq i \leq N_p}$. \\
+  Pour obtenir les distributions présentées à la figure \ref{fig_5_AE}, {un lissage par noyau} a été effectué afin de construire une densité de probabilité à partir d'une population statistique, en l'occurrence les particules $\left\{\VecTheta_k^{(i)}\right\}_{0\leq k \leq K}^{1\leq i \leq N_p}$ associées à leurs poids d'importance respectifs $\left\{\widetilde{w}_k^{(i)}\right\}_{0\leq k \leq K}^{1\leq i \leq N_p}$. \\
   
   
-  Néanmoins, il est toujours possible d'obtenir un estimateur ponctuel à partir des lois a posteriori, il suffit pour cela de calculer, {par exemple}, le MMSE selon la formule suivante: 
-  
-  \begin{equation}
-  \widehat{\PosSource} = \sum\limits_{k=0}^K\sum\limits_{i=1}^{N_p} \tilde{w}_k^{(i)}\VecTheta_{k}^{(i)}
-  \end{equation}
-  
-  On arrive ainsi à un point estimé distant de moins d'un mètre par rapport à la position réelle de la source. \\
+  Néanmoins, il est toujours possible d'obtenir un estimateur ponctuel à partir des lois a posteriori, il suffit pour cela de se ramener à l'estimation MMSE présentée à l'équation \eqref{eq_estimateurs_mmse}. Par ce procédé, on arrive ainsi à un point estimé distant de moins d'un mètre par rapport à la position réelle de la source. \\
 
   \subsubsection{Estimation du profil de rejet}
   
-  \NdFS{Afin de visualiser l'estimation du profil d'émission, on utilise également une approche basée sur le MMSE. L'estimation de $\VecQSource$ peut alors s'écrire:
-  \begin{equation}
-	  \widehat{\VecQSource} = \sum\limits_{k=1}^K \sum\limits_{i=1}^{N_p} \widetilde{w}_k^{(i)} \PostMeanQ(\VecPosSource_k^{(i)})
-	  \label{eq_mmse_q}
-  \end{equation}
-  
-  La matrice de covariance associée à cette estimation est obtenue suivant le même processus:
+  \NdFS{Afin de visualiser l'estimation du profil d'émission, on utilise également une approche basée sur le MMSE. Le vecteur $\widehat{\VecQSource}$ estimé est obtenu depuis l'équation \eqref{eq_estimateurs_mmse}, et la matrice de covariance estimée associée est donnée par:
+  	
   \begin{equation}
 	 \MatSigma_{\widehat{\VecQSource}} = \sum\limits_{k=1}^K \sum\limits_{i=1}^{N_p} \widetilde{w}_k^{(i)} \PostCovQ(\VecPosSource_k^{(i)})
   \end{equation}
