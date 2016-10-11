@@ -400,7 +400,7 @@ avec $\VecMu_d \in \mathbb{R}^2$ et $\MatSigma_d \in \mathbb{R}^{2\times2}$.
 \NdFS{En suivant la procédure décrite par l'algorithme \ref{schema_amis} sur un total de $K$ itérations, la loi a posteriori marginale de la position de la source peut être approximée grâce à \eqref{eq_IS_poids_normalises} de la façon suivante:
 	
 \begin{equation}
-	p(\VecPosSource | \VecObs) \simeq \sum\limits_{k=1}^K \sum\limits_{i=1}^{N_p} \widetilde{w}_k^{(i)} \VecPosSource_k^{(i)} \delta_{\VecPosSource_k^{(i)}}(\VecPosSource)
+	p(\VecPosSource | \VecObs) \simeq \sum\limits_{k=1}^K \sum\limits_{i=1}^{N_p} \widetilde{w}_k^{(i)} \delta_{\VecPosSource_k^{(i)}}(\VecPosSource)
 	\label{eq_marginal_posterior_location}
 \end{equation}
 
