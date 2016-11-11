@@ -446,15 +446,9 @@ Avec ces paramètres, l'algorithme d'estimation parvient à fournir une reconstr
  	\item $\widehat{\Vecx} _{MMSE}$ est l'estimation ponctuelle par MMSE de la position de la source obtenue via les particules et les poids d'importance fournis en sortie de l'AMIS.
  \end{itemize}
  
- Pour mesurer l'erreur d'estimation du débit, on utilise l'erreur quadratique moyenne définie par:
- \begin{equation}
- {
-	 Err(\tilde{\VecMeanQ}) = \dfrac{1}{T_s} \sum\limits_{i=1}^{T_s}(\VecQSource(i) - \tilde{\VecMeanQ}(i))^2
-	}
- \end{equation}
- où $\VecQSource$ est le profil d'émission réel et $\tilde{\VecMeanQ}$ est le profil estimé.\\
+ \NdFS{Pour mesurer l'erreur d'estimation du débit, on utilise la même métrique (MSE) que dans le chapitre précédent (\eqref{eq_AE_31}).}
  
- Dans l'exemple de la figure \ref{fig_25C_prelim}, on obtient ainsi une erreur relative de $r_d = 0.017$ pour la position, et une erreur d'estimation du débit de $Err(\tilde{\VecMeanQ}) = 296.909$. \\
+ Dans l'exemple de la figure \ref{fig_25C_prelim}, on obtient ainsi une erreur relative de $r_d = 0.017$ pour la position, et \NdFS{une erreur d'estimation du profil d'émission valant $\text{MSE}(\widehat{\VecQSource}, \VecQSource) = 296.909$.}\\
  
  Nous étudions dans les paragraphes suivants l'influence des paramètres de variance d'observation $\varObs$ et de variance a priori $\varQ$ du profil d'émission $\VecQSource$ sur la qualité de l'estimation. Une telle étude paramétrique permet en effet de donner du sens à ces paramètres, ceux-ci devant être spécifiés par l'utilisateur parmi les variables d'entrée de l'algorithme d'estimation. 
  

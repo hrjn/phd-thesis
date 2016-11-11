@@ -105,11 +105,6 @@
 \usepackage{subcaption}
 
 
-% Pour ajouter les numéros de ligne dans la version draft:
-%\usepackage{lineno}
-%	\linenumbers
-%<<<<<<< HEAD
-
 % Pour écrire des algorithmes en pseudo-code:
 %\usepackage[ruled, lined, linesnumbered, algochapter]{algorithm2e}
 \usepackage{algorithm, algpseudocode}
@@ -119,6 +114,8 @@
 
 % Pour la citation 
 \usepackage{epigraph}
+
+
 
 
 
@@ -179,9 +176,10 @@
 \newcommand{\varBruit}{{\sigma_{\mathcal{B}}^2}}
 
 % Corrections
-\newcommand{\NdFS}[1]{{\leavevmode\color{teal}#1}}
+\newcommand{\NdFS}[1]{{\leavevmode\color{black}#1}}
 \newcommand{\NdPA}[1]{{\leavevmode\color{violet}#1}}
 \newcommand{\NdHR}[1]{{\leavevmode\color{orange}#1}}
+\newcommand*{\correction}{\textcolor{red}}
 
 
 % Titre
@@ -196,22 +194,31 @@
 	%\maketitle
 	
 	\input{page_garde}
-
+	\cleardoublepage
+	\input{abstracts}
+	\cleardoublepage
+	\input{acknowledgements}
+	\cleardoublepage
+\setlength{\epigraphwidth}{0.8\textwidth}
+\epigraph{\textit{Mais je connais la solitude. Trois années de désert m'en ont enseigné le goût. On ne s'y effraie point d'une jeunesse qui s'use dans un paysage minéral, mais il y apparait que, loin de soi, c'est le monde entier qui vieillit. Les arbres ont formé leurs fruits, les terres ont sorti leur blé, les femmes déjà sont belles... Mais la saison avance et l'on est retenu au loin... Et les biens de la terre glissent entre les doigts comme le sable fin des dunes.}}{\textit{Terre des Hommes}, A. de Saint-Exupéry}
+\cleardoublepage
 	\renewcommand{\contentsname}{Sommaire} % Dans le corps du document,avant la commande \tableofcontents.
 	
 	\tableofcontents
 
 	
-	\clearpage
+	\cleardoublepage
 	
 			\pagestyle{empty}
 	\listoffigures
+	
+	\cleardoublepage
 	
 	%\input{liste_symboles}
 	
 	%\printnomenclature
 	
-	%input{acknowledgements}
+
 	
 	\pagestyle{fancy}
 	

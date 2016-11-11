@@ -156,13 +156,12 @@ Dans \cite{Bocquet2008}, il est expliqué que l'hypothèse gaussienne sur $\VecQ
 
 Il est toutefois possible d'atténuer les effets indésirables de l'hypothèse gaussienne sans avoir à changer la nature de la loi de probabilité a priori de $\VecQSource$, nous verrons comment cela est possible dans le prochain paragraphe.
 
+\section{Démarche de résolution du problème bayésien}
 
-\section{Marginalisation du profil d'émission}
+\NdFS{Nous développons ici en détail le processus de résolution du problème tel qu'il a été défini dans le paragraphe précédent, à savoir \textit{le calcul de la loi a posteriori $p(\VecThetaMaj | \VecObs)$ des paramètres de la source}. En pratique, il est impossible d'obtenir cette dernière de façon analytique, à cause de la complexité et de l'aspect fortement non-linéaire de la vraisemblance $p(\VecObs|\VecThetaMaj)$ présentée à l'équation \eqref{eq_AE_5}. Afin de contourner ce problème, une solution consiste à décomposer la loi d'intérêt en plusieurs éléments distincts, suivant une opération de \textit{marginalisation}}.\\
 
-\subsection{Principe}
-La vraisemblance $p(\VecObs|\VecThetaMaj)$ présentée à l'équation \eqref{eq_AE_5} est fortement non-linéaire, et la complexité de sa formulation rend impossible le calcul analytique de la loi a posteriori $p(\VecThetaMaj | \VecObs)$. Afin de contourner ce problème, une solution consiste à exprimer cette loi a posteriori en fonction des différentes \textit{lois a posteriori marginales} dont elle dépend. \\
 
-Par définition, la loi a posteriori $p(\VecThetaMaj|\VecObs)$ peut s'exprimer en fonction de la loi jointe de $\VecThetaMaj$ et $\VecObs$:
+\NdFS{La loi $p(\VecThetaMaj|\VecObs)$ est dite \textit{jointe}, car elle regroupe tous les paramètres de la source autour d'une unique loi a posteriori. Par définition des probabilités conditionnelles, cette loi peut s'écrire de la façon suivante:}
 
 \begin{equation}
 p(\VecThetaMaj|\VecObs) = p(\PosSource, \VecQSource | \VecObs) = \dfrac{p(\PosSource, \VecQSource, \VecObs)}{p(\VecObs)}
@@ -174,24 +173,33 @@ En appliquant la règle du conditionnement en chaîne, ou \textit{chain rule}\fo
 p(\PosSource, \VecQSource | \VecObs) = p(\VecQSource | \PosSource, \VecObs)p(\PosSource | \VecObs)
 \label{eq_AE_9}
 \end{equation}
-où $p(\VecQSource | \PosSource, \VecObs)$ et $p(\PosSource | \VecObs)$ sont {les lois a posteriori respectives du profil d'émission conditionnellement à la position de la source}. \\
+\NdFS{
+où: 
+	
+	\begin{itemize}
+		\item $p(\VecQSource | \PosSource, \VecObs)$ est la loi a posteriori conditionnelle de $\VecQSource$,
+		\item $p(\PosSource | \VecObs)$ est la loi a posteriori marginale de $\PosSource$.
+	\end{itemize} 
+}
 
-\subsection{A priori gaussien et solution analytique}
+\subsection{Loi conditionnelle du profil d'émission}
+
+\subsubsection{A priori gaussien et solution analytique}
 
 
 {
-	Etant donnés les paramètres $\VecMeanQ$ et $\MatSigma_q$ définis à l'équation \eqref{eq_AE_8} et la formulation du modèle de l'équation \eqref{eq_AE_3}  il est possible de réécrire la vraisemblance sous la forme suivante:
+	Etant donnés les paramètres $\VecMeanQ$ et $\MatSigma_q$ définis à l'équation \eqref{eq_AE_8} et la formulation du modèle de l'équation \eqref{eq_AE_3}, \NdFS{la vraisemblance marginale peut s'écrire sous la forme suivante:
 	
 	\begin{equation}
-		p(\VecObs | \VecQSource, \PosSource) = \mathcal{N}(\VecObs | \MatC(\PosSource)\VecMeanQ, \MatC(\PosSource)\MatSigma_q\MatC(\PosSource)^T + \MatR)
+		p(\VecObs | \PosSource) = \mathcal{N}(\VecObs | \MatC(\PosSource)\VecMeanQ, \MatC(\PosSource)\MatSigma_q\MatC(\PosSource)^T + \MatR)
 		\label{eq_lk_gaussian}
 	\end{equation}
 	
-	La loi a priori de $\VecQSource$ ainsi que la vraisemblance de l'équation \eqref{eq_lk_gaussian} suivant toutes deux des lois normales, alors la loi a posteriori marginale de $\VecQSource$ suit également une loi normale de moyenne $\PostMeanQ$ et de matrice de covariance $\PostCovQ$, dont les valeurs sont obtenues par les formules empiriques: 
+	La loi a priori de $\VecQSource$ ainsi que la vraisemblance de l'équation \eqref{eq_lk_gaussian} suivant toutes deux des lois normales, alors la loi a posteriori \NdFS{conditionnelle} de $\VecQSource$ suit également une loi normale de moyenne $\PostMeanQ$ et de matrice de covariance $\PostCovQ$, dont les valeurs sont obtenues par les formules empiriques: 
 	 \begin{equation}
 	 \begin{split}
-	 \PostMeanQ & = \VecMeanQ + \MatK(\VecObs - \MatC(\PosSource)\VecMeanQ) \\
-	 \PostCovQ & = \MatCovQ - \MatK\MatC(\PosSource)\MatCovQ
+	 \PostMeanQ (\VecPosSource) & = \VecMeanQ + \MatK(\VecObs - \MatC(\PosSource)\VecMeanQ) \\
+	 \PostCovQ (\VecPosSource) & = \MatCovQ - \MatK\MatC(\PosSource)\MatCovQ
 	 \end{split}
 	 \label{eq_filtre_kalman_statique}
 	 \end{equation}
@@ -202,13 +210,13 @@ où $p(\VecQSource | \PosSource, \VecObs)$ et $p(\PosSource | \VecObs)$ sont {le
 	  \end{equation}
 	
 	}
-  Les paramètres $\PostMeanQ$ et $\PostCovQ$ sont ainsi obtenus de façon analytique (i.e. sans approximation) par les équations \eqref{eq_filtre_kalman_statique}. 
+  \NdFS{Pour une valeur de $\VecPosSource$ donnée, les paramètres $\PostMeanQ(\VecPosSource)$ et $\PostCovQ(\VecPosSource)$ sont ainsi obtenus de façon analytique (i.e. sans approximation) par les équations \eqref{eq_filtre_kalman_statique}. Dans un souci de lisibilité, on notera plus simplement $\PostMeanQ$ et $\PostCovQ$ par la suite.}
 
-\subsection{Contrainte de positivité}
+\subsubsection{Contrainte de positivité}
 
 Dans le but d'assurer la positivité des valeurs d'émission de la source, une contrainte peut être appliquée sur les résultats de l'équation \eqref{eq_filtre_kalman_statique}, inspirée par les travaux de \cite{Simon2010}. Il s'agit d'utiliser une méthode permettant de restreindre les valeurs d'un vecteur d'état à un intervalle borné ou semi-borné prédéfini: pour cela, la densité de probabilité de ce vecteur d'état est tronquée suivant la contrainte que l'on cherche à appliquer. \\
 
-Le processus de troncature est ainsi appliqué de façon séquentielle sur chaque composante de $\VecQSource$: on travaille ainsi à tronquer $T_s$ densités de loi univariées. Le détail de cette démarche est décrit par l'algorithme \ref{algo_PCO}, qui permet d'approximer la loi a posteriori marginale de $\VecQSource$ par : 
+Le processus de troncature est ainsi appliqué de façon séquentielle sur chaque composante de $\VecQSource$: on travaille ainsi à tronquer $T_s$ densités de loi univariées. Le détail de cette démarche est décrit par l'algorithme \ref{algo_PCO}, qui permet d'approximer la loi a posteriori \NdFS{conditionnelle} de $\VecQSource$ par : 
 
 \begin{equation}
 p^c(\VecQSource | \PosSource, \VecObs) = \mathcal{N}(\VecQSource | \PostMeanQ^c, \PostCovQ^c)
@@ -279,11 +287,11 @@ p^c(\VecObs | \PosSource) = \dfrac{p(\VecObs | \VecQSource, \PosSource)p(\VecQSo
 
 La figure \ref{fig_AE_2} résume bien le fonctionnement de l'algorithme \ref{algo_PCO}: la zone en noir représente la version tronquée aux valeurs positives de la distribution initiale (en rouge). 
 
-\section{Localisation de la source avec l'algorithme AMIS}
+\subsection{Localisation de la source avec l'algorithme AMIS}
 
 Il s'agit ici d'étudier la loi a posteriori marginale $p(\PosSource | \VecObs)$ de la position de la source. Contrairement au profil d'émission, il est {impossible} d'obtenir une solution analytique pour caractériser cette distribution. Par conséquent, {l'idée est d'utiliser les méthodes de simulation stochastique afin d'}approximer la distribution $p(\PosSource | \VecObs)$. \\
 
-\subsection{Principe}
+\subsubsection{Principe}
 
 Nous appliquons l'algorithme AMIS décrit dans le chapitre 2 afin de localiser la source. Pour cela, on va ainsi construire une procédure itérative basée sur l'algorithme \ref{algo_AMIS} afin de créer sur $K$ itérations et en générant $N_p$ particules par itération un échantillon de $KN_p$ particules {$\left\{\PosSource_k^{(i)}\right\}_{0\leq k \leq K}^{1\leq i \leq N_p}$} dont la distribution approxime celle de la loi marginale a posteriori {$p(\PosSource | \VecObs)$} de la position de la source.\\
 
@@ -323,7 +331,7 @@ La fonction de vraisemblance {$p(\VecObs | \PosSource)$} est définie par l'équ
         \label{schema_amis}
  \end{figure}
 
-\subsection{Choix de la loi de proposition}
+\subsubsection{Choix de la loi de proposition}
 
 L'algorithme AMIS requiert une loi de proposition paramétrique qui soit suffisamment flexible pour:
 {
@@ -385,6 +393,41 @@ avec $\VecMu_d \in \mathbb{R}^2$ et $\MatSigma_d \in \mathbb{R}^{2\times2}$.
  	
  	Une fois l'algorithme lancé, à chaque itération, ces paramètres  sont mis à jour grâce aux formules des équations \eqref{eq_maj_gaussien}.}\\
 
+\subsection{Loi a posteriori jointe des paramètres de la source}
+
+
+
+\NdFS{En suivant la procédure décrite par l'algorithme \ref{schema_amis} sur un total de $K$ itérations, la loi a posteriori marginale de la position de la source peut être approximée grâce à \eqref{eq_IS_poids_normalises} de la façon suivante:
+	
+\begin{equation}
+	p(\VecPosSource | \VecObs) \simeq \sum\limits_{k=1}^K \sum\limits_{i=1}^{N_p} \widetilde{w}_k^{(i)} \delta_{\VecPosSource_k^{(i)}}(\VecPosSource)
+	\label{eq_marginal_posterior_location}
+\end{equation}
+
+En reprenant l'expression  de la loi a posteriori jointe \eqref{eq_AE_9}, on obtient finalement la solution suivante:
+
+ \begin{equation}
+p(\VecPosSource, \VecQSource | \VecObs) \simeq \sum\limits_{k=1}^K \sum\limits_{i=1}^{N_p} \widetilde{w}_k^{(i)} p(\VecQSource | {\VecPosSource}_k^{(i)}, \VecObs) \delta_{{\VecPosSource}_k^{(i)}} (\VecPosSource)
+ \label{eq_joint_posterior}
+ \end{equation}
+
+Les estimations respectives (au sens du MMSE) de la position de la source et de son profil d'émission sont alors données par les relations suivantes:
+\begin{equation}
+	\begin{split}
+		  \widehat{\VecPosSource} &= \sum\limits_{k=0}^K\sum\limits_{i=1}^{N_p} \widetilde{w}_k^{(i)}\VecPosSource_{k}^{(i)} \\
+		  \widehat{\VecQSource} &= \sum\limits_{k=1}^K \sum\limits_{i=1}^{N_p} \widetilde{w}_k^{(i)} \PostMeanQ(\VecPosSource_k^{(i)})
+	\end{split}
+	\label{eq_estimateurs_mmse}
+\end{equation}
+
+
+
+%Afin d'interpréter les résultats de localisation de la source, on peut estimer la densité a posteriori via une approche de type KDE en utilisant les échantillons tirés via l'AMIS. Pour une estimation ponctuelle, on peut avoir recours au MMSE. \\
+
+%Pour obtenir une estimation du profil d'émission de type MMSE, on moyenne les valeurs de $\PostMeanQ$ obtenues pour chaque particule échantillonnée par l'AMIS en respectant la pondération imposée par les poids d'importance correspondants. \\
+
+
+}
 
 \section{Description du modèle de dispersion à bouffées gaussiennes}
 
@@ -492,19 +535,19 @@ L'algorithme a été testé avec deux positions de source différentes, correspo
  
   Le fait de visualiser une distribution de probabilité permet ainsi une vision plus explicite des aspects liés aux incertitudes autour de l'estimation,  en comparaison avec des méthodes de type optimisation où seule une estimation ponctuelle est donnée.
   
-  Pour obtenir les distributions présentées à la figure \ref{fig_5_AE}, {un lissage par noyau} a été effectué afin de construire une densité de probabilité à partir d'une population statistique, en l'occurence les particules $\left\{\VecTheta_k^{(i)}\right\}_{0\leq k \leq K}^{1\leq i \leq N_p}$ associées à leurs poids d'importance respectifs $\left\{\widetilde{w}_k^{(i)}\right\}_{0\leq k \leq K}^{1\leq i \leq N_p}$. \\
+  Pour obtenir les distributions présentées à la figure \ref{fig_5_AE}, {un lissage par noyau} a été effectué afin de construire une densité de probabilité à partir d'une population statistique, en l'occurrence les particules $\left\{\VecTheta_k^{(i)}\right\}_{0\leq k \leq K}^{1\leq i \leq N_p}$ associées à leurs poids d'importance respectifs $\left\{\widetilde{w}_k^{(i)}\right\}_{0\leq k \leq K}^{1\leq i \leq N_p}$. \\
   
   
-  Néanmoins, il est toujours possible d'obtenir un estimateur ponctuel à partir des lois a posteriori, il suffit pour cela de calculer, {par exemple}, le MMSE selon la formule suivante: 
-  
-  \begin{equation}
-  \widehat{\PosSource} = \sum\limits_{k=0}^K\sum\limits_{i=1}^{N_p} \tilde{w}_k^{(i)}\VecTheta_{k}^{(i)}
-  \end{equation}
-  
-  On arrive ainsi à un point estimé distant de moins d'un mètre par rapport à la position réelle de la source. \\
+  Néanmoins, il est toujours possible d'obtenir un estimateur ponctuel à partir des lois a posteriori, il suffit pour cela de se ramener à l'estimation MMSE présentée à l'équation \eqref{eq_estimateurs_mmse}. Par ce procédé, on arrive ainsi à un point estimé distant de moins d'un mètre par rapport à la position réelle de la source. \\
 
   \subsubsection{Estimation du profil de rejet}
   
+  \NdFS{Afin de visualiser l'estimation du profil d'émission, on utilise également une approche basée sur le MMSE. Le vecteur $\widehat{\VecQSource}$ estimé est obtenu depuis l'équation \eqref{eq_estimateurs_mmse}, et la matrice de covariance estimée associée est donnée par:
+  	
+  \begin{equation}
+	 \MatSigma_{\widehat{\VecQSource}} = \sum\limits_{k=1}^K \sum\limits_{i=1}^{N_p} \widetilde{w}_k^{(i)} \PostCovQ(\VecPosSource_k^{(i)})
+  \end{equation}
+}
   La figure \ref{fig_6_AE} illustre l'impact de l'utilisation de la contrainte de positivité pour l'estimation du profil du rejet $\VecQSource$.
   
  \begin{figure}[h!]
@@ -543,7 +586,7 @@ L'algorithme a été testé avec deux positions de source différentes, correspo
   	\label{fig_AE_7}	
   \end{figure}
   
-  Comme présenté en figure \ref{fig_AE_7}, la méthode parvient à fournir une bonne estimation du profil de rejet dans les trois cas présentés. Sachant que l'estimation de la loi a posteriori de $\VecQSource$ consiste à estimer à la fois $\PostMeanQ$ et $\PostCovQ$, il est possible de représenter la marge d'incertitude associée à chaque valeur estimée: pour chacun des cas de la figure \ref{fig_AE_7} la valeur réelle du débit est bien incluse dans l'intervalle à $\pm 2\widetilde{\sigma}_q$, où $\widetilde{\sigma}_q^2 = \text{diag}(\PostCovQ)$. Dans le cas de la figure \ref{fig_AE_7_C}, {on observe un effet de bord sur la fin du rejet estimé, phénomène qui est absent des autres configurations. Cela est dû au fait que l'algorithme ne dispose pas des mesures permettant de confirmer ou non les valeurs non-nulles prises par le débit estimé, ces observations étant après la limite supérieure de la fenêtre temporelle d'observation. Le problème ne se pose pas dans les configurations précédentes, car comme les concentrations mesurées sont nulles au dernier instant d'observation, l'algorithme laisse la valeur de débit estimé égale à sa moyenne a priori, à savoir 0.}
+  Comme présenté en figure \ref{fig_AE_7}, la méthode parvient à fournir une bonne estimation du profil de rejet dans les trois cas présentés. Sachant que l'estimation de la loi a posteriori de $\VecQSource$ \NdFS{dépend à la fois de $\PostMeanQ$ et $\PostCovQ$,} il est possible de représenter la marge d'incertitude associée à chaque valeur estimée: pour chacun des cas de la figure \ref{fig_AE_7} la valeur réelle du débit est bien incluse dans l'intervalle à $\pm 2\widetilde{\sigma}_q$, où \NdFS{$\widetilde{\sigma}_q^2 = \text{diag}(\MatSigma_{\widehat{\VecQSource}})$}. Dans le cas de la figure \ref{fig_AE_7_C}, {on observe un effet de bord sur la fin du rejet estimé, phénomène qui est absent des autres configurations. Cela est dû au fait que l'algorithme ne dispose pas des mesures permettant de confirmer ou non les valeurs non-nulles prises par le débit estimé, ces observations étant après la limite supérieure de la fenêtre temporelle d'observation. Le problème ne se pose pas dans les configurations précédentes, car comme les concentrations mesurées sont nulles au dernier instant d'observation, l'algorithme laisse la valeur de débit estimé égale à sa moyenne a priori, à savoir 0.}
   
   
   le pic à la limite de l'intervalle d'émission est dû au fait que le rejet est plus long que la période d'observation: en l'absence d'information, l'algorithme ne peut fournir une estimation correcte, mais demeure cohérent  en augmentant fortement la taille de la marge d'incertitude, signifiant ainsi que l'information manque. \\
@@ -567,13 +610,13 @@ L'algorithme a été testé avec deux positions de source différentes, correspo
     	\label{table_1_AE}
     \end{table}
     
-    Ces résultats confirment que l'application de la contrainte de positivité apporte en moyenne une certaine amélioration au niveau de la localisation de la source. Si on cherche à quantifier la précision de l'estimation du profil de rejet, on peut calculer l'erreur quadratique moyenne, ou \textit{mean square error} (MSE), entre la valeur estimée $\PostMeanQ$ et la valeur théorique $\VecQSource$ selon la formule suivante: 
-    
+    Ces résultats confirment que l'application de la contrainte de positivité apporte en moyenne une certaine amélioration au niveau de la localisation de la source. Si on cherche à quantifier la précision de l'estimation du profil de rejet, on peut calculer l'erreur quadratique moyenne, ou \textit{mean square error} (MSE), entre la valeur estimée \NdFS{$\widehat{\VecQSource}$} et la valeur théorique $\VecQSource$ selon la formule suivante: 
+    \NdFS{
     \begin{equation}
-    \text{MSE}(\PostMeanQ, \VecQSource) = \dfrac{1}{T_s}\sum\limits_{n=1}^{T_s}\left(\PostMeanQ(t'_n) - \VecQSource(t'_n)\right)^2
+    \text{MSE}(\widehat{\VecQSource}, \VecQSource) = \dfrac{1}{T_s}\sum\limits_{n=1}^{T_s}\left(\widehat{\VecQSource}(t'_n) - \VecQSource(t'_n)\right)^2
     \label{eq_AE_31}
     \end{equation}
-    
+}
 Dans le cas où on applique la contrainte de positivité, on a une erreur MSE de $1.37\times10^{-12}$, qui est une meilleure valeur que pour le cas sans contrainte, où on a une erreur MSE de $1.26\times10^{-9}$.  \\
 
 \subsubsection{Comparaison avec le MCMC}
