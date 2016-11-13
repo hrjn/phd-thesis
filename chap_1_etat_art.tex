@@ -42,9 +42,11 @@
  \dfrac{-\partial C^*}{\partial t} - \nabla \cdot(C^*\bm{\vec{u}}) = \nabla \cdot (\bm{K}\nabla C^*) + \VecObs
  \end{equation}
  
- où $C^*$ est un champ de concentrations conjuguées, ou \textit{rétro-concentrations}, dont les valeurs sont obtenues par des rétro-rejets virtuels depuis les capteurs vers la source. Le modèle de dispersion associé à cette démarche duale est alors appelé {\textit{modèle de rétro-dispersion}, ou \textit{modèle rétrograde}}. Cette démarche revient ainsi à transformer le champ d'émission {obtenu par l'équation \eqref{eqn_advection_diffusion}} en un champ de rétro-émissions issues des capteurs, comme illustré sur les figures \ref{schema_probleme_direct} et \ref{schema_probleme_inverse}, et ainsi fournir une estimation du terme source.\\
+ où $C^*$ est un champ de concentrations conjuguées, ou \textit{rétro-concentrations}, dont les valeurs sont obtenues par des rétro-rejets virtuels depuis les capteurs vers la source. Le modèle de dispersion associé à cette démarche duale est alors appelé {\textit{modèle de rétro-dispersion}, ou \textit{modèle rétrograde}}. Cette démarche revient ainsi à transformer le champ d'émission {obtenu par l'équation \eqref{eqn_advection_diffusion}} en un champ de rétro-émissions issues des capteurs, comme illustré sur les figures \ref{schema_probleme_direct} et \ref{schema_probleme_inverse}, et ainsi fournir une estimation du terme source. Dans \cite{Flesch1995}, un modèle {rétrograde} lagrangien est construit pour estimer le profil de rejet d'une source surfacique.  Cette méthode est également appliquée dans \cite{Pudykiewicz1998}, où la position et l'intensité du terme source de Tchernobyl sont reconstruits. 
  
- \begin{figure}[h]
+ \newpage De même, dans \cite{Hourdin2006b} le principe du \textit{backtracking} est appliqué à un modèle eulérien pour retrouver la source de la campagne ETEX\footnote{L’expérience \textit{European Tracer EXperiment 1} (ETEX-1), menée en 1994,  a consisté à mesurer et étudier l'impact à l'échelle européenne de rejets de gaz traceurs passifs émis depuis une source située dans la ville de Monterfil, en Bretagne.}.\\
+ 
+ \begin{figure}[h!]
  	\begin{subfigure}{0.5\textwidth}
  		\includegraphics[scale=0.6]{schema_probleme_direct.png}
  		\caption{Approche orientée source}
@@ -57,8 +59,7 @@
  	\end{subfigure}
  	\caption{Exemple illustrant la relation entre une source unique $S$ et trois capteurs $R_1,R_2,R_3$ sur un problème en deux dimensions pour les approches en "direct" (\ref{schema_probleme_direct}) et en "adjoint" (\ref{schema_probleme_inverse}). }
  \end{figure}
- 
- Dans \cite{Flesch1995}, un modèle {rétrograde} lagrangien est construit pour estimer le profil de rejet d'une source surfacique.  Cette méthode est également appliquée dans \cite{Pudykiewicz1998}, où la position et l'intensité du terme source de Tchernobyl sont reconstruits. De même, dans \cite{Hourdin2006b} le principe du \textit{backtracking} est appliqué à un modèle eulérien pour retrouver la source de la campagne ETEX\footnote{L’expérience \textit{European Tracer EXperiment 1} (ETEX-1), menée en 1994,  a consisté à mesurer et étudier l'impact à l'échelle européenne de rejets de gaz traceurs passifs émis depuis une source située dans la ville de Monterfil, en Bretagne.}.\\
+
  
  \subsection{Formulation linéaire du problème et optimisation}
  \label{subsection_MCO}
@@ -147,7 +148,9 @@ Dans le cadre de statistiques gaussiennes, la fonction-coût peut alors s'écrir
 
 \subsubsection{Régularisations}
 
-Bien souvent, le nombre d'observations à notre disposition est limité, à cause par exemple d'un faible nombre de capteurs ou d'une mauvaise représentativité temporelle dans les mesures fournies par ces derniers. Dans de telles situations, le problème inverse peut admettre une infinité de solutions, et ainsi devenir \textit{mal-posé}. Rappelons qu'un problème \textit{bien posé} au sens de Hadamard \cite{Hadamard1902} désigne un modèle mathématique dont la solution existe, est unique, et dépend de façon continue des données. A l'inverse, un problème mal-posé déroge à au moins une des règles précédemment citées. \\
+Bien souvent, le nombre d'observations à notre disposition est limité, à cause par exemple d'un faible nombre de capteurs ou d'une mauvaise représentativité temporelle dans les mesures fournies par ces derniers. Dans de telles situations, le problème inverse peut admettre une infinité de solutions, et ainsi devenir \textit{mal-posé}. Rappelons qu'un problème \textit{bien posé} au sens de Hadamard \cite{Hadamard1902} désigne un modèle mathématique dont la solution existe, est unique, et dépend de façon continue des données. \\
+
+A l'inverse, un problème mal-posé déroge à au moins une des règles précédemment citées. \\
 
 De nombreux problèmes physiques sont intrinsèquement mal-posés, et des solutions existent pour les \textit{régulariser}, c'est-à-dire leur appliquer une transformation qui permet de revenir à un problème bien posé. Parmi ces méthodes, la \textit{régularisation de Tikhonov} \cite{Tikhonov1963} est la plus fréquemment employée: elle consiste à ajouter un terme $\lambda_B ||\VecSigmaB||_2$ dit \textit{régularisant} à l'expression de la fonction-coût $\CostF_2$, qui devient alors:
 

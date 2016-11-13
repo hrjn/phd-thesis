@@ -11,7 +11,10 @@
 % --- IMPORTS ---
 
 % Pour la mise en page:
-\usepackage[a4paper]{geometry}
+\usepackage[a4paper, twoside, bottom=3cm]{geometry}
+
+% Lower page numbers
+\setlength{\footskip}{1.5cm}
 
 % Pour les paramètres d'encodage et de langue:
 \usepackage[T1]{fontenc}
@@ -68,11 +71,13 @@
 \usepackage{fancyhdr}
 	\pagestyle{fancy}
 	\renewcommand{\headrulewidth}{1pt}
+
 	\fancyhead[LE]{}
-	\fancyhead[LO]{CHAPITRE \thechapter}
+	\fancyhead[LO]{Chapitre \thechapter}
 	\fancyhead[C]{}
 	\fancyhead[RO]{}
-	\fancyhead[RE]{\rightmark}
+	\fancyhead[RE]{\nouppercase\rightmark}
+	%\cfoot{} % get rid of the page number 
 
 % Pour mettre une table des matières par chapitre:
 % \usepackage[french]{minitoc}
@@ -87,7 +92,7 @@
 % Pour mettre des hyperliens dans le document:
 \usepackage{hyperref}
 	\hypersetup{
-		colorlinks=true, % colorie les liens
+		colorlinks=false, % colorie les liens
 		breaklinks=true, % retour chariot sur liens trop longs
 		urlcolor=blue, % couleur des liens
 		linkcolor=blue, % couleur des liens internes
@@ -182,6 +187,8 @@
 \newcommand*{\correction}{\textcolor{red}}
 
 
+
+
 % Titre
 \title{Inférence bayésienne adaptative pour la reconstruction de source en dispersion atmosphérique}
 \date{12 juillet 2016}
@@ -195,24 +202,28 @@
 	
 	\input{page_garde}
 	\cleardoublepage
+	\pagestyle{plain}
+	\frontmatter
+	\addcontentsline{toc}{chapter}{Résumés}
 	\input{abstracts}
 	\cleardoublepage
+	\addcontentsline{toc}{chapter}{Remerciements}
 	\input{acknowledgements}
 	\cleardoublepage
 \setlength{\epigraphwidth}{0.8\textwidth}
-\epigraph{\textit{Mais je connais la solitude. Trois années de désert m'en ont enseigné le goût. On ne s'y effraie point d'une jeunesse qui s'use dans un paysage minéral, mais il y apparait que, loin de soi, c'est le monde entier qui vieillit. Les arbres ont formé leurs fruits, les terres ont sorti leur blé, les femmes déjà sont belles... Mais la saison avance et l'on est retenu au loin... Et les biens de la terre glissent entre les doigts comme le sable fin des dunes.}}{\textit{Terre des Hommes}, A. de Saint-Exupéry}
+\epigraph{\textit{\og Mais je connais la solitude. Trois années de désert m'en ont enseigné le goût. On ne s'y effraie point d'une jeunesse qui s'use dans un paysage minéral, mais il y apparait que, loin de soi, c'est le monde entier qui vieillit. Les arbres ont formé leurs fruits, les terres ont sorti leur blé, les femmes déjà sont belles... Mais la saison avance et l'on est retenu au loin... Et les biens de la terre glissent entre les doigts comme le sable fin des dunes. \fg{}}}{\textit{Terre des Hommes}, A. de Saint-Exupéry}
 \cleardoublepage
 	\renewcommand{\contentsname}{Sommaire} % Dans le corps du document,avant la commande \tableofcontents.
-	
+	\pagestyle{plain}
+	%\pagenumbering{gobble}
 	\tableofcontents
-
-	
 	\cleardoublepage
-	
-			\pagestyle{empty}
+	\pagestyle{plain}
 	\listoffigures
-	
 	\cleardoublepage
+	\mainmatter
+	%\pagenumbering{arabic}
+
 	
 	%\input{liste_symboles}
 	

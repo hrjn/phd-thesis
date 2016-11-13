@@ -124,7 +124,7 @@ p(\VecThetaMaj | \VecObs) \propto p(\VecObs | \VecThetaMaj)p(\VecThetaMaj)
 \label{eq_AE_1_prop}
 \end{equation}
 
-Comme {le vecteur d'erreur est supposé gaussien centré}, on peut alors définir la vraisemblance des observations $\VecObs$ sachant un terme source donné $\VecThetaMaj$:
+\newpage Comme {le vecteur d'erreur est supposé gaussien centré}, on peut alors définir la vraisemblance des observations $\VecObs$ sachant un terme source donné $\VecThetaMaj$:
 
 \begin{equation}
 p(\VecObs | \VecThetaMaj) = \prod\limits_{i=1}^{N_c} \prod\limits_{j=1}^{T_c}\mathcal{N}\left(\obs_{i,j} \middle\vert \MatC_{i,j}(\PosSource)\VecQSource, \varObs\right)
@@ -161,7 +161,7 @@ Il est toutefois possible d'atténuer les effets indésirables de l'hypothèse g
 \NdFS{Nous développons ici en détail le processus de résolution du problème tel qu'il a été défini dans le paragraphe précédent, à savoir \textit{le calcul de la loi a posteriori $p(\VecThetaMaj | \VecObs)$ des paramètres de la source}. En pratique, il est impossible d'obtenir cette dernière de façon analytique, à cause de la complexité et de l'aspect fortement non-linéaire de la vraisemblance $p(\VecObs|\VecThetaMaj)$ présentée à l'équation \eqref{eq_AE_5}. Afin de contourner ce problème, une solution consiste à décomposer la loi d'intérêt en plusieurs éléments distincts, suivant une opération de \textit{marginalisation}}.\\
 
 
-\NdFS{La loi $p(\VecThetaMaj|\VecObs)$ est dite \textit{jointe}, car elle regroupe tous les paramètres de la source autour d'une unique loi a posteriori. Par définition des probabilités conditionnelles, cette loi peut s'écrire de la façon suivante:}
+\newpage \NdFS{La loi $p(\VecThetaMaj|\VecObs)$ est dite \textit{jointe}, car elle regroupe tous les paramètres de la source autour d'une unique loi a posteriori. Par définition des probabilités conditionnelles, cette loi peut s'écrire de la façon suivante:}
 
 \begin{equation}
 p(\VecThetaMaj|\VecObs) = p(\PosSource, \VecQSource | \VecObs) = \dfrac{p(\PosSource, \VecQSource, \VecObs)}{p(\VecObs)}
@@ -295,7 +295,7 @@ Il s'agit ici d'étudier la loi a posteriori marginale $p(\PosSource | \VecObs)$
 
 Nous appliquons l'algorithme AMIS décrit dans le chapitre 2 afin de localiser la source. Pour cela, on va ainsi construire une procédure itérative basée sur l'algorithme \ref{algo_AMIS} afin de créer sur $K$ itérations et en générant $N_p$ particules par itération un échantillon de $KN_p$ particules {$\left\{\PosSource_k^{(i)}\right\}_{0\leq k \leq K}^{1\leq i \leq N_p}$} dont la distribution approxime celle de la loi marginale a posteriori {$p(\PosSource | \VecObs)$} de la position de la source.\\
 
-Dans un cadre bayésien, la loi cible recherchée peut alors s'écrire à une constante multiplicative près, suivant la relation de proportionnalité suivante:
+\newpage Dans un cadre bayésien, la loi cible recherchée peut alors s'écrire à une constante multiplicative près, suivant la relation de proportionnalité suivante:
 
 \begin{equation}
 {
@@ -431,7 +431,7 @@ Les estimations respectives (au sens du MMSE) de la position de la source et de 
 
 \section{Description du modèle de dispersion à bouffées gaussiennes}
 
-Une fois la loi de proposition initialisée, on peut exécuter la boucle itérative de l'algorithme AMIS telle que décrite à l'algorithme \ref{algo_AMIS}. Dans cet algorithme, le calcul de la loi de vraisemblance telle que décrite à l'équation \eqref{eq_AE_5} requiert l'exécution d'un modèle de dispersion pour obtenir $\MatC(\PosSource)$. Ici, nous choisissons d'utiliser un modèle \textit{à boufféees gaussiennes}, ou \textit{Gaussian Puff Model} (GPM). Nous expliquons brièvement dans la suite de ce paragraphe les principes de base régissant ce type de modèles.\\
+Une fois la loi de proposition initialisée, on peut exécuter la boucle itérative de l'algorithme AMIS telle que décrite à l'algorithme \ref{algo_AMIS}. Dans cet algorithme, le calcul de la loi de vraisemblance telle que décrite à l'équation \eqref{eq_AE_5} requiert l'exécution d'un modèle de dispersion pour obtenir $\MatC(\PosSource)$. Ici, nous choisissons d'utiliser un modèle \textit{à boufféees gaussiennes}, ou \textit{Gaussian Puff Model} (GPM).
 
 Les modèles gaussiens permettent de représenter la dispersion à petite échelle autour d'une source. Pour cela, une formulation analytique de la concentration du polluant est calculée suivant plusieurs hypothèses permettant une mise en oeuvre simple et peu coûteuse en temps de calcul. Il existe deux types différents de modèles gaussiens:\\
 
@@ -589,7 +589,7 @@ L'algorithme a été testé avec deux positions de source différentes, correspo
   Comme présenté en figure \ref{fig_AE_7}, la méthode parvient à fournir une bonne estimation du profil de rejet dans les trois cas présentés. Sachant que l'estimation de la loi a posteriori de $\VecQSource$ \NdFS{dépend à la fois de $\PostMeanQ$ et $\PostCovQ$,} il est possible de représenter la marge d'incertitude associée à chaque valeur estimée: pour chacun des cas de la figure \ref{fig_AE_7} la valeur réelle du débit est bien incluse dans l'intervalle à $\pm 2\widetilde{\sigma}_q$, où \NdFS{$\widetilde{\sigma}_q^2 = \text{diag}(\MatSigma_{\widehat{\VecQSource}})$}. Dans le cas de la figure \ref{fig_AE_7_C}, {on observe un effet de bord sur la fin du rejet estimé, phénomène qui est absent des autres configurations. Cela est dû au fait que l'algorithme ne dispose pas des mesures permettant de confirmer ou non les valeurs non-nulles prises par le débit estimé, ces observations étant après la limite supérieure de la fenêtre temporelle d'observation. Le problème ne se pose pas dans les configurations précédentes, car comme les concentrations mesurées sont nulles au dernier instant d'observation, l'algorithme laisse la valeur de débit estimé égale à sa moyenne a priori, à savoir 0.}
   
   
-  le pic à la limite de l'intervalle d'émission est dû au fait que le rejet est plus long que la période d'observation: en l'absence d'information, l'algorithme ne peut fournir une estimation correcte, mais demeure cohérent  en augmentant fortement la taille de la marge d'incertitude, signifiant ainsi que l'information manque. \\
+  Le pic à la limite de l'intervalle d'émission est dû au fait que le rejet est plus long que la période d'observation: en l'absence d'information, l'algorithme ne peut fournir une estimation correcte, mais demeure cohérent  en augmentant fortement la taille de la marge d'incertitude, signifiant ainsi que l'information manque. \\
   
   \subsubsection{Robustesse statistique de l'estimation}
     
@@ -662,7 +662,7 @@ Un test de robustesse statistique a ensuite été effectué, en changeant de fa�
  
  Les résultats obtenus démontrent l'efficacité de l'aspect adaptatif de l'AMIS, qui lui permet d'atteindre rapidement une estimation de bonne qualité pour la localisation de la source.\\
  
- Encore une fois, dans la démarche MCMC, l'initialisation de la chaîne de Markov influe sur la vitesse de convergence, cette dernière étant d'autant plus élevée que l'état initial se situe près de la vraie source. Un autre paramètre du MCMC intervient également ici: la variance du noyau de transition. En effet, comme expliqué au Chapitre 2, si la valeur choisie pour cette variance est trop faible, même si l'initialisation place la chaîne dans une position relativement favorable, la convergence sera trop lente car le nombre d'états nécessaires pour atteindre une estimation correcte sera plus élevé. A l'inverse, il est risqué de trop augmenter la valeur de cette variance, car cela entraînerait des transitions d'amplitude trop élevée, pouvant potentiellement empêcher la convergence vers le point source recherché. L'AMIS est quant à lui plus souple dans sa démarche de transition d'une itération à l'autre, cependant il peut être également sujet à des problèmes de convergence si, par exemple, les particules échantillonnées par la loi de proposition initiale ne couvrent pas du tout la zone où se situe la vraie source, d'où l'intérêt d'une initialisation homogène telle que présentée à la figure \ref{init_amis_good}.\\
+ Encore une fois, dans la démarche MCMC, l'initialisation de la chaîne de Markov influe sur la vitesse de convergence, cette dernière étant d'autant plus élevée que l'état initial se situe près de la vraie source. Un autre paramètre du MCMC intervient également ici: la variance du noyau de transition. En effet, comme expliqué au Chapitre 2, si la valeur choisie pour cette variance est trop faible, même si l'initialisation place la chaîne dans une position relativement favorable, la convergence sera trop lente car le nombre d'états nécessaires pour atteindre une estimation correcte sera plus élevé. A l'inverse, il est risqué de trop augmenter la valeur de cette variance, car cela entraînerait des transitions d'amplitude trop élevée, pouvant potentiellement empêcher la convergence vers le point source recherché. L'AMIS est quant à lui plus souple dans sa démarche de transition d'une itération à l'autre, cependant il peut être sujet à des problèmes de convergence si, par exemple, les particules échantillonnées par la loi de proposition initiale ne couvrent pas la zone où se situe la vraie source, d'où l'intérêt d'une initialisation homogène (figure \ref{init_amis_good}).\\
  
  \subsubsection{Effective Sample Size}
  
@@ -702,7 +702,7 @@ Le fait d'utiliser des données expérimentales permet également de prendre en 
 	\label{fig_11_AE}
 \end{figure}
 
-Le choix d'un modèle de dispersion à bouffées gaussiennes permet ainsi d'intégrer ces variations de vent: pour le \textit{trial} 7 nous avons donc recueilli et moyenné les mesures de vent issues des deux capteurs de vent soniques (anémomètres à ultrasons) présents sur le domaine, puis intégré les valeurs résultantes dans le modèle de dispersion. Pour le \textit{trial} 30 les variations sont beaucoup moins importantes, nous avons donc gardé l'hypothèse d'un vent stationnaire uniforme. \\
+Le choix d'un modèle de dispersion à bouffées gaussiennes permet ainsi d'intégrer ces variations de vent: pour le \textit{trial} 7 nous avons donc recueilli et moyenné les mesures de vent issues des deux capteurs de vent soniques (anémomètres à ultrasons) présents sur le domaine, puis intégré les valeurs résultantes dans le modèle de dispersion. \newpage Pour le \textit{trial} 30 les variations sont beaucoup moins importantes, nous avons donc gardé l'hypothèse d'un vent stationnaire uniforme. \\
 
 \subsubsection{Estimation de la position (\textit{trials} 7 et 30)}
 
