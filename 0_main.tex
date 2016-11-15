@@ -196,17 +196,21 @@
 
 
 \begin{document}
-		\pagestyle{empty}
+
 
 	%\maketitle
-	
+	\pagestyle{empty}
 	\input{page_garde}
+	\pagestyle{empty}
 	\cleardoublepage
-	\pagestyle{plain}
 	\frontmatter
+	\pagestyle{plain}
+
+
 	\addcontentsline{toc}{chapter}{Résumés}
 	\input{abstracts}
 	\cleardoublepage
+	
 	\addcontentsline{toc}{chapter}{Remerciements}
 	\input{acknowledgements}
 	\cleardoublepage
