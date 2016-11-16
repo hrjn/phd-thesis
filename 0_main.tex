@@ -1,4 +1,4 @@
-\documentclass{book}
+\documentclass[oneside]{book}
 
 %%%
 % Fichier principal du manuscrit de thèse, à utiliser pour compilation.
@@ -11,7 +11,14 @@
 % --- IMPORTS ---
 
 % Pour la mise en page:
-\usepackage[a4paper, twoside, bottom=3cm]{geometry}
+\usepackage[a4paper, bottom=3cm]{geometry}
+\usepackage{afterpage}
+	\newcommand\blankpage{%
+		\null
+		\thispagestyle{plain}%
+		%\addtocounter{page}{-1}%
+		\newpage}
+
 
 % Lower page numbers
 \setlength{\footskip}{1.5cm}
@@ -73,10 +80,10 @@
 	\renewcommand{\headrulewidth}{1pt}
 
 	\fancyhead[LE]{}
-	\fancyhead[LO]{Chapitre \thechapter}
+	\fancyhead[LO]{Chap.\thechapter}
 	\fancyhead[C]{}
-	\fancyhead[RO]{}
-	\fancyhead[RE]{\nouppercase\rightmark}
+	\fancyhead[RO]{\nouppercase\rightmark}
+	%\fancyhead[RE]{\nouppercase\rightmark}
 	%\cfoot{} % get rid of the page number 
 
 % Pour mettre une table des matières par chapitre:
@@ -201,8 +208,12 @@
 	%\maketitle
 	\pagestyle{empty}
 	\input{page_garde}
-	\pagestyle{empty}
-	\cleardoublepage
+			\null
+			\thispagestyle{empty}%
+			%\addtocounter{page}{-1}%
+			\newpage
+			
+			
 	\frontmatter
 	\pagestyle{plain}
 
@@ -220,12 +231,13 @@
 	\renewcommand{\contentsname}{Sommaire} % Dans le corps du document,avant la commande \tableofcontents.
 	\pagestyle{plain}
 	%\pagenumbering{gobble}
+	\afterpage{\blankpage}
 	\tableofcontents
 	\cleardoublepage
 	\pagestyle{plain}
 	\listoffigures
 	\cleardoublepage
-	\mainmatter
+
 	%\pagenumbering{arabic}
 
 	

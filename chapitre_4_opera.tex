@@ -6,8 +6,6 @@ Après avoir utilisé le cas-test Beaune pour tester plusieurs aspects de l'algo
 
 Nous considérons désormais un cas-test en milieu urbain caractérisé par la présence d'obstacles multiples et de géométries variées sur le domaine (bâtiments). Pour cela, on utilise une reconstitution du quartier parisien de l'Opéra (figure \ref{fig_opera_config}).\\
 
-
-
 \begin{figure}[h!]
 	\centering
 	\begin{subfigure}[t]{0.5\textwidth}
@@ -92,7 +90,9 @@ Etant donné la taille réduite du domaine ainsi que les conditions météorolog
 
 Avec le cas-test Opéra, il est vite apparu que sans apport préalable d'information, l'algorithme aurait des difficultés à converger vers une solution correcte étant donné la complexité {de la configuration à traiter (milieu obstrué et météorologie variable)}. Une procédure préliminaire a donc été mise en place {visant à prédéterminer une zone à favoriser pour la localisation de la source. Pour cela, le but est } d'initialiser les paramètres de la loi de proposition de l'AMIS autrement que par une simple répartition uniforme des particules sur le domaine. {Un ajustement de ces paramètres} en amont de l'exécution de l'AMIS permettrait alors d'explorer des zones potentiellement intéressantes plus rapidement, augmentant ainsi l'efficacité de l'algorithme d'estimation. \\
 
-\newpage Pour cela, nous proposons d'utiliser le résultat des calculs de rétro-propagation en modélisant par une mixture de $K$ gaussiennes la densité de probabilité sur la localisation obtenue par rétro-propagation à $D/K$ instants choisis uniformément répartis sur un intervalle $[t_0, t_{T_s}]$, où $t_0$ est l'instant durant lequel est observé le maximum de concentration et {$t_{T_s}$ }est l'instant final de la rétro-propagation, défini par l'utilisateur. Plus précisément, pour un instant {$t_l \in [t_0,t_{T_s}]$}, en notant $\VecTheta = (x,y)$ un point du domaine maillé suivant une grille de dimensions $(N_x,N_y)$, on considère la distribution suivante:
+\newpage
+
+ Pour cela, nous proposons d'utiliser le résultat des calculs de rétro-propagation en modélisant par une mixture de $K$ gaussiennes la densité de probabilité sur la localisation obtenue par rétro-propagation à $D/K$ instants choisis uniformément répartis sur un intervalle $[t_0, t_{T_s}]$, où $t_0$ est l'instant durant lequel est observé le maximum de concentration et {$t_{T_s}$ }est l'instant final de la rétro-propagation, défini par l'utilisateur. Plus précisément, pour un instant {$t_l \in [t_0,t_{T_s}]$}, en notant $\VecTheta = (x,y)$ un point du domaine maillé suivant une grille de dimensions $(N_x,N_y)$, on considère la distribution suivante:
 
 \begin{equation}
 p(\VecTheta | t_l,\VecObs) = \sum\limits_{i=1}^{N_x} \sum\limits_{j=1}^{N_y} \widetilde{\omega}_{x_i,y_j}^l ~  \mathcal{U}_{[x_{i-1},x_i]\times [y_{j-1},y_j]}(\VecTheta)
