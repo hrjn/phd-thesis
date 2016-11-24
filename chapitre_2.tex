@@ -4,153 +4,156 @@
 
 Ce chapitre introduit {la méthodologie} et les objectifs de l'inférence bayésienne, puis présente les principes de base régissant les méthodes de Monte Carlo. Un exposé plus détaillé est développé autour des deux grandes familles des techniques Monte Carlo, à savoir les \textit{Markov Chain Monte Carlo} et les algorithmes d'échantillonnage d'importance. Concernant ces derniers, l'aspect adaptatif sur la loi de proposition est introduit au travers des méthodes Population Monte Carlo, puis complété par la notion d'adaptativité multiple qui caractérise l'algorithme AMIS. 
 
-	
-	\section{Eléments de statistique bayésienne}
-	
-	\subsection{L'intérêt d'une approche statistique}
-	\label{ss_erreurs}
-	
-	Le cadre des problèmes STE offre plusieurs arguments en faveur d'une approche de type statistique.\\
-	
-	La physique de l'atmosphère ainsi que les systèmes instrumentaux permettant d'en mesurer les variables sont soumis à des phénomènes de fluctuations aléatoires dont il est, par définition, impossible  de quantifier la nature exacte. Le fait d'utiliser un cadre de travail probabiliste et de considérer la nature statistique des grandeurs d'intérêt prend donc tout son sens dans un tel contexte. Une approche statistique permet en effet de s'appuyer sur le socle théorique rigoureux des probabilités afin de chercher à estimer non plus des valeurs ponctuelles par des méthodes déterministes, mais plutôt des distributions de probabilité liées à ces valeurs. Il devient alors possible : 
-	\begin{itemize}
-		\item de modéliser \textit{l'incertitude relative aux données observées} en considérant qu'elles sont affectées par un certain type de \textit{bruit}, qui est alors défini comme suivant une loi de probabilité spécifique,
-		\item de quantifier \textit{l'incertitude autour des valeurs estimées} pour la grandeur d'intérêt, en l'occurrence les paramètres d'un terme source dans notre cas. Comme on travaille désormais sur des distributions statistiques, on peut s'appuyer sur un \textit{estimateur} afin de caractériser le résultat recherché, ainsi que, {par exemple}, sur la \textit{variance} qui lui est associée pour évaluer le degré de plausibilité du résultat d'estimation.
-	\end{itemize}
+
+\section{Eléments de statistique bayésienne}
+
+\subsection{L'intérêt d'une approche statistique}
+\label{ss_erreurs}
+
+Le cadre des problèmes STE offre plusieurs arguments en faveur d'une approche de type statistique.\\
+
+La physique de l'atmosphère ainsi que les systèmes instrumentaux permettant d'en mesurer les variables sont soumis à des phénomènes de fluctuations aléatoires dont il est, par définition, impossible  de quantifier la nature exacte. Le fait d'utiliser un cadre de travail probabiliste et de considérer la nature statistique des grandeurs d'intérêt prend donc tout son sens dans un tel contexte. Une approche statistique permet en effet de s'appuyer sur le socle théorique rigoureux des probabilités afin de chercher à estimer non plus des valeurs ponctuelles par des méthodes déterministes, mais plutôt des distributions de probabilité liées à ces valeurs. Il devient alors possible : 
+
+\begin{itemize}
+	\item de modéliser \textit{l'incertitude relative aux données observées} en considérant qu'elles sont affectées par un certain type de \textit{bruit}, qui est alors défini comme suivant une loi de probabilité spécifique,
+	\item de quantifier \textit{l'incertitude autour des valeurs estimées} pour la grandeur d'intérêt, en l'occurrence les paramètres d'un terme source dans notre cas. Comme on travaille désormais sur des distributions statistiques, on peut s'appuyer sur un \textit{estimateur} afin de caractériser le résultat recherché, ainsi que, {par exemple}, sur la \textit{variance} qui lui est associée pour évaluer le degré de plausibilité du résultat d'estimation.
+\end{itemize}
+
+\subsubsection{Erreurs d'observation}
+Toute l'\textit{information disponible} pour traiter un problème STE est {contenue} dans les observations issues du réseau de capteurs. Or ces mesures ne représentent pas parfaitement la "vérité physique" illustrant le rejet caractérisé, celle-ci étant altérée par plusieurs facteurs : \\
+
+\begin{itemize}
+	\item \textbf{la représentativité spatiale du réseau}: plus le nombre de capteurs est important, mieux le phénomène sera mesuré. Cependant, en pratique, le cas parfait où chaque point du domaine est instrumenté n'existe pas;
+	\item \textbf{la représentativité temporelle du capteur}: les observations sont obtenues suivant une certaine fréquence d'acquisition. Celle-ci peut être définie par les procédés physiques inhérents à la mesure, ceux-ci pouvant impliquer une chaîne de traitement plus ou moins complexe avant obtention d'une valeur de concentration. Dans d'autres cas l'acquisition de ces valeurs peut être quasi- instantanée, mais les contraintes de stockage et de transfert des données font qu'une opération de moyennage devient nécessaire afin de réduire la quantité des observations à un nombre compatible avec les capacités du dispositif instrumental considéré. Dans tous les cas, cela génère un biais sur les observations.
+	\item les différences sources de bruit imputables à \textbf{l'électronique du capteur}.\\
+\end{itemize}
+
+\subsubsection{Erreurs du modèle}
+Une autre source d'incertitude concerne l'\textit{information générée} par le modèle de dispersion, elle-même confrontée à l'information disponible pour inférer les paramètres de la source. En effet, les approximations consécutives à la mise en équation des phénomènes de dispersion engendrent déjà un premier écart par rapport à la réalité. Ces approximations peuvent être de nature physique ou numérique (par exemple les dimensions du maillage pour un modèle eulérien, ou le nombre de particules numériques émises pour un modèle lagrangien). A cela viennent ensuite s'ajouter les incertitudes autour des données météorologiques, qu'elles soient obtenues grâce à une station de mesure ou par un modèle de prévision. \\
+
+Dans la suite, nous décrivons un formalisme classique dès qu'il s'agit d'inférence statistique qui est celui du paradigme bayésien. L'analyse des incertitudes dans les méthodes STE constitue un volet de recherche important (voir par exemple \cite{Rodriguez2011} et \cite{Rodriguez2013}), mais n'est pas l'objet du travail de recherche présenté dans ce manuscrit.\\
+
+\subsection{Formulation du paradigme bayésien}
+\label{paragraphe_paradigme_bayesien}
+
+Dans le cadre d'une approche statistique, on considère que les éléments $\valObs^{(1)}, \valObs^{(2)}, \dots, \valObs^{(m)}$ du vecteur d'observation $\VecObs$ proviennent de lois de probabilités de paramètres respectifs $\VecTheta^{(1)}, \VecTheta^{(2)}, \dots, \VecTheta^{(m)}$. Pour un problème STE, les observations sont \textit{indépendantes}, et peuvent également être considérées comme \textit{identiquement distribuées}, c'est-à-dire suivant une unique loi de probabilité de paramètre $\VecTheta \in \Theta$, où $\Theta$ est un espace de dimension finie. Dans ce cas, cette loi peut alors s'écrire:
+
+\begin{equation}
+	p(\VecObs | \VecTheta) = \prod_{i=1}^m p(\valObs^{(i)} | \VecTheta)
+	\label{eq_bayesien_modele_observation}
+\end{equation}
+
+Dans la démarche bayésienne, l'objectif est d'exploiter au mieux l'information apportée par $\VecObs$ sur le paramètre $\VecTheta$, pour ensuite créer des procédures d'inférence sur $\VecTheta$. Pour cela, l'idée de base consiste à définir $\VecTheta$ non plus comme un paramètre déterministe, mais désormais comme une variable aléatoire. D'après la définition des probabilités conditionnelles, on a alors:
+
+\begin{equation}
+	p(\VecTheta | \VecObs) = \dfrac{p(\VecTheta, \VecObs)}{p(\VecObs)}
+	\label{equation_pre_bayes_1}
+\end{equation}
+
+où $p(\VecTheta, \VecObs)$ est la loi jointe de $\VecTheta$ et $\VecObs$. Par cette même définition on a également:
+
+\begin{equation}
+	p(\VecObs | \VecTheta) =  \dfrac{p(\VecTheta, \VecObs)}{p(\VecTheta)}
+	\label{equation_pre_bayes_2}
+\end{equation}
+
+En combinant \eqref{equation_pre_bayes_1} et \eqref{equation_pre_bayes_2} on obtient ainsi:
+
+\begin{equation}
+	p(\VecTheta | \VecObs) = \dfrac{p(\VecTheta)p(\VecObs | \VecTheta)}{p(\VecObs)}
+	\label{eq_bayes_simple}
+\end{equation}
+
+Il s'agit de la \textit{règle de Bayes}, qui peut s'écrire sous sa forme complète grâce à la définition de la loi marginale $p(\VecObs)$:
+
+\begin{equation}
+	p(\VecObs) = \int_{\Theta} p(\VecTheta,\VecObs)d\VecTheta = \int_{\Theta} p(\VecTheta)p(\VecObs|\VecTheta)d\VecTheta
+	\label{eq_definition_marginale_d}
+\end{equation}
 	
 
-	
-	\subsubsection{Erreurs d'observation}
-	Toute l'\textit{information disponible} pour traiter un problème STE est {contenue} dans les observations issues du réseau de capteurs. Or ces mesures ne représentent pas parfaitement la "vérité physique" illustrant le rejet caractérisé, celle-ci étant altérée par plusieurs facteurs : \\
-	
-	\begin{itemize}
-		\item \textbf{la représentativité spatiale du réseau}: plus le nombre de capteurs est important, mieux le phénomène sera mesuré. Cependant, en pratique, le cas parfait où chaque point du domaine est instrumenté n'existe pas;
-		\item \textbf{la représentativité temporelle du capteur}: les observations sont obtenues suivant une certaine fréquence d'acquisition. Celle-ci peut être définie par les procédés physiques inhérents à la mesure, ceux-ci pouvant impliquer une chaîne de traitement plus ou moins complexe avant obtention d'une valeur de concentration. Dans d'autres cas l'acquisition de ces valeurs peut être quasi- instantanée, mais les contraintes de stockage et de transfert des données font qu'une opération de moyennage devient nécessaire afin de réduire la quantité des observations à un nombre compatible avec les capacités du dispositif instrumental considéré. Dans tous les cas, cela génère un biais sur les observations.
-		\item les différences sources de bruit imputables à \textbf{l'électronique du capteur}.\\
-	\end{itemize}
-	
-	\subsubsection{Erreurs du modèle}
-	Une autre source d'incertitude concerne l'\textit{information générée} par le modèle de dispersion, elle-même confrontée à l'information disponible pour inférer les paramètres de la source. En effet, les approximations consécutives à la mise en équation des phénomènes de dispersion engendrent déjà un premier écart par rapport à la réalité. Ces approximations peuvent être de nature physique ou numérique (par exemple les dimensions du maillage pour un modèle eulérien, ou le nombre de particules numériques émises pour un modèle lagrangien). A cela viennent ensuite s'ajouter les incertitudes autour des données météorologiques, qu'elles soient obtenues grâce à une station de mesure ou par un modèle de prévision. \\
-	
-	Dans la suite, nous décrivons un formalisme classique dès qu'il s'agit d'inférence statistique qui est celui du paradigme bayésien. L'analyse des incertitudes dans les méthodes STE constitue un volet de recherche important (voir par exemple \cite{Rodriguez2011} et \cite{Rodriguez2013}), mais n'est pas l'objet du travail de recherche présenté dans ce manuscrit.\\
-	
-	\subsection{Formulation du paradigme bayésien}
-	\label{paragraphe_paradigme_bayesien}
-	
-	Dans le cadre d'une approche statistique, on considère que les éléments $\valObs^{(1)}, \valObs^{(2)}, \dots, \valObs^{(m)}$ du vecteur d'observation $\VecObs$ proviennent de lois de probabilités de paramètres respectifs $\VecTheta^{(1)}, \VecTheta^{(2)}, \dots, \VecTheta^{(m)}$. Pour un problème STE, les observations sont \textit{indépendantes}, et peuvent également être considérées comme \textit{identiquement distribuées}, c'est-à-dire suivant une unique loi de probabilité de paramètre $\VecTheta \in \Theta$, où $\Theta$ est un espace de dimension finie. Dans ce cas, cette loi peut alors s'écrire:
-	
-	\begin{equation}
-		p(\VecObs | \VecTheta) = \prod_{i=1}^m p(\valObs^{(i)} | \VecTheta)
-		\label{eq_bayesien_modele_observation}
-	\end{equation}
-	
-	Dans la démarche bayésienne, l'objectif est d'exploiter au mieux l'information apportée par $\VecObs$ sur le paramètre $\VecTheta$, pour ensuite créer des procédures d'inférence sur $\VecTheta$. Pour cela, l'idée de base consiste à définir $\VecTheta$ non plus comme un paramètre déterministe, mais désormais comme une variable aléatoire. D'après la définition des probabilités conditionnelles, on a alors:
-	
-	\begin{equation}
-		p(\VecTheta | \VecObs) = \dfrac{p(\VecTheta, \VecObs)}{p(\VecObs)}
-		\label{equation_pre_bayes_1}
-	\end{equation}
-	
-	où $p(\VecTheta, \VecObs)$ est la loi jointe de $\VecTheta$ et $\VecObs$. Par cette même définition on a également:
-	
-	\begin{equation}
-		p(\VecObs | \VecTheta) =  \dfrac{p(\VecTheta, \VecObs)}{p(\VecTheta)}
-		\label{equation_pre_bayes_2}
-	\end{equation}
-	
-	En combinant \eqref{equation_pre_bayes_1} et \eqref{equation_pre_bayes_2} on obtient ainsi:
-	
-	\begin{equation}
-		p(\VecTheta | \VecObs) = \dfrac{p(\VecTheta)p(\VecObs | \VecTheta)}{p(\VecObs)}
-		\label{eq_bayes_simple}
-	\end{equation}
-	
-	Il s'agit de la \textit{règle de Bayes}, qui peut s'écrire sous sa forme complète grâce à la définition de la loi marginale $p(\VecObs)$:
-	
-	\begin{equation}
-		p(\VecObs) = \int_{\Theta} p(\VecTheta,\VecObs)d\VecTheta = \int_{\Theta} p(\VecTheta)p(\VecObs|\VecTheta)d\VecTheta
-		\label{eq_definition_marginale_d}
-	\end{equation}
-	
-	D'où:
+D'où:
 
-	\begin{equation}
+\begin{equation}
 	p(\VecTheta | \VecObs) = \dfrac{p(\VecTheta)p(\VecObs | \VecTheta)}{ \int_{\Theta} p(\VecTheta)p(\VecObs|\VecTheta)d\VecTheta}
 	\label{eq_bayes_simple}
-	\end{equation}
-	
-	Le terme $p(\VecObs|\VecTheta)$ contient l'information fournie par l'observation, {et définit la \textit{fonction de vraisemblance} de $\VecTheta$.} 
-	L'incertitude sur $\VecTheta$ peut désormais être traduite par une loi de probabilité $p(\VecTheta)$, ce qui signifie que $\VecTheta$ suit cette loi en l'absence d'information d'observation. Cette loi est également appelée loi  \textit{a priori}. 
-	Enfin, la loi de probabilité de $\VecTheta$ après acquisition des observations $\VecObs$ et définie par  	$p(\VecTheta | \VecObs)$ est appelée loi \textit{a posteriori}.\\
-	
-	Dans l'équation \eqref{eq_bayes_simple}, la loi marginale $p(\VecObs)$ sert de constante de normalisation pour que $p(\VecTheta | \VecObs)$ réponde bien à la définition d'une densité de probabilité. Comme cette constante ne dépend pas de $\VecTheta$, on utilise souvent la notation de proportionnalité suivante : 
-	
-	\begin{equation}
+\end{equation}
+
+Le terme $p(\VecObs|\VecTheta)$ contient l'information fournie par l'observation, {et définit la \textit{fonction de vraisemblance} de $\VecTheta$.} 
+L'incertitude sur $\VecTheta$ peut désormais être traduite par une loi de probabilité $p(\VecTheta)$, ce qui signifie que $\VecTheta$ suit cette loi en l'absence d'information d'observation. Cette loi est également appelée loi  \textit{a priori}. 
+Enfin, la loi de probabilité de $\VecTheta$ après acquisition des observations $\VecObs$ et définie par  	$p(\VecTheta | \VecObs)$ est appelée loi \textit{a posteriori}.\\
+
+Dans l'équation \eqref{eq_bayes_simple}, la loi marginale $p(\VecObs)$ sert de constante de normalisation pour que $p(\VecTheta | \VecObs)$ réponde bien à la définition d'une densité de probabilité. Comme cette constante ne dépend pas de $\VecTheta$, on utilise souvent la notation de proportionnalité suivante : 
+\begin{equation}
 	p(\VecTheta | \VecObs) \propto p(\VecTheta)p(\VecObs | \VecTheta)
 	\label{eq_bayes_proportionnalite}
-	\end{equation}
-	
-	En une seule équation, le raisonnement bayésien permet ainsi de joindre l'information d'observation, l'information initialement disponible ou manquante sur le paramètre d'intérêt, et toutes les incertitudes associées grâce au cadre de la théorie des probabilités.
-	
-	\subsubsection{A propos du choix de l'a priori}
-	
-	La quantification de l'information disponible a priori est souvent perçue comme l'une des difficultés principales en statistique bayésienne, celle-ci étant faite de façon relativement arbitraire et ne faisant pas systématiquement de lien avec une distribution connue. Il existe néanmoins un ensemble de règles permettant de mieux appréhender cette étape.
-	
-	\begin{itemize}
-		\item Il est d'abord nécessaire de définir le cas où aucune information préalable n'est disponible. Il reste alors possible d'utiliser la règle de Bayes grâce à la définition d'un type d'a priori non-informatif appelé "a priori de Jeffreys" et défini par la loi:\\
-		\begin{equation}
+\end{equation}
+
+En une seule équation, le raisonnement bayésien permet ainsi de joindre l'information d'observation, l'information initialement disponible ou manquante sur le paramètre d'intérêt, et toutes les incertitudes associées grâce au cadre de la théorie des probabilités.
+
+\subsubsection{A propos du choix de l'a priori}
+
+La quantification de l'information disponible a priori est souvent perçue comme l'une des difficultés principales en statistique bayésienne, celle-ci étant faite de façon relativement arbitraire et ne faisant pas systématiquement de lien avec une distribution connue. Il existe néanmoins un ensemble de règles permettant de mieux appréhender cette étape.
+
+\begin{itemize}
+
+	\item Il est d'abord nécessaire de définir le cas où aucune information préalable n'est disponible. Il reste alors possible d'utiliser la règle de Bayes grâce à la définition d'un type d'a priori non-informatif appelé "a priori de Jeffreys" et défini par la loi:\\
+	\begin{equation}
 		p(\VecTheta) \propto \sqrt{\mathcal{I}(\VecTheta | \VecObs)}
 		\label{eq_jeffreys}
-		\end{equation}
-		où $\mathcal{I}(\VecTheta | \VecObs)$ est l'information de Fisher de la vraisemblance:
-		\begin{equation}
+	\end{equation}
+	où $\mathcal{I}(\VecTheta | \VecObs)$ est l'information de Fisher de la vraisemblance:
+	\begin{equation}
 		\mathcal{I}(\VecTheta | \VecObs) = -\mathbb{E}_\VecTheta\left[\dfrac{\partial^2 \log p(\VecObs|\VecTheta)}{\partial \VecTheta^2}\right]
-		\end{equation}
-		
-		\item Il existe également des cas où il n'y a pas de raison de favoriser initialement une ou plusieurs valeurs de $\VecTheta$. On peut alors choisir une loi uniforme pour $p(\VecTheta)$, à condition que le support de cette distribution soit compact, i.e. que l'ensemble des valeurs pouvant être prises par $\VecTheta$ soit contenu dans un intervalle fermé. A la suite de l'équation \eqref{eq_bayes_proportionnalite}, la loi a posteriori devient alors simplement proportionnelle à la vraisemblance. Notons que le fait de borner $\VecTheta$ introduit d'ores et déjà de l'information a priori, une loi uniforme n'est donc pas strictement non-informative.\\
-		
-		\item Dans un cadre plus général, la famille de la distribution a priori est souvent choisie de façon à faciliter le calcul de la loi a posteriori. Cela est possible grâce à l'utilisation des \textit{a priori conjugués} qui, pour une vraisemblance donnée, retournent une distribution a posteriori de la même famille que l'a priori, et dont les paramètres peuvent être calculés de façon analytique.\\
-	\end{itemize}
-	
-	\subsection{Estimateurs ponctuels}
+	\end{equation}
+
+	\item Il existe également des cas où il n'y a pas de raison de favoriser initialement une ou plusieurs valeurs de $\VecTheta$. On peut alors choisir une loi uniforme pour $p(\VecTheta)$, à condition que le support de cette distribution soit compact, i.e. que l'ensemble des valeurs pouvant être prises par $\VecTheta$ soit contenu dans un intervalle fermé. A la suite de l'équation \eqref{eq_bayes_proportionnalite}, la loi a posteriori devient alors simplement proportionnelle à la vraisemblance. Notons que le fait de borner $\VecTheta$ introduit d'ores et déjà de l'information a priori, une loi uniforme n'est donc pas strictement non-informative.\\
+
+	\item Dans un cadre plus général, la famille de la distribution a priori est souvent choisie de façon à faciliter le calcul de la loi a posteriori. Cela est possible grâce à l'utilisation des \textit{a priori conjugués} qui, pour une vraisemblance donnée, retournent une distribution a posteriori de la même famille que l'a priori, et dont les paramètres peuvent être calculés de façon analytique.\\
+\end{itemize}
+
+
+\subsection{Estimateurs ponctuels}
 Comme $\VecTheta$ est désormais une variable aléatoire, sa distribution a posteriori suffit pour prendre la décision sous-jacente à son interprétation. On peut donc caractériser cette loi par un estimateur ponctuel $\hat{\VecTheta}$, dont la construction est choisie selon la façon dont on interprète l'écart entre les valeurs estimées et les valeurs réelles du paramètre.\\
 
 On peut ainsi définir une fonction-coût, ou \textit{fonction de perte} $L(\varrho, \VecTheta)$, où $\varrho$ est l'approximation de $\VecTheta$ issue du processus d'estimation. L'\textit{estimateur bayésien} (ou \textit{estimateur optimal}) est par définition celui qui minimise le \textit{risque bayésien}, dont la valeur est donnée par : 
 
 \begin{equation}
-\mathcal{R}(\varrho) = \int_{\mathbb{R}^m} \int_{\Theta} L(\varrho,\VecTheta)p(\VecObs | \VecTheta)p(\VecTheta) d\VecObs d\VecTheta
-\label{eq_risque_bayesien}
+	\mathcal{R}(\varrho) = \int_{\mathbb{R}^m} \int_{\Theta} L(\varrho,\VecTheta)p(\VecObs | \VecTheta)p(\VecTheta) d\VecObs d\VecTheta
+	\label{eq_risque_bayesien}
 \end{equation}
 
 D'après le paragraphe §1.3 de \cite{Robert2004}, cela revient de façon équivalente à minimiser la \textit{perte a posteriori}:
 
 \begin{equation}
-\mathbb{E}[L(\varrho,\VecTheta)|\VecObs] = \int_{\Theta} L(\varrho,\VecObs)\PosteriorTheta d\VecTheta
-\label{eq_perte_a_posteriori}
+	\mathbb{E}[L(\varrho,\VecTheta)|\VecObs] = \int_{\Theta} L(\varrho,\VecObs)\PosteriorTheta d\VecTheta
+	\label{eq_perte_a_posteriori}
 \end{equation}
 
 Pour cela, une approche courante consiste à écrire une fonction-coût de type quadratique:
 
 \begin{equation}
-L(\varrho,\VecTheta) = || \varrho - \VecTheta ||^2
-\label{eq_fonction_cout_bayesien_quadratique}
+	L(\varrho,\VecTheta) = || \varrho - \VecTheta ||^2
+	\label{eq_fonction_cout_bayesien_quadratique}
 \end{equation}
 	
 Dans ce cas, l'estimateur optimal est \textit{l'espérance a posteriori}, aussi appelé MMSE (\textit{Minimum Mean Square Error}), et s'écrit comme l'intégration de $\VecTheta$ sous la mesure $p(\VecTheta | \VecObs)$ : 
 
 \begin{equation}
-\varrho_{MMSE} = \hat{\VecTheta}_{MMSE} = \mathbb{E}_{\VecTheta | \VecObs}[\VecTheta] = \int_{\Theta}\VecTheta \PosteriorTheta d\VecTheta
-\label{eq_definition_mmse}
+	\varrho_{MMSE} = \hat{\VecTheta}_{MMSE} = \mathbb{E}_{\VecTheta | \VecObs}[\VecTheta] = \int_{\Theta}\VecTheta \PosteriorTheta d\VecTheta
+	\label{eq_definition_mmse}
 \end{equation}
 
 Une autre possibilité consiste à choisir la fonction-coût 0-1, qui associe un coût nul à une estimation correcte (i.e. $\delta = \VecTheta$) et un coût unitaire à n'importe quelle autre valeur. On montre alors que l'estimateur optimal est le \textit{maximum a posteriori} (MAP) et s'écrit: 
 
 \begin{equation}
-\varrho_{MAP} = \hat{\VecObs} = \argmax_{\VecTheta} \PosteriorTheta
-\label{eq_definition_map}
+	\varrho_{MAP} = \hat{\VecObs} = \argmax_{\VecTheta} \PosteriorTheta
+	\label{eq_definition_map}
 \end{equation}
 
 En pratique il s'agit simplement du mode de la loi a posteriori $\PosteriorTheta$.\\
+
+
 
 \section{Méthodes de Monte Carlo}
 
@@ -164,37 +167,34 @@ Des différentes définitions données aux méthodes de Monte Carlo, celle énon
 	\item la représentation de la solution d'un problème par les paramètres d'une population statistique hypothétique,
 	\item l'utilisation d'une suite aléatoire de valeurs pour construire un ensemble d'échantillons de cette population, dont les paramètres statistiques peuvent ensuite être obtenus et répondre au problème initial.\\
 \end{itemize}
-	
+
 Dans un contexte général, cela revient à tirer depuis un espace $\Upsilon$ un vecteur $\VecXMC$ de $N$ éléments (ou $N$-échantillon) $\valXMC^{(1)}, \valXMC^{(2)}, \dots, \valXMC^{(N)}$ indépendants et identiquement distribués pour simuler la densité $p(\VecXMC)$ définie comme étant la \textit{loi cible}, i.e. celle dont les paramètres permettent de résoudre le problème initial. Ce $N$-échantillon permet d'approximer $p(\VecXMC)$ par une loi $p_N(\VecXMC)$ qui peut s'écrire:
 
 \begin{equation}
-p_N(\VecXMC) = \dfrac{1}{N} \sum\limits_{i=1}^N\delta_{\valXMC^{(i)}}(\VecXMC)
-\label{eq_approximation_MC}
+	p_N(\VecXMC) = \dfrac{1}{N} \sum\limits_{i=1}^N\delta_{\valXMC^{(i)}}(\VecXMC)
+	\label{eq_approximation_MC}
 \end{equation}
+
 où $\delta_{\valXMC^{(i)}}(\VecXMC)$ représente la distribution de Dirac centrée au point $\valXMC^{(i)}$. \\
 
 On peut utiliser l'approximation de Monte Carlo pour approcher l'espérance de n'importe quelle fonction d'une variable aléatoire: il suffit pour cela de tirer des échantillons depuis la loi de cette variable, puis de calculer la moyenne arithmétique de la fonction en question appliquée aux échantillons. En d'autres termes, l'intégrale sur la variable aléatoire $X$ suivante:
 
 \begin{equation}
-{
-\mathbb{E}_p [\psi(X)] = \int \psi(x) p(x)dx
-\label{eq_integrale_MC_intractable}
-}
+	\mathbb{E}_p [\psi(X)] = \int \psi(x) p(x)dx
+	\label{eq_integrale_MC_intractable}
 \end{equation}
+
 peut ainsi être approximée par:
 
 \begin{equation}
-{
-\mathbb{E}_p[\psi(X)] \simeq \dfrac{1}{N}\sum\limits_{i=1}^N \psi(x^{(i)})
-\label{eq_integrale_MC_approximation}
-}
+	\mathbb{E}_p[\psi(X)] \simeq \dfrac{1}{N}\sum\limits_{i=1}^N \psi(x^{(i)})
+	\label{eq_integrale_MC_approximation}
 \end{equation}
 
 Une autre fonctionnalité des méthodes Monte Carlo, directement liée à l'inférence bayésienne appliquée aux problèmes inverses, concerne la simulation de distribution de probabilités complexes. Généralement, la valeur liant les observations au modèle de données et représentée par la vraisemblance $p(\VecObs |\VecTheta)$, présente un aspect fortement non-linéaire induit par la nature des phénomènes physiques mis en jeu. Par conséquent, il devient difficile d'échantillonner facilement depuis la loi a posteriori $\PosteriorTheta$, qui devient ici la loi cible.\\
 
 La solution consiste alors à tirer depuis une loi alternative plus accessible appelée \textit{loi de proposition}, et de choisir les paramètres de cette loi de façon à ce que les éléments qui en sont issus reflètent au mieux les propriétés statistiques de la loi cible. C'est dans cette optique que nous allons développer les différentes familles de méthodes Monte Carlo présentées dans la suite de ce chapitre.\\
 
-%\textbf{Remarque}: L'intégration Monte Carlo peut également être utilisée dans le cadre Bayésien, dans les situations où le calcul de la constante de normalisation $p(\VecObs) = \int_{\Theta} p(\VecTheta)p(\VecObs | \VecTheta)d\VecTheta$ se révèle nécessaire, par exemple dans les problèmes de sélection de modèle.
 
 \subsection{Algorithmes Markov Chain Monte Carlo (MCMC)}
 
@@ -205,8 +205,8 @@ Les méthodes \textit{Markov Chain Monte Carlo} (MCMC) associent l'approche Mont
 Une chaîne de Markov est un processus aléatoire  $(\VecTheta^{(0)}, \VecTheta^{(1)}, \dots, \VecTheta^{(N)})$ à temps discret tel que, $\forall i \in \{1, \dots, N\}$ la loi de l'état $i$ ne dépend uniquement que de celui qui le précède (donc l'état $i-1$). Autrement dit:
 
 \begin{equation}
-p(\VecThetaNouveau | \VecTheta^{(0)}, \VecTheta^{(1)}, \dots, \VecThetaCourant) = p(\VecThetaNouveau|\VecThetaCourant)
-\label{eq_propriete_markov}
+	p(\VecThetaNouveau | \VecTheta^{(0)}, \VecTheta^{(1)}, \dots, \VecThetaCourant) = p(\VecThetaNouveau|\VecThetaCourant)
+	\label{eq_propriete_markov}
 \end{equation}
 
 Toute chaîne de Markov peut être caractérisée par :
@@ -226,9 +226,10 @@ On peut toutefois distinguer certains types particuliers de chaînes définis pa
 La propriété qui nous intéresse concerne la \textit{loi de probabilité stationnaire}: si, à partir d'un certain seuil, chacune des variables aléatoires de la chaîne suit la même loi, alors on dit que l'état stationnaire est atteint. La convergence vers une telle loi est garantie si la chaîne de Markov est dite \textit{ergodique}, i.e. si elle respecte les propriétés d'homogénéité, d'irréductibilité, de récurrence positive et d'apériodicité. En d'autres termes, pour tout état $j$ d'une chaîne de Markov ergodique:
 
 \begin{equation}
-\lim_{n \rightarrow + \infty} P(\VecTheta^{(n)} = j) = \pi(j)
-\label{eq_definition_loi_stationnaire}
+	\lim_{n \rightarrow + \infty} P(\VecTheta^{(n)} = j) = \pi(j)
+	\label{eq_definition_loi_stationnaire}
 \end{equation}
+
 où $\pi$ est la distribution stationnaire de la chaîne. 
 
 
@@ -243,13 +244,11 @@ On choisit souvent $\kernel$ comme étant une distribution gaussienne symétriqu
 En pratique, une fois que $\VecThetaCandidat$ est obtenu, on cherche à déterminer si on accepte ou non ce candidat, en calculant une probabilité d'acceptation $r$ définie par:
 
 \begin{equation}
-{
-\label{eq_acceptation_MH}
-\begin{split}
-r & =\min\{1,\beta\} \\
-\beta & =\dfrac{\pi(\VecThetaCandidat)\kernel(\VecThetaCandidat, \VecThetaCourant)}{\pi(\VecThetaCourant)\kernel(\VecThetaCourant, \VecThetaCandidat)}
-\end{split}
-}
+	\label{eq_acceptation_MH}
+	\begin{split}
+	r & =\min\{1,\beta\} \\
+	\beta & =\dfrac{\pi(\VecThetaCandidat)\kernel(\VecThetaCandidat, \VecThetaCourant)}{\pi(\VecThetaCourant)\kernel(\VecThetaCourant, \VecThetaCandidat)}
+	\end{split}
 \end{equation}
 
 {
@@ -288,8 +287,8 @@ La génération des différents états de la chaîne de Markov s'effectue ainsi 
 Pour illustrer le fonctionnement de l'algorithme MH, nous pouvons prendre l'exemple d'une mixture de deux lois normales, dont la loi s'écrit : 
 
 \begin{equation}
-\pi(\VecTheta) = \gamma \mathcal{N}(\VecTheta | \mu_1, \sigma_1^2) + (1-\gamma)\mathcal{N}(\VecTheta | \mu_2, \sigma_2^2)
-\label{eq_mixture_2_gaussiennes_1D}
+	\pi(\VecTheta) = \gamma \mathcal{N}(\VecTheta | \mu_1, \sigma_1^2) + (1-\gamma)\mathcal{N}(\VecTheta | \mu_2, \sigma_2^2)
+	\label{eq_mixture_2_gaussiennes_1D}
 \end{equation}
 
 Le paramètre $\gamma$ permet de définir l'influence de chacune des composantes dans la mixture. Pour la suite, nous reprenons les paramètres utilisés dans le chapitre 24 de  \cite{Murphy2012}, à savoir $\gamma = 0.3$, $\mu_1 = -20$, $\sigma_1 = 10$,  (en orange sur la figure \ref{fig_courbe_pdf_mixture_1D}), et $\mu_2 = 20$, $\sigma_2 = 10$ (en bleu sur la figure \ref{fig_courbe_pdf_mixture_1D})
@@ -305,8 +304,8 @@ Le paramètre $\gamma$ permet de définir l'influence de chacune des composantes
  Supposons que l'on cherche à échantillonner depuis cette distribution: nous définissons un noyau de transition  gaussien afin d'appliquer une méthodologie de type \textit{random-walk Metropolis}: 
 
 \begin{equation}
-\kernel(\VecTheta, \VecThetaCandidat ) = \mathcal{N}(\VecThetaCandidat | \VecTheta, \sigma_{K}^2)
-\label{eq_noyau_gaussien}
+	\kernel(\VecTheta, \VecThetaCandidat ) = \mathcal{N}(\VecThetaCandidat | \VecTheta, \sigma_{K}^2)
+	\label{eq_noyau_gaussien}
 \end{equation}
 
 La figure \ref{fig_courbe_4_histogrammes_exemple_1} illustre ainsi l'approximation de $\pi$ grâce aux histogrammes des {échantillons} obtenus à différentes itérations de l'algorithme. 
@@ -377,29 +376,29 @@ Le parcours des composantes de $\VecTheta$ peut se faire de façon déterministe
 Pour illustrer le fonctionnement de ce type d'algorithme, nous allons chercher à échantillonner depuis une gaussienne bivariée à deux dimensions. Dans ce cas, on va donc noter $\VecTheta = (\theta_1, \theta_2)^T$, on a ainsi $\VecTheta \sim \mathcal{N}(\VecMu, \MatSigma)$ avec: 
 
 \begin{equation}
-{
-\label{eq_caracs_gaussienne_bivariee}
-\begin{split}
-\VecMu &= (\mu_1, \mu_2)^T \\
-\MatSigma &= \begin{pmatrix}
-\sigma_{1}^2 & \corr\\
- \corr & \sigma_{2}^2 
-\end{pmatrix}
-\end{split}
-}
+	{
+	\label{eq_caracs_gaussienne_bivariee}
+	\begin{split}
+	\VecMu &= (\mu_1, \mu_2)^T \\
+	\MatSigma &= \begin{pmatrix}
+	\sigma_{1}^2 & \corr\\
+	 \corr & \sigma_{2}^2 
+	\end{pmatrix}
+	\end{split}
+	}
 \end{equation} 
 où $\sigma_1^2$ et $\sigma_2^2$ sont les variances respectives de $\theta_1$ et $\theta_2$, et {$\corr$} est la corrélation entre $\theta_1$ et $\theta_2$ définie par: {$$\corr = \dfrac{\text{Cov}(\theta_1,\theta_2)}{\sigma_1\sigma_2}$$.}
 
 Le cas gaussien bivarié est relativement facile à traiter, car on sait calculer directement les expressions des lois conditionnelles, qui sont elle-mêmes gaussiennes, et qui s'écrivent sous la forme suivante:
 
  \begin{equation}
- {
- \label{eq_conditionnelles_gaussienne_bivariee}
- \begin{split}
- p(\theta_1 | \theta_2) &= \mathcal{N}\left(\theta_1 \middle\vert \mu_1 + \sigma_1 \corr\left(\dfrac{\theta_2 - \mu_2}{\sigma_2}\right), \sigma_1^2 (1-\corr)\right) \\
- p(\theta_2 | \theta_1) &= \mathcal{N}\left(\theta_2 \middle\vert \mu_2 + \sigma_2 \corr\left(\dfrac{\theta_1 - \mu_1}{\sigma_1}\right), \sigma_2^2 (1-\corr)\right)
- \end{split}
-}
+	 {
+	 \label{eq_conditionnelles_gaussienne_bivariee}
+	 \begin{split}
+	 p(\theta_1 | \theta_2) &= \mathcal{N}\left(\theta_1 \middle\vert \mu_1 + \sigma_1 \corr\left(\dfrac{\theta_2 - \mu_2}{\sigma_2}\right), \sigma_1^2 (1-\corr)\right) \\
+	 p(\theta_2 | \theta_1) &= \mathcal{N}\left(\theta_2 \middle\vert \mu_2 + \sigma_2 \corr\left(\dfrac{\theta_1 - \mu_1}{\sigma_1}\right), \sigma_2^2 (1-\corr)\right)
+	 \end{split}
+	}
  \end{equation}
  
 \begin{figure}[h!]
@@ -433,43 +432,44 @@ Cette famille d'algorithmes, contrairement à l'approche MH, n'effectue pas de s
  L'idée de départ des méthodes IS est de chercher à approximer des intégrales de la forme : 
  
  \begin{equation}
-  I = \mathbb{E}_\pi[f(\VecTheta)] = \int f(\VecTheta)\pi(\VecTheta)d\VecTheta
-  \label{eq_IS_integrale_1}
+	  I = \mathbb{E}_\pi[f(\VecTheta)] = \int f(\VecTheta)\pi(\VecTheta)d\VecTheta
+	  \label{eq_IS_integrale_1}
  \end{equation}
  
  Pour cela, on définit une loi de proposition $\propFonc$ permettant de réécrire l'équation \eqref{eq_IS_integrale_1} sous la forme:
  
  \begin{equation}
-\mathbb{E}_\pi[f(\VecTheta)] = \int  f(\VecTheta) \dfrac{\pi(\VecTheta)}{\propFonc(\VecTheta)}\propFonc(\VecTheta)d\VecTheta = \int  f(\VecTheta) w(\VecTheta) \propFonc(\VecTheta)d\VecTheta 
-\label{eq_IS_integrale_2}
+	\mathbb{E}_\pi[f(\VecTheta)] = \int  f(\VecTheta) \dfrac{\pi(\VecTheta)}{\propFonc(\VecTheta)}\propFonc(\VecTheta)d\VecTheta = \int  f(\VecTheta) w(\VecTheta) \propFonc(\VecTheta)d\VecTheta 
+	\label{eq_IS_integrale_2}
  \end{equation}
  où $w(\VecTheta) = \dfrac{\pi(\VecTheta)}{\propFonc(\VecTheta)}$ {définit les \textit{poids d'importance}, et $\propFonc$ est telle que $\propFonc(\VecTheta) >0 $ pour tout $\VecTheta$ où $\pi(\VecTheta) > 0$, autrement dit le support de $\propFonc$ inclut celui de $\pi$. } La forme de l'intégrale obtenue permet alors de dire que:
  
 \begin{equation}
-\mathbb{E}_\pi[f(\VecTheta)] = \mathbb{E}_\propFonc[f(\VecTheta)w(\VecTheta)] 
-\label{eq_IS_integrale_2_1}
+	\mathbb{E}_\pi[f(\VecTheta)] = \mathbb{E}_\propFonc[f(\VecTheta)w(\VecTheta)] 
+	\label{eq_IS_integrale_2_1}
 \end{equation}
 
 D'après la loi forte des grands nombres, {en notant $w^{(i)}(\VecTheta) = \dfrac{\pi^{(i)}(\VecTheta)}{\propFonc^{(i)}(\VecTheta)}$, la quantité} $\sum\limits_{i=1}^N f(\VecTheta^{(i)}) w^{(i)}$ converge presque sûrement vers  $\mathbb{E}_\varphi[f(\VecTheta)w(\VecTheta)]$ pour $N \rightarrow + \infty$. En associant cela avec l'équation \eqref{eq_IS_integrale_2_1}, on obtient ainsi:
  
  \begin{equation}
- \mathbb{E}_\pi[f(\VecTheta)] \simeq I_N = \dfrac{1}{N}\sum\limits_{i=1}^N f(\VecTheta^{(i)})  w^{(i)}
- \label{eq_IS_integrale_3}
+	 \mathbb{E}_\pi[f(\VecTheta)] \simeq I_N = \dfrac{1}{N}\sum\limits_{i=1}^N f(\VecTheta^{(i)})  w^{(i)}
+	 \label{eq_IS_integrale_3}
  \end{equation}
  
  Dans notre contexte, l'équation \eqref{eq_bayes_proportionnalite} nous rappelle que la loi cible n'est connue qu'à une constante près: pour en tenir compte, il est nécessaire de normaliser les poids d'importance. En écrivant : 
  
  \begin{equation}
- \forall i \in \{1, \dots, N\}, ~ \poidsNorm^{(i)} = \dfrac{w^{(i)}}{\sum\limits_{i=1}^N w^{(i)}}
- \label{eq_IS_poids_normalises}
+	 \forall i \in \{1, \dots, N\}, ~ \poidsNorm^{(i)} = \dfrac{w^{(i)}}{\sum\limits_{i=1}^N w^{(i)}}
+	 \label{eq_IS_poids_normalises}
  \end{equation}
+
  on garantit bien que toutes les valeurs de $\VecPoidsNorm$ sont comprises entre 0 et 1. \\
  
  En reprenant l'équation \eqref{eq_IS_integrale_3}, on peut alors obtenir une approximation de la loi cible, qui s'écrit:
  
  \begin{equation}
- \pi(\VecTheta) \simeq \sum\limits_{i=1}^N \poidsNorm(\VecTheta^{(i)})\delta_{\VecTheta^{(i)}}(\VecTheta)
- \label{eq_IS_approximation_loi_cible}
+	 \pi(\VecTheta) \simeq \sum\limits_{i=1}^N \poidsNorm(\VecTheta^{(i)})\delta_{\VecTheta^{(i)}}(\VecTheta)
+	 \label{eq_IS_approximation_loi_cible}
  \end{equation}
 
 L'équation \eqref{eq_IS_approximation_loi_cible} permet ainsi d'obtenir des particules pondérées de la loi cible. Pour cela, il faut choisir une loi de proposition $\propFonc$ qui soit suffisamment proche de la loi cible, dont le support englobe celui de cette dernière, et à partir de laquelle on puisse échantillonner facilement. \\
@@ -495,8 +495,8 @@ L'équation \eqref{eq_IS_approximation_loi_cible} permet ainsi d'obtenir des par
  On remarque également qu'un petit nombre de particules agrège les valeurs les plus importantes des poids, alors que la majorité restante détient des poids de faibles valeurs. Ce déséquilibre de répartition est plus généralement connu sous le nom de \textit{dégénérescence des poids}. La métrique permettant de quantifier ce phénomène et de facto d'évaluer les performances de la loi de proposition, est appelée \textit{Effective Sample Size} ($\ESS$), et se calcule selon la formule suivante:
 
 \begin{equation}
-\mathbb{ESS} = \dfrac{\left(\sum\limits_{i=1}^N w^{(i)}\right)^2}{\sum\limits_{i=1}^N \left(w^{(i)}\right)^2}
-\label{eq_def_ESS}
+	\mathbb{ESS} = \dfrac{\left(\sum\limits_{i=1}^N w^{(i)}\right)^2}{\sum\limits_{i=1}^N \left(w^{(i)}\right)^2}
+	\label{eq_def_ESS}
 \end{equation}
 
 Dans le cas le plus extrême où une unique particule à un poids égal à 1 et toutes les autres ont un poids nul, on a $\ESS = 1$. Plus sa valeur croît, plus la loi de proposition est proche de la loi cible, le cas parfait étant $\ESS = N$ où $\propFonc$ et $\pi$ sont identiques.\\
@@ -510,11 +510,11 @@ Le facteur-clé de la performance d'un algorithme de type IS réside dans l'util
 \subsubsection{Population Monte Carlo}
 
 Les travaux présentés dans \cite{Cappe2004} illustrent une première approche, appelée \textit{Population Monte Carlo} (PMC), qui peut être vue comme une version itérative de l'IS visant à adapter la loi de proposition afin de la rapprocher au mieux de la loi cible. Plus précisément, à chaque itération $k$: 
+
 \begin{enumerate}
 	\item on tire un échantillon $\VecTheta_k = (\theta_{1,k}, \dots, \theta_{N_p,k})$ de particules obtenues par une perturbation stochastique qui revient à appliquer un noyau de transition de type "marche aléatoire" sur chacun des $\theta_{1,k-1}, \dots, \theta_{N_p,k-1}$, à la façon d'une chaîne de Markov,
 	\item on calcule le vecteur des poids d'importance normalisés $\VecPoidsNorm_k$ de ces particules,
 	\item on génère un nouvel échantillon $(\tilde{\theta}_{1,k}, \dots, \tilde{\theta}_{N_p,k})$ obtenu par \textit{resampling} de $ (\theta_{1,k}, \dots, \theta_{N_p,k})$ en utilisant les poids $\VecPoidsNorm_k$.
-
 \end{enumerate}
 
 Le point 3. donne le résultat de l'algorithme à l'itération $k$, à savoir un vecteur de particules ajustées pour être proche de la loi cible. A partir de là, on peut ré-itérer en appliquant de nouveau une perturbation sur ce vecteur, et ainsi de suite. 
@@ -525,15 +525,15 @@ Le point 3. donne le résultat de l'algorithme à l'itération $k$, à savoir un
 \cite{Douc2007} formalise le concept d'adaptation de la loi de proposition en la définissant comme étant un mélange de $D$ noyaux fixes $\propFonc_1, \dots, \propFonc_D$ défini par : 
 
 \begin{equation}
-\propFonc_\alpha(\VecTheta, \VecThetaCandidat) = \sum\limits_{d=1}^D\alpha_d \propFonc_d(\VecTheta, \VecThetaCandidat)
-\label{eq_PMC_D_Kernel}
+	\propFonc_\alpha(\VecTheta, \VecThetaCandidat) = \sum\limits_{d=1}^D\alpha_d \propFonc_d(\VecTheta, \VecThetaCandidat)
+	\label{eq_PMC_D_Kernel}
 \end{equation}
+
 où les $\alpha_d$ définissent les \textit{facteurs d'influence} des composantes respectives $\propFonc_d$, et sont tels que $$\sum\limits_{d=1}^D \alpha_d = 1$$  La démarche proposée, portant le nom de \textit{D-kernel PMC}, consiste à ajuster les valeurs des $\alpha_d$ à chaque itération d'un algorithme PMC, sur la base d'un critère de performance visant à minimiser l'écart statistique entre la distribution de proposition et la loi cible. Un tel écart peut être quantifié par la \textit{divergence de Kullback-Leibler} (KL)  $D(\pi || \propFonc_\alpha )$, définie par : 
 
-
 \begin{equation}
-D(\pi || q_\alpha ) = \int \log\left(\dfrac{\pi(\VecTheta)}{q_\alpha(\VecTheta)}\right)\pi(\VecTheta)d\VecTheta
-\label{eq_definition_KL}
+	D(\pi || q_\alpha ) = \int \log\left(\dfrac{\pi(\VecTheta)}{q_\alpha(\VecTheta)}\right)\pi(\VecTheta)d\VecTheta
+	\label{eq_definition_KL}
 \end{equation}
 
 \subsubsection{M-PMC}
@@ -541,27 +541,28 @@ D(\pi || q_\alpha ) = \int \log\left(\dfrac{\pi(\VecTheta)}{q_\alpha(\VecTheta)}
 \cite{Cappe2008} propose une extension de ces travaux en introduisant une méthode appelée \textit{Mixture-PMC} (M-PMC) reposant sur le même type de critère de performance, mais visant cette fois à étendre la phase d'adaptation à tous les paramètres de la mixture $q_{\alpha}$, sans se limiter aux seuls $\alpha_d$ . La loi de proposition peut alors s'écrire sous la forme suivante:
 
 \begin{equation}
-\propFonc_{(\alpha,\nu)}(\VecTheta) = \sum\limits_{d=1}^D\alpha_d \propFonc_d(\VecTheta |\nu_d)
-\label{eq_M_PMC_kernel}
+	\propFonc_{(\alpha,\nu)}(\VecTheta) = \sum\limits_{d=1}^D\alpha_d \propFonc_d(\VecTheta |\nu_d)
+	\label{eq_M_PMC_kernel}
 \end{equation}
 où $\nu_d$ représente les paramètres de la $d$-ième composante de la loi de proposition.
 
 La procédure d'adaptation qui en découle s'inspire de l'algorithme dit d'\textit{Expectation-Maximization} (EM) pour construire les équations de mise à jour des éléments constituant $\nu_d$ : en effet, le fait de minimiser l'équation \eqref{eq_definition_KL} équivaut ici  à maximiser la grandeur : 
 
 \begin{equation}
-\int \log\left(\sum\limits_{d=1}^D \alpha_d \propFonc_d(\VecTheta| \nu_d)\right)\pi(\VecTheta)d\VecTheta
-\label{eq_KL_pour_EM}
+	\int \log\left(\sum\limits_{d=1}^D \alpha_d \propFonc_d(\VecTheta| \nu_d)\right)\pi(\VecTheta)d\VecTheta
+	\label{eq_KL_pour_EM}
 \end{equation} 
 
 On se ramène ainsi à un problème similaire à celui du calcul d'un estimateur du maximum de vraisemblance pour un modèle de mixture, d'où l'emploi d'une méthode de type EM. {$\pi(\VecTheta)$ est alors approchée par l'exécution itérative des formules d'approximation empirique présentées dans \cite{Cappe2008}.}
 Ce type de méthode est particulièrement approprié si on choisit la loi de proposition comme étant une mixture de gaussiennes multivariées, i.e. dont la densité en dimension $p$ prend la forme suivante : 
 
 \begin{equation}
-{
-\forall d = 1, \dots, D, ~ \propFonc_d(\VecTheta|\nu_d) = \dfrac{1}{\bigl((2\pi)^p\det \Sigma_d\bigr)^{1/2}}\exp\left(-\dfrac{1}{2}(\VecTheta - \mu_d)^T \Sigma_d^{-1}(\VecTheta - \mu_d)\right)
-\label{eq_def_multivariate_gaussian}
-}
+	{
+	\forall d = 1, \dots, D, ~ \propFonc_d(\VecTheta|\nu_d) = \dfrac{1}{\bigl((2\pi)^p\det \Sigma_d\bigr)^{1/2}}\exp\left(-\dfrac{1}{2}(\VecTheta - \mu_d)^T \Sigma_d^{-1}(\VecTheta - \mu_d)\right)
+	\label{eq_def_multivariate_gaussian}
+	}
 \end{equation}
+
 où $\nu_d = (\mu_d, \Sigma_d)$ représente les paramètres classiques (moyenne et matrice de covariance) de la $d$-ième composante. En effet, dans ce cas-là, les équations de mise à jour de $\nu_d$ peuvent être obtenues de façon analytique. Pour cela, en se plaçant à l'itération $k$ sur la $d$-ième composante et pour la $i$-ème particule, on définit tout d'abord la grandeur intermédiaire suivante:
 
 \begin{equation}
@@ -571,12 +572,12 @@ où $\nu_d = (\mu_d, \Sigma_d)$ représente les paramètres classiques (moyenne 
 La mise à jour de $\alpha_d^k$ et des éléments $\mu_d^k$ et $\Sigma_d^k$ de $\nu_d^k$ est alors donnée par:
 
 \begin{equation}
-\begin{split}
-\alpha_d^{k+1}  &= \sum\limits_{i=1}^N \tilde{w}_k^{(i)} \rho_d^k(\VecTheta_k^{(i)} | \alpha_d^k , \nu_d^k) \\
-\mu_d^{k+1} &= \dfrac{\sum\limits_{i=1}^N\tilde{w}_k^{(i)} \rho_d^k(\VecTheta_k^{(i)} | \alpha_d^k , \nu_d^k) \VecTheta_k^{(i)}}{\alpha_d^{k+1} } \\
-\Sigma_d^{k+1} &= \dfrac{\sum\limits_{i=1}^N \tilde{w}_k^{(i)} \rho_d^k(\VecTheta_k^{(i)} | \alpha_d^k , \nu_d^k)(\VecTheta_k^{(i)} - \mu_d^{k+1})(\VecTheta_k^{(i)} - \mu_d^{k+1})^T }{\alpha_d^{k+1}}
-\end{split}
-\label{eq_maj_gaussien}
+	\begin{split}
+	\alpha_d^{k+1}  &= \sum\limits_{i=1}^N \tilde{w}_k^{(i)} \rho_d^k(\VecTheta_k^{(i)} | \alpha_d^k , \nu_d^k) \\
+	\mu_d^{k+1} &= \dfrac{\sum\limits_{i=1}^N\tilde{w}_k^{(i)} \rho_d^k(\VecTheta_k^{(i)} | \alpha_d^k , \nu_d^k) \VecTheta_k^{(i)}}{\alpha_d^{k+1} } \\
+	\Sigma_d^{k+1} &= \dfrac{\sum\limits_{i=1}^N \tilde{w}_k^{(i)} \rho_d^k(\VecTheta_k^{(i)} | \alpha_d^k , \nu_d^k)(\VecTheta_k^{(i)} - \mu_d^{k+1})(\VecTheta_k^{(i)} - \mu_d^{k+1})^T }{\alpha_d^{k+1}}
+	\end{split}
+	\label{eq_maj_gaussien}
 \end{equation}
 
 
@@ -588,15 +589,16 @@ A chaque itération $k \in {1, \dots, K}$, l'approche M-PMC permet ainsi, à par
 \subsubsection{Adaptive Multiple Importance Sampling (AMIS)}
 
 {Il faut noter que malgré son aspect adaptatif, la méthode M-PMC n'exploite que les particules de l'itération courante pour l'ajustement des paramètres de la loi de proposition, ainsi que pour l'approximation empirique de la loi a posteriori. Une amélioration supplémentaire consiste à reprendre les idées développées dans } \cite{Veach1995} et \cite{Owen2000}, avec l'utilisation d'une méthode appelée \textit{deterministic multiple mixture}, {qui permet de réutiliser toutes les particules générées durant la simulation}. En pratique,cela consiste à modifier la formule de calcul du poids d'importance $w_k^{(i)}$ associé à la particule $\theta_k^{(i)}$ à l'itération $k$. Le but est de prendre en compte la suite $(\propFonc_0, \dots, \propFonc_k)$ des distributions de proposition, et non plus uniquement la loi  courante $\propFonc_k$. Pour cela, on définit la grandeur suivante:
+
 \begin{equation}
-\vartheta_k^{(i)} = N_p \propFonc_{\alpha^0,\nu^0}(\theta_k^{(i)}) + \sum\limits_{l=1}^k N_p \propFonc_{\alpha^l,\nu^l}(\theta_k^{(i)})
-\label{eq_DMW_1}
+	\vartheta_k^{(i)} = N_p \propFonc_{\alpha^0,\nu^0}(\theta_k^{(i)}) + \sum\limits_{l=1}^k N_p \propFonc_{\alpha^l,\nu^l}(\theta_k^{(i)})
+	\label{eq_DMW_1}
 \end{equation}
 
 On peut alors écrire la nouvelle formule permettant de calculer le poids d'importance $w_k^{(i)}$:
 
 \begin{equation}
-w_k^{(i)} = \dfrac{\pi(\theta_k^{(i)})}{\left(\dfrac{1}{(k+1)N_p}\vartheta_k^{(i)}\right)} = (k+1)N_p\dfrac{\pi(\theta_k^{(i)})}{\vartheta_k^{(i)}}
+	w_k^{(i)} = \dfrac{\pi(\theta_k^{(i)})}{\left(\dfrac{1}{(k+1)N_p}\vartheta_k^{(i)}\right)} = (k+1)N_p\dfrac{\pi(\theta_k^{(i)})}{\vartheta_k^{(i)}}
 \end{equation}
 
 Ce cheminement peut être appliqué à la fois pour le calcul du poids courant, mais également pour ajuster les poids calculés lors des itérations précédentes: on parle alors de \textit{recyclage des poids}. Un tel processus de stabilisation  permet ainsi d'atténuer automatiquement les valeurs des poids d'importance sujets à dégénérescence en les pénalisant par rapport aux poids obtenus aux itérations suivantes.\\
@@ -609,20 +611,15 @@ Le fait de coupler au sein d'un même algorithme : \\
 \end{itemize}
 constitue ainsi le coeur des travaux présentés dans \cite{Cornuet2012}, qui ont mené à la création de l'algorithme d'\textit{Adaptive Multiple Importance Sampling} (AMIS). \\
 
-{La caractéristique principale de l'AMIS est la combinaison d'une loi de proposition adaptive et d'une "mise en mémoire" progressive des populations de particules générées au fil des itérations. Cela permet à l'algorithme de ne pas se limiter aux particules de l'itération courante, mais de travailler sur l'ensemble des populations de particules générées depuis la première itération. L'AMIS ré-exploite ainsi toute l'information disponible sur les poids d'importance et les particules de façon optimale. Son fonctionnement est détaillé dans l'algorithme \ref{algo_AMIS}: les valeurs à fournir en entrée sont  les paramètres $\alpha^0$, $\nu^0$ de la loi de proposition initiale $\propFonc_{\alpha^0, \nu^0}$, et les résultats obtenus en sortie sont:
-	\begin{itemize}
+La caractéristique principale de l'AMIS est la combinaison d'une loi de proposition adaptive et d'une "mise en mémoire" progressive des populations de particules générées au fil des itérations. Cela permet à l'algorithme de ne pas se limiter aux particules de l'itération courante, mais de travailler sur l'ensemble des populations de particules générées depuis la première itération. L'AMIS ré-exploite ainsi toute l'information disponible sur les poids d'importance et les particules de façon optimale. Son fonctionnement est détaillé dans l'algorithme \ref{algo_AMIS}: les valeurs à fournir en entrée sont  les paramètres $\alpha^0$, $\nu^0$ de la loi de proposition initiale $\propFonc_{\alpha^0, \nu^0}$, et les résultats obtenus en sortie sont:
+
+\begin{itemize}
 	 \item la collection de toutes les particules $\theta_0^{(1)}, \dots, \theta_0^{(N_p)}, \theta_1^{(1)}, \dots, \theta_K^{(1)}, \dots, \theta_K^{(N_p)}$,
 	 \item les poids recyclés associés $\tilde{w}_0^{(1)}, \dots, \tilde{w}_0^{(N_p)}, \tilde{w}_1^{(1)}, \dots, \tilde{w}_K^{(1)}, \dots, \tilde{w}_K^{(N_p)}$.\\
-	 \end{itemize}
-} 
-
+ \end{itemize}
 
 \begin{algorithm}[p!]
 	\begin{algorithmic}
-	
-	
-	%\State \textbf{Entrées}: les paramètres $\alpha^0$, $\nu^0$ de la loi de proposition initiale $\propFonc_{\alpha^0, \nu^0}$
-	
 	\State Générer $N_p$ particules $\valTheta_0^{(1)}, \dots, \valTheta_0^{(N_p)}$ depuis  $\propFonc_{\alpha^0, \nu^0}$
 	\For{$i=1, \dots, N_p$}
 		\State Calculer les poids d'importance initiaux:
@@ -656,17 +653,14 @@ constitue ainsi le coeur des travaux présentés dans \cite{Cornuet2012}, qui on
 			\EndFor
 		\State Mettre à jour la loi de proposition en calculant $\alpha^{k+1}$ et $\nu^{k+1}$ à partir de $\alpha^k$, $\nu^k$ , de la concaténation des poids recyclés normalisés $\tilde{w}_0, \dots, \tilde{w}_k$ {et des particules correspondantes $\theta_0, \cdots, \theta_K$}
 		\EndFor
-		%\State \textbf{Sortie}:La collection de toutes les particules: $\theta_0^{(1)}, \dots, \theta_0^{(N_p)}, \theta_1^{(1)}, \dots, \theta_K^{(1)}, \dots, \theta_K^{(N_p)}$ ainsi que les poids recyclés associés:\\
-		  %$\tilde{w}_0^{(1)}, \dots, \tilde{w}_0^{(N_p)}, \tilde{w}_1^{(1)}, \dots, \tilde{w}_K^{(1)}, \dots, \tilde{w}_K^{(N_p)}$
-	
 	\end{algorithmic}
 	\caption{Adaptive Multiple Importance Sampling (AMIS)}
 	\label{algo_AMIS}
 \end{algorithm}
 
-{
-	L'aspect adaptatif de l'AMIS est ainsi renforcé par le recyclage de tous les poids générés depuis le début de la simulation. Cela lui permet, en pratique, de mieux exploiter l'information disponible, ce qui est illustré par la figure \ref{fig_ais_comp_ess} , où l'exemple du modèle \ref{eq_mixture_2_gaussiennes_1D} est appliqué aux algorithmes basés sur l'IS.
-	
+
+L'aspect adaptatif de l'AMIS est ainsi renforcé par le recyclage de tous les poids générés depuis le début de la simulation. Cela lui permet, en pratique, de mieux exploiter l'information disponible, ce qui est illustré par la figure \ref{fig_ais_comp_ess} , où l'exemple du modèle \ref{eq_mixture_2_gaussiennes_1D} est appliqué aux algorithmes basés sur l'IS.
+
 \begin{figure}[h!]
 	\centering
 	\includegraphics[width=0.8\textwidth]{ais_comp_ess}
@@ -695,130 +689,6 @@ L'AMIS permet également de fournir un estimateur dont la variance est moins él
 	\caption{Mixtures de gaussiennes: erreurs absolues (sur 100 réplicats) des estimateurs MMSE pour les algorithmes IS adaptatifs} 
 	\label{fig_ais_comp_err}
 \end{figure}
-}
+
 
 Les avantages que présentent l'AMIS en font ainsi un choix privilégié pour la suite des travaux présentés dans ce manuscrit: les deux prochains chapitres introduisent son application à la problématique d'estimation du terme source dans différents cas pratiques.
-%{
-%\subsubsection{Exemple comparatif sur les méthodes à base d'IS}
-%
-%Nous illustrons ici les résultats de trois approches basées sur l'échantillonnage d'importance: l'algorithme classique, le M-PMC et l'AMIS. Pour cela, }nous reprenons le cas du mélange de gaussiennes présenté à l'équation \eqref{eq_mixture_2_gaussiennes_1D}. Supposons qu'on dispose d'un vecteur d'observations $\Vecy$ suivant cette distribution, avec $\sigma_1 = \sigma_2 = 1$ et $\gamma = 0.3$. Le vecteur $\VecTheta = (\mu_1, \mu_2)$ des moyennes de chaque composante du mélange constitue l'inconnue à estimer.\\
-%
-%Si on formule le problème sous sa forme bayésienne, celui-ci peut s'écrire sous la forme suivante:
-%\begin{equation}
-%	\pi(\VecTheta) = p(\VecTheta | \Vecy) \propto p(\Vecy | \VecTheta) p(\VecTheta)
-%	\label{eq_bayes_ex_amis}
-%\end{equation}
-%
-%On choisit un a priori gaussien sur chacune des composantes, de moyenne 1 et de variance 10. Comme $\mu_1$ et $\mu_2$ sont indépendants, on a :
-%
-%\begin{equation}
-%	p(\VecTheta) = p(\mu_1)p(\mu_2)
-%\end{equation}
-%
-%La loi de vraisemblance est obtenue grâce au modèle de mélange de l'équation \eqref{eq_mixture_2_gaussiennes_1D}: 
-%
-%\begin{equation}
-%	p(\Vecy | \VecTheta) = \gamma \mathcal{N}(\Vecy | \mu_1,\sigma_1^2) + (1-\gamma)\mathcal{N}(\Vecy | \mu_2, \sigma_2^2)
-%\end{equation}
-%
-%Comme il est impossible d'obtenir une forme analytique de la loi a posteriori \eqref{eq_bayes_ex_amis}, nous passons par l'algorithme AMIS pour en obtenir une approximation. Pour cela, on choisit une loi de proposition gaussienne bi-variée, suffisamment flexible et dont il est facile d'obtenir des échantillons:
-%
-%\begin{equation}
-%\varphi(\VecTheta) = \mathcal{N}(\VecTheta | \Vecmup, \MatSigmap)
-%\end{equation}
-%
-%On initialise cette loi de proposition avec $\Vecmup^{(0)} = (1,1)$ et $\MatSigmap^{(0)} = \begin{pmatrix} 20&0\\ 0&20 \end{pmatrix}$ pour bien couvrir l'espace des paramètres à explorer. {On choisit par ailleurs cette version de la loi de proposition pour l'implémentation de l'IS standard.}\\
-%
-%En reprenant l'algorithme \ref{algo_AMIS} et en l'appliquant à notre exemple, on peut décomposer l'exécution de l'AMIS en plusieurs étapes caractéristiques. Ainsi, à l'itération $k$:
-%
-%\begin{enumerate}
-%	\item on échantillonne depuis la loi de proposition courante afin d'obtenir un ensemble de $N$ particules : 
-%	$$ \VecTheta_k^{(1)}, \dots, \VecTheta_k^{(N)} \sim \varphi (\Vecmup^k, \MatSigmap^k) $$
-%	
-%	\item on calcule $\vartheta_k$ et le vecteur des poids d'importance pour l'itération courante $w_k$
-%	
-%	\item on recycle les poids générés aux itérations précédentes
-%	
-%	\item  on met les paramètres de la loi de proposition à jour: comme on est dans un cadre gaussien, on peut reprendre les équations \ref{eq_maj_gaussien}, on a alors : 
-%	\begin{equation*}
-%	{
-%	\begin{split}
-%		\Vecmup^{k+1} &= \sum\limits_{l=1}^k\sum\limits_{i=1}^N \tilde{w}_l^{(i)}\VecTheta_l^{(i)} \\
-%		\MatSigmap^{k+1} &= \sum\limits_{l=1}^k\sum\limits_{i=1}^N \tilde{w}_l^{(i)}(\VecTheta_l^{(i)} - \Vecmup^{l+1} )
-%(\VecTheta_l^{(i)} - \Vecmup^{l+1} )^T	\end{split}
-%}
-%	\end{equation*}
-%\end{enumerate}
-%
-%Au bout de $K$ itérations, l'approximation de la loi a posteriori est ainsi donnée par : 
-%
-%\begin{equation}
-%\pi(\VecTheta) \simeq \sum\limits_{k=1}^K \sum\limits_{i=1}^N \tilde{w}_k^{(i)} \VecTheta_k^{(i)}
-%\end{equation}
-%
-%\begin{figure}[h!]
-%	\centering
-%	\begin{subfigure}[t]{0.33\textwidth}
-%		\centering
-%		\includegraphics[width=0.9\textwidth]{mu1_is}
-%		\caption{}
-%		\label{mu1_is}
-%	\end{subfigure}%
-%	~ 
-%		\begin{subfigure}[t]{0.33\textwidth}
-%			\centering
-%			\includegraphics[width=0.9\textwidth]{mu1_pmc}
-%			\caption{}
-%			\label{mu1_pmc}
-%		\end{subfigure}%
-%		~ 
-%		\begin{subfigure}[t]{0.33\textwidth}
-%			\centering
-%			\includegraphics[width=0.9\textwidth]{mu1_amis}
-%			\caption{}
-%			\label{mu1_amis}
-%		\end{subfigure}
-%
-%	\begin{subfigure}[t]{0.33\textwidth}
-%		\centering
-%		\includegraphics[width=0.9\textwidth]{mu2_is}
-%		\caption{}
-%		\label{mu2_is}
-%	\end{subfigure}%
-%	~ 
-%	\begin{subfigure}[t]{0.33\textwidth}
-%		\centering
-%		\includegraphics[width=0.9\textwidth]{mu2_pmc}
-%		\caption{}
-%		\label{mu2_pmc}
-%	\end{subfigure}%
-%	~ 
-%	\begin{subfigure}[t]{0.33\textwidth}
-%		\centering
-%		\includegraphics[width=0.9\textwidth]{mu2_amis}
-%		\caption{}
-%		\label{mu2_amis}
-%	\end{subfigure}
-%	\caption{{Estimation des densités a posteriori marginales $p(\mu_1 | \Vecy)$ (en bleu) et $p(\mu_2 | \Vecy)$ (en magenta) avec l'IS (gauche), le M-PMC (milieu) et l'AMIS (droite)}}
-%	\label{fig_mus}
-%\end{figure}
-%
-%Les éléments de la figure \ref{fig_mus} permettent de représenter explicitement les résultats de l'estimation de $\mu_1$ et $\mu_2$ grâce au procédé d'\textit{estimation par noyau} ou \textit{kernel density estimation} (KDE): si $\theta^{(1)}, \theta^{(2)}, \dots, \theta^{(n)}$ est un échantillon issu d'une variable aléatoire $\VecTheta$, alors l'estimateur de $\VecTheta$ par la méthode KDE est donné par :
-%
-% \begin{equation}
-%	\widehat{f}_h(\theta) = \dfrac{1}{nh}\sum\limits_{i=1}^n K\left(\dfrac{\theta - \theta^{(i)}}{h}\right)
-%	\label{eq_KDE} 
-% \end{equation} 
-% où $K$ est un noyau arbitrairement choisi et $h$ est la fenêtre du noyau, qui règle le degré de lissage de l'estimation. $K$ est ici choisi comme étant gaussien centré réduit, un choix fréquent dans ce genre de démarche. \\
-% 
-% {
-% Comme on peut le voir sur les figures \ref{mu1_is} et \ref{mu2_is}, l'utilisation de l'IS ne permet pas une estimation suffisamment précise des paramètres $\mu_1$ et $\mu_2$: cela est dû à la nature "statique" de la loi de proposition. En effet celle-ci n'est visiblement pas assez proche de la loi cible recherchée pour produire un résultat significatif.
-% 
-% Le M-PMC (figures \ref{mu1_pmc} et \ref{mu2_pmc}) parvient à restreindre les probabilités a posteriori de $\mu_1$ et $\mu_2$ à des intervalles réduits, permettant une meilleure inférence sur les valeurs des paramètres recherchés. Toutefois, en termes de précision relative, il y a un certain décalage entre les valeurs à retrouver et le mode des densités de probabilité, $\mu_1$ étant même presque en dehors de la zone de probabilité non-nulle fournie par le M-PMC. 
-% 
-% C'est finalement l'AMIS (figures \ref{mu1_amis} et \ref{mu2_amis})  qui obtient les meilleurs résultats, avec une estimation précise des densités $p(\mu_1 | \Vecy)$ et $p(\mu_2 | \Vecy)$ autour des vraies valeurs. Cela atteste à la fois du gain en qualité par rapport à une approche IS standard, ainsi que d'une plus grande souplesse sur l'exploitation des particules échantillonnées. En effet, le gain par rapport au M-PMC peut s'expliquer par le fait que l'AMIS ne s'est pas limité à l'exploitation de la dernière itération de l'algorithme (comme c'est le cas avec le M-PMC), mais a su tirer parti de l'information présente dans les poids d'importance et les particules générés dès la première itération. Il a ainsi pu définir des densités de probabilité plus en accord avec les valeurs réelles de $\mu_1$ et $\mu_2$. \\
-% 
- 
- 
-%}
-

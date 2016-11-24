@@ -1,202 +1,14 @@
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% PhD thesis
+% Author: Harizo RAJAONA
+% Title: Inférence bayésienne adaptative pour la reconstruction de source en dispersion atmosphérique
+% Date: Monday, November 21st 2016
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
 \documentclass[oneside]{book}
+\usepackage{these-harizo}
 
-%%%
-% Fichier principal du manuscrit de thèse, à utiliser pour compilation.
-%%%
-
-%AUTHOR: Harizo RAJAONA
-%VERSION: 1.0
-%DATE: 2016-07-20
-
-% --- IMPORTS ---
-
-% Pour la mise en page:
-\usepackage[a4paper, bottom=3cm]{geometry}
-\usepackage{afterpage}
-	\newcommand\blankpage{%
-		\null
-		\thispagestyle{plain}%
-		%\addtocounter{page}{-1}%
-		\newpage}
-
-
-% Lower page numbers
-\setlength{\footskip}{1.5cm}
-
-% Pour les paramètres d'encodage et de langue:
-\usepackage[T1]{fontenc}
-\usepackage[utf8]{inputenc}
-\usepackage[frenchb]{babel}
-
-
-% Pour de jolies figures en natif:
-\usepackage{tikz}
-
-% Pour citer en full version dans le doc:
-\usepackage{bibentry}
-\nobibliography*
-
-% Pour les symboles mathématiques:
-\usepackage{amsmath}
-\usepackage{amsfonts}
-\usepackage{mathtools}
-\newcommand{\diagentry}[1]{\mathmakebox[1.8em]{#1}}
-\newcommand{\xddots}{%
-	\raise 4pt \hbox {.}
-	\mkern 6mu
-	\raise 1pt \hbox {.}
-	\mkern 6mu
-	\raise -2pt \hbox {.}
-}
-\usepackage{bbm}
-
-% Pour améliorer le spacing entre mots, lettres:
-\usepackage{microtype}
-
-% Pour les unités physiques:
-\usepackage[load-configurations = abbreviations]{siunitx}
-\sisetup{locale = FR,
-	detect-all,
-}
-
-% Pour mettre du boldface dans les maths:
-\usepackage{bm}
-
-% Pour insérer des images:
-\usepackage{graphicx}
-	\graphicspath{{figures_chap_1/}{figures_chap_2/}{figures_chap_3/}{figures_chap_4/}{figures_chap_4/opera/}{figures_chap_4/beaune/}}
-% Pour insérer des images au format eps:
-\usepackage{epstopdf}
-
-
-\usepackage{enumitem}
-
-
-
-
-% Pour l'en-tête et le pied de page:
-\usepackage{fancyhdr}
-	\pagestyle{fancy}
-	\renewcommand{\headrulewidth}{1pt}
-
-	\fancyhead[LE]{}
-	\fancyhead[LO]{Chap.\thechapter}
-	\fancyhead[C]{}
-	\fancyhead[RO]{\nouppercase\rightmark}
-	%\fancyhead[RE]{\nouppercase\rightmark}
-	%\cfoot{} % get rid of the page number 
-
-% Pour mettre une table des matières par chapitre:
-% \usepackage[french]{minitoc}
-
-% Pour passer à la ligne si la citation est trop longue:
-\usepackage{breakcites}
-
-% Pour régler l'espace inter-ligne dans le texte:
-\usepackage{setspace}
-	\onehalfspacing
-
-% Pour mettre des hyperliens dans le document:
-\usepackage{hyperref}
-	\hypersetup{
-		colorlinks=false, % colorie les liens
-		breaklinks=true, % retour chariot sur liens trop longs
-		urlcolor=blue, % couleur des liens
-		linkcolor=blue, % couleur des liens internes
-		citecolor=brown, % couleur des références
-		}
-		
-% Pour mettre des commentaires/corrections à la relecture:
-\usepackage{todonotes}
-\newcommand\todoin[2][]{\todo[inline, backgroundcolor=red!20!white, caption={2do}, #1]{
-		\begin{minipage}{\textwidth-4pt}#2\end{minipage}}}
-
-
-	
-% Pour créer des sous-figures dans un environnement figure commun:
-\usepackage{subcaption}
-
-
-% Pour écrire des algorithmes en pseudo-code:
-%\usepackage[ruled, lined, linesnumbered, algochapter]{algorithm2e}
-\usepackage{algorithm, algpseudocode}
-\usepackage{caption}
-\captionsetup[ruled]{labelsep=period}
-\makeatletter
-
-% Pour la citation 
-\usepackage{epigraph}
-
-
-
-
-
-% --- CUSTOM MATH SYMBOLS ---
-\DeclareMathOperator*{\argmin}{\arg\!\min}
-\DeclareMathOperator*{\argmax}{\arg\!\max}
-\newcommand{\VecTSource}{{\bm{t'_s}}}
-\newcommand{\VecPosSource}{{\bm{x_s}}}
-\newcommand{\VecQSource}{{\bm{q}}}
-\newcommand{\VecObs}{{\bm{\eta}}}
-\newcommand{\valObs}{{\eta}}
-\newcommand{\VecErreur}{{\bm{\varepsilon}}}
-\newcommand{\MatC}{{\bm{C}}}
-\newcommand{\MatH}{{\bm{H}}}
-\newcommand{\VecTheta}{{\bm{\theta}}}
-\newcommand{\VecSigma}{{\bm{\varsigma}}}
-\newcommand{\VecSigmaB}{{\bm{\varsigma_b}}}
-\newcommand{\CostF}{{\mathcal{J}}}
-\newcommand{\MatR}{{\bm{R}}}
-\newcommand{\MatB}{{\bm{B}}}
-\newcommand{\MatId}{{\bm{I}}}
-\newcommand{\VecX}{{\bm{x}}}
-\newcommand{\PosteriorTheta}{{p(\VecTheta | \VecObs)}}
-\newcommand{\MatSigma}{{\bm{\Sigma}}}
-\newcommand{\VecThetaCandidat}{{\VecTheta^*}}
-\newcommand{\VecThetaCourant}{{\VecTheta^{(i-1)}}}
-\newcommand{\VecThetaNouveau}{{\VecTheta^{(i)}}}
-\newcommand{\valTheta}{{\theta}}
-\newcommand{\VecMu}{{\bm{\mu}}}
-\newcommand{\VecPoids}{{\bm{w}}}
-\newcommand{\poidsNorm}{{\tilde{w}}}
-\newcommand{\VecPoidsNorm}{{\tilde{\bm{w}}}}
-\newcommand{\valXMC}{{\upsilon}}
-\newcommand{\VecXMC}{{\bm{\upsilon}}}
-\newcommand{\kernel}{{\mathcal{K}}}
-\newcommand{\corr}{{\rho}}
-\newcommand{\propFonc}{{\varphi}}
-\newcommand{\ESS}{{\mathbb{ESS}}}
-\newcommand{\PosSource}{{\bm{x}_s}}
-\newcommand{\obs}{{\eta}}
-\newcommand{\PosCapteur}{{\bm{x}_c}}
-\newcommand{\varObs}{{\sigma_{obs}^2}}
-\newcommand{\stdObs}{{\sigma_{obs}}}
-\newcommand{\VecMeanQ}{{\bm{\mu}_q}}
-\newcommand{\MatCovQ}{{\bm{\Sigma}_q}}
-\newcommand{\MatG}{{\bm{[G]}}}
-\newcommand{\MatK}{{\bm{K}}}
-\newcommand{\PostMeanQ}{{\widetilde{\bm{\mu}_q}}}
-\newcommand{\PostCovQ}{{\widetilde{\bm{\Sigma}_q}}}
-\newcommand{\varQ}{\sigma_q^2}
-\newcommand{\VecThetaMaj}{{\bm{\Theta}}}
-\newcommand{\Vecx}{{\bm{x}}}
-\newcommand{\Vecv}{{\bm{v}}}
-\newcommand{\Vecu}{{\bm{u}}}
-\newcommand{\Vecy}{{\bm{y}}}
-\newcommand{\Vecmup}{{\bm{\mu}_\varphi}}
-\newcommand{\MatSigmap}{{\bm{\Sigma}_\varphi}}
-\newcommand{\varBruit}{{\sigma_{\mathcal{B}}^2}}
-
-% Corrections
-\newcommand{\NdFS}[1]{{\leavevmode\color{black}#1}}
-\newcommand{\NdPA}[1]{{\leavevmode\color{violet}#1}}
-\newcommand{\NdHR}[1]{{\leavevmode\color{orange}#1}}
-\newcommand*{\correction}{\textcolor{red}}
-
-
-
-
-% Titre
+% Attributs page de garde
 \title{Inférence bayésienne adaptative pour la reconstruction de source en dispersion atmosphérique}
 \date{12 juillet 2016}
 \author{Harizo Rajaona}
@@ -204,68 +16,57 @@
 
 \begin{document}
 
-
-	%\maketitle
+%	Ne pas mettre en forme pour les pages de préambule (pagestyle{empty})
 	\pagestyle{empty}
 	\input{page_garde}
-			\null
-			\thispagestyle{empty}%
-			%\addtocounter{page}{-1}%
-			\newpage
-			
-			
+		\null
+		\thispagestyle{empty}%
+		\newpage
+
+	% Démarrer la pagination en chiffres romains:
 	\frontmatter
 	\pagestyle{plain}
 
-
+	% Ajouter les résumés à la table des matières:
 	\addcontentsline{toc}{chapter}{Résumés}
 	\input{abstracts}
 	\cleardoublepage
-	
+
+	% Ajouter les remerciements à la table des matières:
 	\addcontentsline{toc}{chapter}{Remerciements}
 	\input{acknowledgements}
 	\cleardoublepage
+
+	% Citation:
 \setlength{\epigraphwidth}{0.8\textwidth}
 \epigraph{\textit{\og Mais je connais la solitude. Trois années de désert m'en ont enseigné le goût. On ne s'y effraie point d'une jeunesse qui s'use dans un paysage minéral, mais il y apparait que, loin de soi, c'est le monde entier qui vieillit. Les arbres ont formé leurs fruits, les terres ont sorti leur blé, les femmes déjà sont belles... Mais la saison avance et l'on est retenu au loin... Et les biens de la terre glissent entre les doigts comme le sable fin des dunes. \fg{}}}{\textit{Terre des Hommes}, A. de Saint-Exupéry}
 \cleardoublepage
+
 	\renewcommand{\contentsname}{Sommaire} % Dans le corps du document,avant la commande \tableofcontents.
 	\pagestyle{plain}
-	%\pagenumbering{gobble}
 	\afterpage{\blankpage}
+
+%	Table des matières:
 	\tableofcontents
 	\cleardoublepage
 	\pagestyle{plain}
+
+%	Table des figures:
 	\listoffigures
 	\cleardoublepage
 
-	%\pagenumbering{arabic}
-
-	
-	%\input{liste_symboles}
-	
-	%\printnomenclature
-	
-
-	
+%	Activer la mise en forme des en-têtes:
 	\pagestyle{fancy}
-	
-	\input{chapitre_1_v2}
 
+%	Ajouter le contenu:
+	\input{chapitre_1}
 	\input{chapitre_2}
-	
 	\input{chapitre_3}
-	
 	\input{chapitre_4}
-	
-	\input{chapitre_4_opera}
-	
 	\input{chapitre_5_conclusion}
-	
 	\input{chapitre_6_publis}
-	%\appendix
-	%\chapter{Ensemble des résultats pour les analyses paramétriques du cas-test Beaune}
 
-	
+%	Ajouter la biblio:
 	\bibliographystyle{apalike}
 	\bibliography{_biblio}
 \end{document}
